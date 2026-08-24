@@ -1,0 +1,120 @@
+{
+ "formatVersion": 1,
+ "club": "HYC",
+ "name": "Autumn League offshore course card",
+ "infrastructure": {
+  "start": {
+   "lat": 53.41603,
+   "lng": -6.0873
+  },
+  "finish": {
+   "lat": 53.40453,
+   "lng": -6.07395
+  },
+  "firstUpwindDistanceNm": 0.5
+ },
+ "courses": [
+  {
+   "id": "001",
+   "marks": [
+    {
+     "mark": "H"
+    },
+    {
+     "mark": "I"
+    },
+    {
+     "mark": "H"
+    },
+    {
+     "mark": "K",
+     "rounding": "starboard"
+    }
+   ]
+  },
+  {
+   "id": "002",
+   "marks": [
+    {
+     "mark": "H"
+    },
+    {
+     "mark": "D"
+    },
+    {
+     "mark": "A"
+    },
+    {
+     "mark": "K",
+     "rounding": "starboard"
+    }
+   ]
+  },
+  {
+   "id": "003",
+   "marks": [
+    {
+     "mark": "H"
+    },
+    {
+     "mark": "K"
+    },
+    {
+     "mark": "A"
+    },
+    {
+     "mark": "K",
+     "rounding": "starboard"
+    }
+   ]
+  },
+  {
+   "id": "004",
+   "marks": [
+    {
+     "mark": "H",
+     "rounding": "starboard"
+    },
+    {
+     "mark": "K"
+    },
+    {
+     "mark": "A"
+    },
+    {
+     "mark": "O"
+    },
+    {
+     "mark": "A"
+    }
+   ]
+  },
+  {
+   "id": "005",
+   "marks": [
+    {
+     "mark": "H"
+    },
+    {
+     "mark": "K"
+    },
+    {
+     "mark": "A"
+    },
+    {
+     "mark": "H"
+    },
+    {
+     "mark": "K"
+    },
+    {
+     "mark": "A"
+    },
+    {
+     "mark": "K",
+     "rounding": "starboard"
+    }
+   ]
+  }
+ ]
+}

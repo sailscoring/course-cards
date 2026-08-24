@@ -1,0 +1,86 @@
+{
+ "formatVersion": 1,
+ "club": "HYC",
+ "marks": [
+  {
+   "id": "C",
+   "name": "Cush",
+   "shape": "conical",
+   "color": "black",
+   "position": {
+    "lat": 53.408333,
+    "lng": -6.090667
+   }
+  },
+  {
+   "id": "D",
+   "name": "Dunbo",
+   "shape": "conical",
+   "color": "yellow",
+   "position": {
+    "lat": 53.412167,
+    "lng": -6.064167
+   }
+  },
+  {
+   "id": "H",
+   "name": "Hub",
+   "shape": "conical",
+   "color": "black",
+   "position": {
+    "lat": 53.4285,
+    "lng": -6.073833
+   }
+  },
+  {
+   "id": "I",
+   "name": "Island",
+   "shape": "conical",
+   "color": "black",
+   "position": {
+    "lat": 53.411667,
+    "lng": -6.073167
+   }
+  },
+  {
+   "id": "P",
+   "name": "Portmarnock",
+   "shape": "conical",
+   "color": "black",
+   "position": {
+    "lat": 53.42,
+    "lng": -6.066667
+   }
+  },
+  {
+   "id": "S",
+   "name": "Spit",
+   "shape": "conical",
+   "color": "black",
+   "position": {
+    "lat": 53.407,
+    "lng": -6.075167
+   }
+  },
+  {
+   "id": "V",
+   "name": "Viceroy",
+   "shape": "conical",
+   "color": "orange",
+   "position": {
+    "lat": 53.418667,
+    "lng": -6.079667
+   }
+  },
+  {
+   "id": "W",
+   "name": "West",
+   "shape": "conical",
+   "color": "black",
+   "position": {
+    "lat": 53.416,
+    "lng": -6.101167
+   }
+  }
+ ]
+}
