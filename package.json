@@ -21,6 +21,9 @@
   "engines": {
     "node": ">=22"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "packageManager": "pnpm@11.25.0",
   "scripts": {
     "test": "vitest run",
