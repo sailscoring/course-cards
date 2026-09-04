@@ -8,7 +8,7 @@ positions, and a "COURSE CARD" page of 16 numbered courses.
 
 | File | Source | Made by |
 |---|---|---|
-| `marks.json` | `source/Brass_Monkey_SI_Winter_2025_.pdf`, page 7 (and §14 for the finish) | `tools/extract_hyc_si.py marks` |
+| `marks.json` | `source/Brass_Monkey_SI_Winter_2025_.pdf`, page 7 (and §14 for the finish); shapes, colours and P's position from `../al-2025/marks.json` | `tools/extract_hyc_si.py marks` |
 | `course-card.json` | the same PDF, page 8; notes from SI §8, 9, 10 and 14 | `tools/extract_hyc_si.py card`, `… notes` |
 | `course-card.html`, `map/marks.svg` | the JSON above, `map/background.png` | `tools/render-cards.ts` |
 | `map/background.png`, `.json` | OpenStreetMap + OpenSeaMap tiles | `tools/fetch_map.py` |
@@ -27,9 +27,15 @@ word positions, the instructions from `pdftotext -layout`.
 **Marks.** The location table has a row per mark — name, letter, and
 latitude and longitude as degrees and decimal minutes ("53 24.5",
 "06 05.44"); longitudes are West, so negative. Eight marks: C Cush, D Dunbo,
-H Hub, I Island, P Portmarnock, S Spit, V Viceroy, W West. SI 10.2 says the
-marks "are orange spherical or black conical" but not which is which, so
-the marks carry no shape or colour. The finish `F` ends every course but is
+H Hub, I Island, P Portmarnock, S Spit, V Viceroy, W West. That is all the
+SI gives: 10.2 says the marks "are orange spherical or black conical" but
+not which is which. These are the same club's marks as the Autumn League
+2025 technical sheet lists (`../al-2025/marks.json`, same names; seven of
+the eight positions agree within 0.12′), so the manifest's `details` has
+the extractor take each mark's **shape and colour from that sheet** — and
+its **position for Portmarnock**, whose table entry is wrong (below). The
+sheet has Dunbo yellow and Viceroy orange conical, a little more varied
+than 10.2's summary. The finish `F` ends every course but is
 on no table: the extractor requires exactly one such mark, last on every
 course, and describes it from SI §14 "The Finish" — "a spherical orange
 cherry mark" gives its shape and colour, and 14.2's "all finishes will be
@@ -59,33 +65,33 @@ its own.
 `tools/check_hyc_si.py` runs as part of `pnpm data` and `pnpm data:check`,
 comparing the positions with the SI's own picture of the marks — the only
 other thing the document says about where they are. It finds the red dots
-on the picture, fits a north-up chart to them against the table's positions
+on the picture, fits a north-up chart to them against the marks' positions
 (trying every pair of dots against every pair of marks, so one bad dot
-cannot skew the fit) and reports any mark not drawn where the table puts
-it. **Six of the eight marks sit within 5.4 pixels of their table positions
+cannot skew the fit) and reports any mark not drawn where the file puts
+it. **Six of the eight marks sit within 5.4 pixels of their positions
 (about 0.05′ on a chart drawn at 88 px per minute of longitude). Two do
 not, and both are recorded as `expected` in the manifest:**
 
 - **Dunbo (D)** is not drawn on the picture at all.
-- **Portmarnock (P)** is drawn about 1.3 NM west-north-west of where the
-  table puts it. The table says 53° 25.2′ N 06° 04.00′ W, which is in open
-  water between Hub and Viceroy, east of every other mark but Dunbo; the
-  picture's dot labelled P is at about 53° 25.82′ N 06° 06.28′ W, off
-  Portmarnock strand — where the Autumn League 2025 technical sheet puts
-  the mark (53° 25.63′ N 06° 05.80′ W). One of the two is wrong, and the
-  table's longitude looks like a transcription slip. **The JSON follows the
-  table, as printed**; anyone using P's position should know this, and the
+- **Portmarnock (P).** The SI's table says 53° 25.2′ N 06° 04.00′ W, which
+  is open water between Hub and Viceroy, east of every other mark but
+  Dunbo — a longitude slip, evidently. The picture's dot labelled P is at
+  about 53° 25.82′ N 06° 06.28′ W, off Portmarnock strand, 1.3 NM away;
+  the Autumn League 2025 sheet has the mark at 53° 25.63′ N 06° 05.80′ W,
+  0.35 NM from that dot on a picture that says it is not to scale. **The
+  JSON uses the Autumn League position**, the club's own figure for the
+  same mark, and the table's is recorded here and in the manifest. The
   club has not been asked.
 
-Against the Autumn League 2025 technical sheet (`../al-2025/marks.json`),
-the other seven positions agree within 0.12′ — Cush, Island and Spit differ
-by 0.03–0.11′, the rest are identical.
+Against the Autumn League sheet the other seven positions agree within
+0.12′ — Cush, Island and Spit differ by 0.03–0.11′, the rest are
+identical.
 
 Structural tests (`tests/hyc-brass-monkey.test.ts`) confirm the 16 courses
-in order, every mark on the marks file, every course rounding to port,
-leaving Island to starboard and ending at the finish, and spot checks of
-five courses read from the printed card by eye. All 16 were compared
-against the PDF's text.
+in order, every mark on the marks file with the sheet's name, shape and
+colour, every course rounding to port, leaving Island to starboard and
+ending at the finish, and spot checks of five courses read from the printed
+card by eye. All 16 were compared against the PDF's text.
 
 ## Notes on the card
 

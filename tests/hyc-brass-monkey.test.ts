@@ -13,13 +13,18 @@ const marks = parseMarksFile(load('marks.json'));
 const card = parseCourseCardFile(load('course-card.json'));
 
 describe('the HYC Brass Monkey 2025 marks file', () => {
-  it('lists the SI’s location table — eight fixed marks — and the finish, laid per race', () => {
+  it('lists the SI’s location table — eight fixed marks, described as on the Autumn League sheet — and the finish, laid per race', () => {
     expect(marks.marks.map((m) => m.id).join('')).toBe('CDHIPSVWF');
+    const al = new Map(
+      parseMarksFile(JSON.parse(readFileSync(join(__dirname, '..', 'data', 'hyc', 'al-2025', 'marks.json'), 'utf-8'))).marks.map((m) => [m.id, m]),
+    );
     for (const m of marks.marks.slice(0, 8)) {
       expect(m.position, m.id).toBeDefined();
-      expect(m.name, m.id).toBeTruthy();
-      expect(m.shape, m.id).toBeUndefined(); // the SI does not say which is orange spherical and which black conical
+      expect(m.name, m.id).toBe(al.get(m.id)!.name);
+      expect(m.shape, m.id).toBe(al.get(m.id)!.shape);
+      expect(m.color, m.id).toBe(al.get(m.id)!.color);
     }
+    expect(marks.marks.find((m) => m.id === 'V')).toMatchObject({ shape: 'conical', color: 'orange' });
     expect(marks.marks[8]).toEqual({
       id: 'F',
       name: 'Finish',
@@ -40,8 +45,8 @@ describe('the HYC Brass Monkey 2025 marks file', () => {
     // Hub 53 25.71 N, 06 04.43 W; Cush 53 24.5 N, 06 05.44 W
     expect(marks.marks.find((m) => m.id === 'H')!.position).toEqual({ lat: 53.4285, lng: -6.073833 });
     expect(marks.marks.find((m) => m.id === 'C')!.position).toEqual({ lat: 53.408333, lng: -6.090667 });
-    // Portmarnock as the table prints it — see the README: the SI's own picture puts it elsewhere
-    expect(marks.marks.find((m) => m.id === 'P')!.position).toEqual({ lat: 53.42, lng: -6.066667 });
+    // Portmarnock from the Autumn League sheet, not the SI's table (53 25.2 N, 06 04.00 W) — see the README
+    expect(marks.marks.find((m) => m.id === 'P')!.position).toEqual({ lat: 53.427167, lng: -6.096667 });
   });
 });
 

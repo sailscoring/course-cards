@@ -69,6 +69,10 @@ def extract(base, artifact, meta_path):
         cmd = [sys.executable, os.path.join(TOOLS, 'extract_dbsc_card.py'), source, '--meta', meta_path]
     elif tool in ('extract_hyc_si_marks', 'extract_hyc_si_card'):
         cmd = [sys.executable, os.path.join(TOOLS, 'extract_hyc_si.py'), tool.rsplit('_', 1)[1], source, '--meta', meta_path]
+        if artifact.get('details'):
+            d = artifact['details']
+            cmd += ['--details', os.path.join(base, d['source']), '--details-fields', ','.join(d.get('fields', [])),
+                    '--details-positions', ','.join(d.get('positions', []))]
     else:
         sys.exit(f'{artifact["output"]}: unknown tool {tool}')
     if artifact.get('notesSource'):

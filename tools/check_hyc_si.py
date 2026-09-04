@@ -7,7 +7,7 @@ two agree.
 
 The dots carry no machine-readable labels, so the check finds the red dots,
 then tries every way of matching dots to marks and keeps the one under which
-the most dots sit where the table's positions put them, in one north-up
+the most dots sit where the marks file's positions put them, in one north-up
 linear fit (the picture is a plain chart, a few miles across, so an affine
 fit is exact to well under a dot's width). A mark whose dot is not within
 `tolerance` pixels of its fitted position — or that has no dot — is reported,
@@ -178,11 +178,11 @@ def check_map_image(base, marks_file, pdf, page, expected=()):
             if m['id'] in known:
                 problems.append(f'{m["id"]} is drawn where the table puts it, but the manifest expects it not to be')
             continue
-        line = f'{m["id"]} {m["name"]}: no dot within {TOLERANCE_PX} px of the table\'s {format_position(m["position"])}'
+        line = f'{m["id"]} {m["name"]}: no dot within {TOLERANCE_PX} px of its {format_position(m["position"])}'
         (noted if m['id'] in known else problems).append(note(line, known.get(m['id'])) if m['id'] in known else line)
     for d in stray:
         p = unproject(f, d)
-        line = f'a dot at pixel ({d[0]:.0f}, {d[1]:.0f}) is about {format_position(p)}, where the table puts no mark'
+        line = f'a dot at pixel ({d[0]:.0f}, {d[1]:.0f}) is about {format_position(p)}, where the marks file puts no mark'
         expected_dot = next((e for e in known_dots if residual(f, e['dot'], d) <= TOLERANCE_PX), None)
         if expected_dot:
             known_dots.remove(expected_dot)
@@ -191,7 +191,7 @@ def check_map_image(base, marks_file, pdf, page, expected=()):
             problems.append(line)
     for e in known_dots:
         problems.append(f'the manifest expects a stray dot about {format_position(e["dot"])}, but there is none')
-    summary = f'{len(placed)} of {len(marks)} marks drawn where the table puts them (worst {worst:.1f} px; {scale})'
+    summary = f'{len(placed)} of {len(marks)} marks drawn where the marks file puts them (worst {worst:.1f} px; {scale})'
     heading = f'{marks_file} against the picture on page {page} of {pdf}'
     return heading, summary, problems, noted
 

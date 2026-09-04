@@ -11,6 +11,13 @@ starboard), ending at the finish mark, which has no suffix.
     python3 tools/extract_hyc_si.py card  <si.pdf> --meta meta.json [--notes n.json] > card.json
     python3 tools/extract_hyc_si.py notes <si.pdf> --sections 8,9,10,14             # SI sections as card notes
 
+The SI's table gives names and positions only. Details the club publishes
+for the same marks elsewhere — the Autumn League technical sheet's shape
+and colour, and its position for a mark whose table entry is doubtful —
+can be taken from that marks file with `--details ../al-2025/marks.json
+--details-fields shape,color --details-positions P`; the marks must match
+by id and name.
+
 The SI is a real-text PDF; the tables are read from `pdftotext -bbox` word
 positions, the instructions from `pdftotext -layout`. A mark the courses
 use that the location table does not list must be the finish, and there
@@ -199,8 +206,32 @@ def finish_mark(id_, text):
     return mark
 
 
-def marks_file(pdf):
+def with_details(marks, path, fields, positions):
+    """Copy `fields` (and, for ids in `positions`, the position) onto the
+    table's marks from another marks file of the same club's marks."""
+    theirs = {m['id']: m for m in json.load(open(path))['marks']}
+    out = []
+    for m in marks:
+        t = theirs.get(m['id'])
+        if not t or t.get('name') != m['name']:
+            sys.exit(f'{path}: no mark {m["id"]} {m["name"]} to take details from')
+        entry = {'id': m['id'], 'name': m['name']}
+        for f in fields:
+            if f not in t:
+                sys.exit(f'{path}: mark {m["id"]} has no {f}')
+            entry[f] = t[f]
+        entry['position'] = t['position'] if m['id'] in positions else m['position']
+        out.append(entry)
+    for id_ in positions:
+        if id_ not in {m['id'] for m in marks}:
+            sys.exit(f'--details-positions: {id_} is not on the location table')
+    return out
+
+
+def marks_file(pdf, details=None):
     marks, courses, _ = read(pdf)
+    if details:
+        marks = with_details(marks, *details)
     known = {m['id'] for m in marks}
     unlisted = sorted({cm['mark'] for c in courses for cm in c['marks']} - known)
     if len(unlisted) > 1:
@@ -238,10 +269,16 @@ def main():
     ap.add_argument('--meta', help='JSON file whose keys (club, name, source, marks…) head the output')
     ap.add_argument('--notes', help='card: JSON list of {title, text} notes to carry after the card\'s own')
     ap.add_argument('--sections', default='', help='notes: comma-separated SI section numbers to carry')
+    ap.add_argument('--details', help="marks: another marks file of the club's to take details from")
+    ap.add_argument('--details-fields', default='', help='marks: comma-separated fields to take from it (shape,color)')
+    ap.add_argument('--details-positions', default='', help='marks: comma-separated ids whose position to take from it')
     args = ap.parse_args()
     meta = json.load(open(args.meta)) if args.meta else {}
     if args.what == 'marks':
-        out = {'formatVersion': 1, **meta, 'marks': marks_file(args.pdf)}
+        details = None
+        if args.details:
+            details = (args.details, [f for f in args.details_fields.split(',') if f], [i for i in args.details_positions.split(',') if i])
+        out = {'formatVersion': 1, **meta, 'marks': marks_file(args.pdf, details)}
     elif args.what == 'card':
         courses, notes = card_file(args.pdf)
         if args.notes:
