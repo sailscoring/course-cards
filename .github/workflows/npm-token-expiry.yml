@@ -45,7 +45,7 @@ jobs:
             if [ "$days" -gt "$WARN_DAYS" ]; then
               echo "No action needed."; exit 0
             fi
-            if [ "$days" -lt 0 ]; then state="**expired on $EXPIRES**"; else state="expires on **$EXPIRES** ($days days)"; fi
+            if [ "$days" -lt 0 ]; then state="expired on $EXPIRES"; else state="expires on $EXPIRES ($days days)"; fi
             title="Rotate NPM_TOKEN — $state"
             body=$(cat <<BODY
           The npm publish token used by the release workflow $state. Until it is replaced, tagging a release still produces the GitHub Release but **nothing is published to npm**.

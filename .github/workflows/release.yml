@@ -52,7 +52,8 @@ jobs:
           NODE_AUTH_TOKEN: ${{ env.NPM_TOKEN }}
       - name: Not publishing to npm
         if: ${{ env.NPM_TOKEN == '' }}
-        run: echo "::warning title=Not published to npm::No NPM_TOKEN secret, so this release is on GitHub only. Set one to publish: README.md, 'Rotating NPM_TOKEN'."
+        run: |
+          echo "::warning title=Not published to npm::No NPM_TOKEN secret, so this release is on GitHub only. To publish, set one — see README.md, 'Rotating NPM_TOKEN'."
 
       - uses: softprops/action-gh-release@v2
         if: ${{ always() }}
