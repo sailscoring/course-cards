@@ -36,6 +36,7 @@ NOTES_TOOLS = {
     'extract_card': ['extract_notes.py'],
     'extract_dbsc_card': ['extract_dbsc_marks.py', '--notes'],
     'extract_hyc_si_card': ['extract_hyc_si.py', 'notes'],
+    'extract_dlcc_card': ['extract_dlcc_card.py', 'notes'],
 }
 
 
@@ -73,6 +74,11 @@ def extract(base, artifact, meta_path):
             d = artifact['details']
             cmd += ['--details', os.path.join(base, d['source']), '--details-fields', ','.join(d.get('fields', [])),
                     '--details-positions', ','.join(d.get('positions', []))]
+    elif tool == 'extract_dlcc_card':
+        cmd = [sys.executable, os.path.join(TOOLS, 'extract_dlcc_card.py'), 'card', source, '--meta', meta_path,
+               '--templates', os.path.join(TOOLS, 'templates', artifact['templates'])]
+        if artifact.get('overrides'):
+            cmd += ['--overrides', os.path.join(base, artifact['overrides'])]
     else:
         sys.exit(f'{artifact["output"]}: unknown tool {tool}')
     if artifact.get('notesSource'):

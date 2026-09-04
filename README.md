@@ -77,6 +77,12 @@ and how it was checked.
   and positions only, and misplaces Portmarnock; shapes, colours and that
   position come from the Autumn League sheet, as the README records.
   [README](data/hyc/brass-monkey-2025/README.md).
+- `data/dlcc/regattas-2026/` — the Dun Laoghaire Combined Clubs regattas
+  2026 (DMYC, NYC, RIYC and RStGYC, June–July), whose common sailing
+  instructions carry the cruisers' "Course Card A" in Addendum A as a
+  picture: 16 lettered sections of four courses round DBSC's marks, read by
+  a small purpose-built OCR, with the marks from DBSC's own sheet, which
+  the addendum reproduces. [README](data/dlcc/regattas-2026/README.md).
 - `data/dbsc/summer-2026/` — Dublin Bay Sailing Club's Summer Series 2026:
   the 26 marks from the club's marks, bearings and distances sheet, and the
   five keelboat course cards (Saturday committee vessel and hut, Thursday
