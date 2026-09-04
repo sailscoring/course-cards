@@ -37,16 +37,25 @@ jobs:
           cp "site/${GITHUB_REF_NAME}/course-cards-${GITHUB_REF_NAME}.zip" .
           cp site/index.json catalogue.json
 
-      # Publishes when the repository has an NPM_TOKEN secret (a granular
-      # access token with publish rights on @sailscoring, 2FA bypass for
-      # automation); otherwise the GitHub Release alone is the release.
+      # Publishes when the repository has an NPM_TOKEN secret: a granular
+      # access token with publish rights on @sailscoring and 2FA bypass, which
+      # npm limits to 90 days — see README.md, "Rotating NPM_TOKEN", and the
+      # npm-token-expiry workflow that nags before it dies.
       - name: Publish to npm
         if: ${{ env.NPM_TOKEN != '' }}
-        run: npm publish --provenance
+        run: |
+          if ! npm publish --provenance; then
+            echo "::error title=npm publish failed::NPM_TOKEN was rejected — it has probably expired (npm caps write tokens at 90 days). Rotate it: README.md, 'Rotating NPM_TOKEN'. The GitHub Release is still created."
+            exit 1
+          fi
         env:
           NODE_AUTH_TOKEN: ${{ env.NPM_TOKEN }}
+      - name: Not publishing to npm
+        if: ${{ env.NPM_TOKEN == '' }}
+        run: echo "::warning title=Not published to npm::No NPM_TOKEN secret, so this release is on GitHub only. Set one to publish: README.md, 'Rotating NPM_TOKEN'."
 
       - uses: softprops/action-gh-release@v2
+        if: ${{ always() }}
         with:
           files: |
             course-cards-${{ github.ref_name }}.zip

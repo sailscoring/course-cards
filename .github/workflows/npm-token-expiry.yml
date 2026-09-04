@@ -1,0 +1,75 @@
+name: npm-token-expiry
+
+# npm granular access tokens with publish rights live at most 90 days, and
+# the release workflow needs one (NPM_TOKEN) to publish. Nothing tells us
+# when it dies, so we record the expiry date ourselves in the repository
+# variable NPM_TOKEN_EXPIRES (YYYY-MM-DD) when rotating the token, and this
+# job opens an issue two weeks before — or if the date was never recorded.
+# Rotation procedure: README.md, "Rotating NPM_TOKEN".
+
+on:
+  schedule:
+    - cron: "0 8 * * 1" # Mondays 08:00 UTC
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      EXPIRES: ${{ vars.NPM_TOKEN_EXPIRES }}
+      WARN_DAYS: 14
+    steps:
+      - name: Open or refresh the reminder issue if the token is expiring
+        run: |
+          repo="${GITHUB_REPOSITORY}"
+          today=$(date -u +%F)
+          if [ -z "$EXPIRES" ]; then
+            title="Record when NPM_TOKEN expires"
+            body=$(cat <<BODY
+          The repository variable \`NPM_TOKEN_EXPIRES\` is not set, so nothing will warn before the npm publish token dies and releases silently stop reaching npm.
+
+          Look up the token's expiry under **npm → Access Tokens**, then run:
+
+              gh variable set NPM_TOKEN_EXPIRES --body YYYY-MM-DD
+
+          Procedure: README.md, "Rotating NPM_TOKEN". Opened by \`.github/workflows/npm-token-expiry.yml\`.
+          BODY
+          )
+          else
+            days=$(( ( $(date -u -d "$EXPIRES" +%s) - $(date -u -d "$today" +%s) ) / 86400 ))
+            echo "NPM_TOKEN expires $EXPIRES ($days days)"
+            if [ "$days" -gt "$WARN_DAYS" ]; then
+              echo "No action needed."; exit 0
+            fi
+            if [ "$days" -lt 0 ]; then state="**expired on $EXPIRES**"; else state="expires on **$EXPIRES** ($days days)"; fi
+            title="Rotate NPM_TOKEN — $state"
+            body=$(cat <<BODY
+          The npm publish token used by the release workflow $state. Until it is replaced, tagging a release still produces the GitHub Release but **nothing is published to npm**.
+
+          Rotate it (about five minutes):
+
+          1. npmjs.com → your avatar → **Access Tokens** → **Generate New Token** → **Granular Access Token**.
+          2. Expiration: 90 days (the maximum). **Bypass two-factor authentication: on.** Packages and scopes: **Read and write**, only the \`@sailscoring\` scope. Organizations: no access.
+          3. Store it and record the new expiry, without pasting the token anywhere else:
+
+                 gh secret set NPM_TOKEN            # prompts for the value
+                 gh variable set NPM_TOKEN_EXPIRES --body YYYY-MM-DD
+
+          4. Delete the old token on npm. Close this issue.
+
+          Full procedure: README.md, "Rotating NPM_TOKEN". Opened by \`.github/workflows/npm-token-expiry.yml\`; it re-checks every Monday.
+          BODY
+          )
+          fi
+          existing=$(gh issue list --repo "$repo" --label npm-token --state open --json number --jq '.[0].number')
+          gh label create npm-token --repo "$repo" --color D93F0B --description "The npm publish token needs attention" --force >/dev/null
+          if [ -n "$existing" ]; then
+            gh issue edit "$existing" --repo "$repo" --title "$title" --body "$body"
+            echo "Updated issue #$existing"
+          else
+            gh issue create --repo "$repo" --title "$title" --body "$body" --label npm-token
+          fi

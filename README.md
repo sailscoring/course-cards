@@ -101,8 +101,42 @@ https://courses.sailscoring.ie/index.json
 
 A deploy carries one release; earlier releases stay downloadable from
 GitHub. The site is built by `pnpm site` into `site/` and deployed by
-Vercel on every push to `main`. Cutting a release is bumping the version in
-`package.json`, committing, and pushing an annotated `vX.Y.Z` tag.
+Vercel on every push to `main`.
+
+### Cutting a release
+
+1. Bump `version` in `package.json` and commit.
+2. `git tag -a vX.Y.Z -m "…"`, then push `main` and the tag.
+3. The release workflow tests, attaches the assets to a GitHub Release, and
+   publishes to npm — if the token below is alive.
+
+### Rotating `NPM_TOKEN`
+
+> ⚠️ **The npm publish token expires every 90 days** — npm's maximum for a
+> token with write access. When it lapses, tagging a release still produces
+> the GitHub Release but **nothing reaches npm**, and the only symptom is a
+> failed "Publish to npm" step. The `npm-token-expiry` workflow opens an
+> issue two weeks before the date recorded in the `NPM_TOKEN_EXPIRES`
+> repository variable — so **record the date every time you rotate**.
+
+1. npmjs.com → avatar → **Access Tokens** → **Generate New Token** →
+   **Granular Access Token**.
+2. Expiration **90 days**. **Bypass two-factor authentication: on** (CI
+   cannot answer a 2FA prompt). Packages and scopes: **Read and write**,
+   restricted to the `@sailscoring` scope. Organizations: **no access**.
+   IP allowlist: empty.
+3. Store the token and record its expiry, without pasting it anywhere else:
+
+   ```sh
+   gh secret set NPM_TOKEN                          # prompts for the value
+   gh variable set NPM_TOKEN_EXPIRES --body YYYY-MM-DD
+   ```
+
+4. Delete the previous token on npm.
+
+The alternative that needs no token is npm's *trusted publishing*
+(GitHub OIDC), configured on the package's npm settings page; if adopted,
+drop the token gate from `.github/workflows/release.yml`.
 
 ## Status
 
