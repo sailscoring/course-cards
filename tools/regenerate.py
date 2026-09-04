@@ -4,12 +4,12 @@
 Each `data/<club>/<event>/manifest.json` lists its artifacts: the output
 file, the extraction tool, the source PDF (kept alongside, verbatim, with
 the URL it was fetched from), the metadata that heads the output, and for a
-card the document its notes are read from. Running
-this rewrites the outputs; `--check` instead fails if any committed output
-differs from a fresh extraction — the CI guard that the JSON really is what
-the tools read from the PDFs. A manifest's `checks` names a tool that then
-cross-checks the outputs against the club's other publications, in both
-modes.
+card the document its notes are read from (and, for sailing instructions,
+which of its sections). Running this rewrites the outputs; `--check`
+instead fails if any committed output differs from a fresh extraction — the
+CI guard that the JSON really is what the tools read from the PDFs. A
+manifest's `checks` names a tool that then cross-checks the outputs against
+the club's other publications, in both modes.
 
     python3 tools/regenerate.py [--check] [manifest.json ...]
 """
@@ -35,12 +35,15 @@ def find_manifests():
 NOTES_TOOLS = {
     'extract_card': ['extract_notes.py'],
     'extract_dbsc_card': ['extract_dbsc_marks.py', '--notes'],
+    'extract_hyc_si_card': ['extract_hyc_si.py', 'notes'],
 }
 
 
 def notes_file(base, artifact):
     tool, *flags = NOTES_TOOLS[artifact['tool']]
-    notes = subprocess.run([sys.executable, os.path.join(TOOLS, tool), os.path.join(base, artifact['notesSource'])] + flags,
+    if artifact.get('notesSections'):
+        flags += ['--sections', ','.join(artifact['notesSections'])]
+    notes = subprocess.run([sys.executable, os.path.join(TOOLS, tool)] + flags + [os.path.join(base, artifact['notesSource'])],
                            check=True, capture_output=True, text=True).stdout
     with tempfile.NamedTemporaryFile('w', suffix='.json', delete=False) as fh:
         fh.write(notes)
@@ -64,6 +67,8 @@ def extract(base, artifact, meta_path):
             cmd += ['--overrides', os.path.join(base, artifact['overrides'])]
     elif tool == 'extract_dbsc_card':
         cmd = [sys.executable, os.path.join(TOOLS, 'extract_dbsc_card.py'), source, '--meta', meta_path]
+    elif tool in ('extract_hyc_si_marks', 'extract_hyc_si_card'):
+        cmd = [sys.executable, os.path.join(TOOLS, 'extract_hyc_si.py'), tool.rsplit('_', 1)[1], source, '--meta', meta_path]
     else:
         sys.exit(f'{artifact["output"]}: unknown tool {tool}')
     if artifact.get('notesSource'):

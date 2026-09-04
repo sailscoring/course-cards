@@ -1,0 +1,74 @@
+{
+  "club": "Howth Yacht Club",
+  "event": "Brass Monkey Winter Series 2025",
+  "artifacts": [
+    {
+      "output": "marks.json",
+      "tool": "extract_hyc_si_marks",
+      "source": "source/Brass_Monkey_SI_Winter_2025_.pdf",
+      "url": "https://hyc.ie/system/resources/2365/original/Brass_Monkey_SI_Winter_2025_.pdf",
+      "meta": {
+        "club": "HYC",
+        "name": "Brass Monkey Winter Series 2025 racing marks",
+        "source": "https://hyc.ie/system/resources/2365/original/Brass_Monkey_SI_Winter_2025_.pdf"
+      }
+    },
+    {
+      "output": "course-card.json",
+      "tool": "extract_hyc_si_card",
+      "source": "source/Brass_Monkey_SI_Winter_2025_.pdf",
+      "url": "https://hyc.ie/system/resources/2365/original/Brass_Monkey_SI_Winter_2025_.pdf",
+      "meta": {
+        "club": "HYC",
+        "name": "Brass Monkey Winter Series 2025 course card",
+        "source": "https://hyc.ie/system/resources/2365/original/Brass_Monkey_SI_Winter_2025_.pdf",
+        "marks": "marks.json"
+      },
+      "notesSource": "source/Brass_Monkey_SI_Winter_2025_.pdf",
+      "notesSections": [
+        "8",
+        "9",
+        "10",
+        "14"
+      ]
+    }
+  ],
+  "checks": {
+    "tool": "check_hyc_si",
+    "items": [
+      {
+        "check": "map-image",
+        "marks": "marks.json",
+        "pdf": "source/Brass_Monkey_SI_Winter_2025_.pdf",
+        "page": 7,
+        "expected": [
+          {
+            "mark": "D",
+            "note": "Dunbo is not drawn on the picture."
+          },
+          {
+            "mark": "P",
+            "note": "The table puts Portmarnock at 53° 25.2′ N 06° 04.00′ W, between Hub and Viceroy, where the picture draws nothing."
+          },
+          {
+            "dot": {
+              "lat": 53.4303,
+              "lng": -6.1047
+            },
+            "note": "The picture's dot labelled P, about 1.3 NM west-north-west of the table's Portmarnock, off Portmarnock strand — where the Autumn League 2025 technical sheet has the mark (53° 25.63′ N 06° 05.80′ W). One of the two is wrong; the JSON follows the table, as printed."
+          }
+        ]
+      }
+    ]
+  },
+  "map": {
+    "background": "map/background.png",
+    "marks": "marks.json",
+    "layers": [
+      "osm",
+      "openseamap"
+    ],
+    "zoom": 14,
+    "paddingMinutes": 0.6
+  }
+}

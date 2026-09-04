@@ -70,6 +70,12 @@ and how it was checked.
   [offshore](https://courses.sailscoring.ie/hyc/al-2025/offshore.html),
   [inshore](https://courses.sailscoring.ie/hyc/al-2025/inshore.html);
   [README](data/hyc/al-2025/README.md).
+- `data/hyc/brass-monkey-2025/` — Howth Yacht Club's Brass Monkey Winter
+  Series 2025: the eight marks and 16 courses from the course card in the
+  last two pages of the sailing instructions, read from the PDF's text layer
+  and checked against the SI's own picture of the marks — which puts
+  Portmarnock somewhere else than the table does, as the README records.
+  [README](data/hyc/brass-monkey-2025/README.md).
 - `data/dbsc/summer-2026/` — Dublin Bay Sailing Club's Summer Series 2026:
   the 26 marks from the club's marks, bearings and distances sheet, and the
   five keelboat course cards (Saturday committee vessel and hut, Thursday
