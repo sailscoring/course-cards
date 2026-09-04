@@ -3,8 +3,8 @@ import { join } from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { parseCourseCardFile, parseMarksFile, renderCardHtml } from '../src/index';
-import { formatPosition } from '../src/render';
+import { parseCourseCardFile, parseMarksFile } from '../src/index';
+import { formatPosition, renderCardHtml } from '../tools/card-html';
 
 function load(rel: string): unknown {
   return JSON.parse(readFileSync(join(__dirname, '..', 'data', 'hyc', 'al-2025', rel), 'utf-8'));

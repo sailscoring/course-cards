@@ -3,7 +3,8 @@
 
 Each `data/<club>/<event>/manifest.json` lists its artifacts: the output
 file, the extraction tool, the source PDF (kept alongside, verbatim, with
-the URL it was fetched from) and the metadata that heads the output. Running
+the URL it was fetched from), the metadata that heads the output, and for a
+card the document its notes are read from. Running
 this rewrites the outputs; `--check` instead fails if any committed output
 differs from a fresh extraction — the CI guard that the JSON really is what
 the tools read from the PDFs.
@@ -38,6 +39,13 @@ def extract(base, artifact, meta_path):
                '--templates', os.path.join(TOOLS, 'templates', artifact['templates'])]
         if artifact.get('overrides'):
             cmd += ['--overrides', os.path.join(base, artifact['overrides'])]
+        if artifact.get('notesSource'):
+            notes = subprocess.run([sys.executable, os.path.join(TOOLS, 'extract_notes.py'),
+                                    os.path.join(base, artifact['notesSource'])],
+                                   check=True, capture_output=True, text=True).stdout
+            with tempfile.NamedTemporaryFile('w', suffix='.json', delete=False) as fh:
+                fh.write(notes)
+            cmd += ['--notes', fh.name]
     else:
         sys.exit(f'{artifact["output"]}: unknown tool {tool}')
     return subprocess.run(cmd, check=True, capture_output=True, text=True).stdout

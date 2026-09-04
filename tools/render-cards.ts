@@ -1,7 +1,8 @@
 /**
  * Write an HTML page for every course card in data/: for each manifest, each
  * card artifact gets `<output>.html` next to it, rendered with the marks file
- * it names. `--check` verifies the committed pages instead.
+ * it names. `--check` verifies the committed pages instead. The last step of
+ * the artifact pipeline, after tools/regenerate.py.
  *
  *     pnpm render            # write
  *     pnpm render -- --check # verify
@@ -10,7 +11,8 @@
 import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative } from 'node:path';
 
-import { parseCourseCardFile, parseMarksFile, renderCardHtml } from '../src/index';
+import { parseCourseCardFile, parseMarksFile } from '../src/index';
+import { renderCardHtml } from './card-html';
 
 const root = join(import.meta.dirname, '..');
 const check = process.argv.includes('--check');

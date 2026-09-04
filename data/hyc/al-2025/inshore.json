@@ -4,6 +4,16 @@
   "name": "Autumn League 2025 course card, inshore committee boat starts",
   "source": "https://hyc.ie/system/resources/2330/original/AL_Course_Card_Inshore_01.pdf",
   "marks": "marks.json",
+  "notes": [
+    {
+      "title": "Navigation Marks and Obstructions",
+      "text": "The Navigation Marks in and around Howth Sound shall be left as follows:\nSouth Rowan: to be passed to the West and South\nRowan Rocks: to be passed to the East and South\nAny part of Ireland’s Eye capable of being touched by a boat while racing is designated as an obstruction to sea room. Competitors are reminded of a trawler wreck in Howth Sound, south of the Carrgran Rocks on Ireland’s Eye, which is submerged at most stages of the tide. Boats racing in the vicinity of Baldoyle Spit shall sail North and East of the Spit Mark (S)."
+    },
+    {
+      "title": "Course Selection",
+      "text": "1).Courses will be designated by three numeral boards.\n2).The first two boards will indicate the beat. ie 07 = 070°\n3).The third board indicates the column number across the top of the page.\nTherefore Course 073 is the third course in from the left on line 07"
+    }
+  ],
   "courses": [
     {"id": "001", "marks": [{"mark": "Z", "side": "port"}, {"mark": "P", "side": "port"}, {"mark": "W", "side": "port"}, {"mark": "S", "side": "starboard"}, {"mark": "F", "side": "port"}]},
     {"id": "002", "marks": [{"mark": "Z", "side": "port"}, {"mark": "W", "side": "port"}, {"mark": "C", "side": "port"}, {"mark": "P", "side": "port"}, {"mark": "W", "side": "port"}, {"mark": "S", "side": "starboard"}, {"mark": "F", "side": "port"}]},

@@ -28,14 +28,6 @@ export interface Mark {
   placement?: string;
 }
 
-/** A passage of the club's explanatory text, as printed: sailing
- *  instructions about the marks, how courses are signalled. Paragraphs are
- *  separated by newlines. */
-export interface Note {
-  title: string;
-  text: string;
-}
-
 export interface MarksFile {
   formatVersion: number;
   /** Who maintains these marks (club or class), free text. */
@@ -43,7 +35,6 @@ export interface MarksFile {
   name?: string;
   /** Where the data came from — the club's published document. */
   source?: string;
-  notes?: Note[];
   marks: Mark[];
 }
 
@@ -68,6 +59,14 @@ export interface Course {
   /** The number or name the race committee displays; any string. */
   id: string;
   marks: CourseMark[];
+}
+
+/** A passage of the club's explanatory text, as printed on or with the
+ *  card: sailing instructions about the marks, how courses are signalled.
+ *  Paragraphs are separated by newlines. */
+export interface Note {
+  title: string;
+  text: string;
 }
 
 export interface CourseCardFile {

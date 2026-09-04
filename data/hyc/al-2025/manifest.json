@@ -24,7 +24,8 @@
         "name": "Autumn League 2025 course card, offshore committee boat starts",
         "source": "https://hyc.ie/system/resources/2329/original/AL_Offshore_Course_Card.pdf",
         "marks": "marks.json"
-      }
+      },
+      "notesSource": "source/AL_Course_Card_Technical_Sheet.pdf"
     },
     {
       "output": "inshore.json",
@@ -37,7 +38,8 @@
         "name": "Autumn League 2025 course card, inshore committee boat starts",
         "source": "https://hyc.ie/system/resources/2330/original/AL_Course_Card_Inshore_01.pdf",
         "marks": "marks.json"
-      }
+      },
+      "notesSource": "source/AL_Course_Card_Technical_Sheet.pdf"
     }
   ]
 }

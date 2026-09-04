@@ -288,6 +288,7 @@ def cmd_build(args):
     templates = load_templates(args.templates)
     overrides = json.load(open(args.overrides)) if args.overrides else {}
     meta = json.load(open(args.meta)) if args.meta else {}
+    notes = json.load(open(args.notes)) if args.notes else None
     problems = []
     courses = []
     review_dir = args.review
@@ -318,7 +319,7 @@ def cmd_build(args):
         for p in problems:
             print('  ' + p, file=sys.stderr)
         sys.exit(1)
-    out = {'formatVersion': 1, **meta, 'courses': courses}
+    out = {'formatVersion': 1, **meta, **({'notes': notes} if notes else {}), 'courses': courses}
     emit(out, sys.stdout)
 
 
@@ -344,6 +345,7 @@ def main():
     b.add_argument('pdf')
     b.add_argument('--templates', required=True)
     b.add_argument('--meta')
+    b.add_argument('--notes', help='JSON list of {title, text} notes to carry on the card')
     b.add_argument('--overrides', help='JSON {"<course>/<glyph index>": "<LETTER>"} for glyphs verified by eye')
     b.add_argument('--review', help='directory to write crops of unresolved glyphs into')
     b.set_defaults(func=cmd_build)

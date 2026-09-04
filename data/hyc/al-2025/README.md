@@ -7,7 +7,7 @@ Howth Yacht Club's Autumn League course cards, as published at hyc.ie:
 | `marks.json` | `source/AL_Course_Card_Technical_Sheet.pdf` | `tools/extract_marks.py` |
 | `offshore.json` | `source/AL_Offshore_Course_Card.pdf` | `tools/extract_card.py` |
 | `inshore.json` | `source/AL_Course_Card_Inshore_01.pdf` | `tools/extract_card.py` |
-| `offshore.html`, `inshore.html` | the JSON above | `scripts/render.ts` |
+| `offshore.html`, `inshore.html` | the JSON above | `tools/render-cards.ts` |
 
 `manifest.json` records each artifact's source, the URL it was fetched
 from, and the metadata that heads the output; `pnpm data` rebuilds them all
@@ -27,10 +27,13 @@ rejoin correctly. Positions are the sheet's degrees and decimal minutes
 converted to decimal degrees; longitudes are West, so negative. Two marks
 have prose where their coordinates would be — Zephyr, "Upwind of Start
 Line", and Finish, "Between Island Mark and Howth Sound" — and are emitted
-without a position and with that text as their `placement`. The sheet's
-two passages of explanatory text — "Navigation Marks and Obstructions" and
-"Course Selection" — are read from the page regions beside and below the
-table and carried as `notes`.
+without a position and with that text as their `placement`.
+
+**Notes.** The sheet's two passages of explanatory text — "Navigation Marks
+and Obstructions" and "Course Selection" — are read from the page regions
+beside and below the table by `tools/extract_notes.py` and carried as
+`notes` on each card, since they are instructions for sailing the courses;
+both cards name the sheet as their notes source in the manifest.
 
 **Cards.** Both cards are pictures: the offshore card's letters are vector
 outlines with no text layer, the inshore card is a 150 dpi scan (its text

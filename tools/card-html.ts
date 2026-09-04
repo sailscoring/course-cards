@@ -1,12 +1,15 @@
 /**
  * A course card as a self-contained HTML page: the course table as the club
  * prints it, the marks with a map, mark-to-mark bearings and distances, and
- * the club's explanatory notes. No dependencies, no scripts; inline CSS and
- * an inline SVG map, so the page can be published anywhere as a file.
+ * the club's explanatory notes. No scripts; inline CSS and an inline SVG
+ * map, so the page can be published anywhere as a file.
+ *
+ * Part of the artifact pipeline (see render-cards.ts), not of the published
+ * library, which it consumes like any other client.
  */
 
-import { bearingDeg, distanceNm } from './geo';
-import type { Course, CourseCardFile, Mark, MarksFile, Note, Position } from './types';
+import { bearingDeg, distanceNm } from '../src/index';
+import type { Course, CourseCardFile, Mark, MarksFile, Note, Position } from '../src/index';
 
 export interface RenderOptions {
   /** Page title; defaults to the card's name. */
@@ -208,7 +211,7 @@ export function renderCardHtml(card: CourseCardFile, marks: MarksFile, options: 
   const title = options.title ?? card.name ?? 'Course card';
   const sources = [card.source, marks.source].filter((s): s is string => !!s);
   const meta = [card.club, ...sources.map((s) => `<a href="${esc(s)}">${esc(s)}</a>`)].filter(Boolean).join(' · ');
-  const allNotes = [...(card.notes ?? []), ...(marks.notes ?? [])];
+  const allNotes = card.notes ?? [];
   return (
     `<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">` +
     `<title>${esc(title)}</title><style>${CSS}</style></head><body>\n` +

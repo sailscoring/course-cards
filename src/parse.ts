@@ -74,7 +74,6 @@ export function parseMarksFile(data: unknown): MarksFile {
     ...optionalString(obj, 'club'),
     ...optionalString(obj, 'name'),
     ...optionalString(obj, 'source'),
-    ...optionalNotes(obj, 'marks'),
     marks,
   };
 }

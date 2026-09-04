@@ -50,21 +50,18 @@ the wind was doing on each leg is the caller's knowledge, not the
 library's. The geometry primitives (`distanceNm`, `bearingDeg`,
 `destination`) are exported for the arithmetic around a race.
 
-`renderCardHtml(card, marks)` produces the card as a self-contained HTML
-page — the course table as printed, the marks with a map, bearings and
-distances between every pair of marks, and the club's notes — with no
-scripts or external resources, so it can be published as a file.
-
 ## Data
 
 `data/hyc/al-2025/` — Howth Yacht Club's Autumn League 2025: the marks
-and notes from the course card technical sheet, and the offshore and
-inshore committee-boat-start course cards (180 courses each), each also
-rendered as an HTML page. The club's PDFs are kept alongside, and the JSON
-is **generated from them** by the tools in `tools/` — a text-layer parser
-for the technical sheet and a small purpose-built OCR for the two cards,
-which are pictures. See the [data README](data/hyc/al-2025/README.md) for
-how, and how it was checked.
+from the course card technical sheet, and the offshore and inshore
+committee-boat-start course cards (180 courses each) with the sheet's
+notes. The club's PDFs are kept alongside, and the JSON is **generated
+from them** by the tools in `tools/` — a text-layer parser for the
+technical sheet and a small purpose-built OCR for the two cards, which are
+pictures. The same pipeline renders each card as a self-contained HTML
+page: the course table as printed, the marks with a map, bearings and
+distances between marks, and the notes. See the
+[data README](data/hyc/al-2025/README.md) for how, and how it was checked.
 
 ```sh
 pnpm data        # rewrite the JSON from the PDFs, then the HTML from the JSON

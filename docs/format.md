@@ -45,10 +45,6 @@ sheet, a table of letter, name, shape, colour and position.
   (the windward mark) and Finish are such marks; a club whose windward mark
   is a fixed mark simply has a position for it.
 - `source` — the document the file was made from.
-- `notes` — the document's explanatory text, as printed, each with a
-  `title` and a `text` whose paragraphs are separated by newlines: HYC's
-  "Navigation Marks and Obstructions" and "Course Selection". A course card
-  file may carry `notes` too.
 
 ## Course card file
 
@@ -78,6 +74,10 @@ The card a club prints: the courses, each an ordered sequence of marks.
 ```
 
 - `marks` — the marks file the card's mark ids refer to, by name.
+- `notes` — the club's explanatory text that goes with the card, as
+  printed, each with a `title` and a `text` whose paragraphs are separated
+  by newlines: HYC's "Navigation Marks and Obstructions" and "Course
+  Selection". Cards sharing a technical sheet each carry a copy.
 - `courses[].id` — what the race committee displays; any string. HYC's
   three-digit numbers encode the first beat's bearing (first two digits ×
   10) and a column on the card (third digit); the format stores the number

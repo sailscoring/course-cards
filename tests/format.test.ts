@@ -30,6 +30,10 @@ describe('the HYC Autumn League 2025 marks file', () => {
     });
   });
 
+  it('carries no notes — those are the cards’', () => {
+    expect((marks as { notes?: unknown }).notes).toBeUndefined();
+  });
+
   it('positions are in Howth Sound, to the sheet’s hundredth of a minute', () => {
     for (const m of marks.marks) {
       if (!m.position) continue;
@@ -52,6 +56,11 @@ describe.each(Object.entries(cards))('the HYC Autumn League 2025 %s card', (name
       for (let col = 1; col <= 5; col++) expected.push(`${String(row).padStart(2, '0')}${col}`);
     }
     expect(ids).toEqual(expected);
+  });
+
+  it('carries the technical sheet’s notes', () => {
+    expect(card.notes?.map((n) => n.title)).toEqual(['Navigation Marks and Obstructions', 'Course Selection']);
+    expect(card.notes![1]!.text).toContain('Course 073 is the third course in from the left on line 07');
   });
 
   it('every course runs from the laid windward mark to the finish over known marks', () => {
