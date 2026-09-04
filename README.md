@@ -27,7 +27,7 @@ laid per race went. Those are supplied to the library per race.
 ## The library
 
 ```ts
-// npm install https://github.com/sailscoring/course-cards/releases/download/v0.1.0/sailscoring-course-cards-0.1.0.tgz
+// npm install @sailscoring/course-cards
 import { courseLegs, destination, parseCourseCardFile, parseMarksFile } from '@sailscoring/course-cards';
 
 const marks = parseMarksFile(JSON.parse(marksJson));
@@ -84,8 +84,9 @@ the artifacts, and each GitHub Release attaches:
   provenance manifests, plus the format spec.
 - **`catalogue.json`** — what the release contains, with the URL of every
   artifact on the site.
-- **`sailscoring-course-cards-X.Y.Z.tgz`** — the library, packed for
-  `npm install <url>`.
+- **`sailscoring-course-cards-X.Y.Z.tgz`** — the library as packed for
+  npm, where it is published as
+  [`@sailscoring/course-cards`](https://www.npmjs.com/package/@sailscoring/course-cards).
 
 [courses.sailscoring.ie](https://courses.sailscoring.ie) lists the available
 course cards and serves every artifact at its own URL — unversioned for the
