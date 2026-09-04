@@ -4,7 +4,7 @@
  * and consumers get plain typed objects.
  */
 
-import { FORMAT_VERSION, type CourseCardFile, type MarksFile, type Position } from './types';
+import { FORMAT_VERSION, type CourseCardFile, type MarksFile, type Position, type Side } from './types';
 
 export class FormatError extends Error {}
 
@@ -12,13 +12,14 @@ function fail(path: string, message: string): never {
   throw new FormatError(`${path}: ${message}`);
 }
 
-function checkVersion(value: unknown, path: string): void {
+function checkVersion(value: unknown, path: string): number {
   if (typeof value !== 'number' || !Number.isInteger(value)) {
     fail(path, 'formatVersion must be an integer');
   }
   if (value > FORMAT_VERSION) {
     fail(path, `formatVersion ${value} is newer than this library understands (${FORMAT_VERSION})`);
   }
+  return value;
 }
 
 function checkPosition(value: unknown, path: string): Position {
@@ -29,29 +30,37 @@ function checkPosition(value: unknown, path: string): Position {
   return { lat: p.lat, lng: p.lng };
 }
 
+function optionalString(obj: Record<string, unknown>, key: string): Record<string, string> {
+  return typeof obj[key] === 'string' ? { [key]: obj[key] } : {};
+}
+
 export function parseMarksFile(data: unknown): MarksFile {
   if (typeof data !== 'object' || data === null) fail('marks', 'expected an object');
   const obj = data as Record<string, unknown>;
-  checkVersion(obj.formatVersion, 'marks.formatVersion');
+  const formatVersion = checkVersion(obj.formatVersion, 'marks.formatVersion');
   if (!Array.isArray(obj.marks) || obj.marks.length === 0) fail('marks.marks', 'expected marks');
   const ids = new Set<string>();
   const marks = obj.marks.map((raw, i) => {
-    if (typeof raw !== 'object' || raw === null) fail(`marks.marks[${i}]`, 'expected an object');
+    const path = `marks.marks[${i}]`;
+    if (typeof raw !== 'object' || raw === null) fail(path, 'expected an object');
     const m = raw as Record<string, unknown>;
-    if (typeof m.id !== 'string' || !m.id) fail(`marks.marks[${i}].id`, 'expected an id');
-    if (ids.has(m.id)) fail(`marks.marks[${i}].id`, `duplicate mark id "${m.id}"`);
+    if (typeof m.id !== 'string' || !m.id) fail(`${path}.id`, 'expected an id');
+    if (ids.has(m.id)) fail(`${path}.id`, `duplicate mark id "${m.id}"`);
     ids.add(m.id);
     return {
       id: m.id,
-      ...(typeof m.name === 'string' ? { name: m.name } : {}),
-      ...(typeof m.shape === 'string' ? { shape: m.shape } : {}),
-      ...(typeof m.color === 'string' ? { color: m.color } : {}),
-      position: checkPosition(m.position, `marks.marks[${i}].position`),
+      ...optionalString(m, 'name'),
+      ...optionalString(m, 'shape'),
+      ...optionalString(m, 'color'),
+      ...(m.position != null ? { position: checkPosition(m.position, `${path}.position`) } : {}),
+      ...optionalString(m, 'placement'),
     };
   });
   return {
-    formatVersion: obj.formatVersion as number,
-    ...(typeof obj.club === 'string' ? { club: obj.club } : {}),
+    formatVersion,
+    ...optionalString(obj, 'club'),
+    ...optionalString(obj, 'name'),
+    ...optionalString(obj, 'source'),
     marks,
   };
 }
@@ -59,55 +68,41 @@ export function parseMarksFile(data: unknown): MarksFile {
 export function parseCourseCardFile(data: unknown): CourseCardFile {
   if (typeof data !== 'object' || data === null) fail('card', 'expected an object');
   const obj = data as Record<string, unknown>;
-  checkVersion(obj.formatVersion, 'card.formatVersion');
+  const formatVersion = checkVersion(obj.formatVersion, 'card.formatVersion');
   if (!Array.isArray(obj.courses) || obj.courses.length === 0) fail('card.courses', 'expected courses');
-
-  let infrastructure: CourseCardFile['infrastructure'];
-  if (obj.infrastructure != null) {
-    if (typeof obj.infrastructure !== 'object') fail('card.infrastructure', 'expected an object');
-    const inf = obj.infrastructure as Record<string, unknown>;
-    infrastructure = {
-      ...(inf.start != null ? { start: checkPosition(inf.start, 'card.infrastructure.start') } : {}),
-      ...(inf.finish != null ? { finish: checkPosition(inf.finish, 'card.infrastructure.finish') } : {}),
-      ...(typeof inf.firstUpwindDistanceNm === 'number' && inf.firstUpwindDistanceNm > 0
-        ? { firstUpwindDistanceNm: inf.firstUpwindDistanceNm }
-        : {}),
-    };
-  }
 
   const ids = new Set<string>();
   const courses = obj.courses.map((raw, i) => {
-    if (typeof raw !== 'object' || raw === null) fail(`card.courses[${i}]`, 'expected an object');
+    const path = `card.courses[${i}]`;
+    if (typeof raw !== 'object' || raw === null) fail(path, 'expected an object');
     const c = raw as Record<string, unknown>;
-    if (typeof c.id !== 'string' || !c.id) fail(`card.courses[${i}].id`, 'expected an id');
-    if (ids.has(c.id)) fail(`card.courses[${i}].id`, `duplicate course id "${c.id}"`);
+    if (typeof c.id !== 'string' || !c.id) fail(`${path}.id`, 'expected an id');
+    if (ids.has(c.id)) fail(`${path}.id`, `duplicate course id "${c.id}"`);
     ids.add(c.id);
-    if (!Array.isArray(c.marks) || c.marks.length === 0) fail(`card.courses[${i}].marks`, 'expected marks');
+    if (!Array.isArray(c.marks) || c.marks.length === 0) fail(`${path}.marks`, 'expected marks');
     const marks = c.marks.map((rawMark, j) => {
-      if (typeof rawMark !== 'object' || rawMark === null) fail(`card.courses[${i}].marks[${j}]`, 'expected an object');
+      const markPath = `${path}.marks[${j}]`;
+      if (typeof rawMark !== 'object' || rawMark === null) fail(markPath, 'expected an object');
       const cm = rawMark as Record<string, unknown>;
-      if (typeof cm.mark !== 'string' || !cm.mark) fail(`card.courses[${i}].marks[${j}].mark`, 'expected a mark id');
-      if (cm.rounding != null && cm.rounding !== 'port' && cm.rounding !== 'starboard') {
-        fail(`card.courses[${i}].marks[${j}].rounding`, 'expected "port" or "starboard"');
+      if (typeof cm.mark !== 'string' || !cm.mark) fail(`${markPath}.mark`, 'expected a mark id');
+      if (cm.side != null && cm.side !== 'port' && cm.side !== 'starboard') {
+        fail(`${markPath}.side`, 'expected "port" or "starboard"');
       }
       return {
         mark: cm.mark,
-        ...(cm.rounding != null ? { rounding: cm.rounding as 'port' | 'starboard' } : {}),
+        ...(cm.side != null ? { side: cm.side as Side } : {}),
         ...(cm.passing === true ? { passing: true } : {}),
       };
     });
-    const wind = c.windDirectionDeg;
-    if (wind != null && (typeof wind !== 'number' || wind < 0 || wind > 360)) {
-      fail(`card.courses[${i}].windDirectionDeg`, 'expected degrees 0–360');
-    }
-    return { id: c.id, ...(wind != null ? { windDirectionDeg: wind as number } : {}), marks };
+    return { id: c.id, marks };
   });
 
   return {
-    formatVersion: obj.formatVersion as number,
-    ...(typeof obj.club === 'string' ? { club: obj.club } : {}),
-    ...(typeof obj.name === 'string' ? { name: obj.name } : {}),
-    ...(infrastructure ? { infrastructure } : {}),
+    formatVersion,
+    ...optionalString(obj, 'club'),
+    ...optionalString(obj, 'name'),
+    ...optionalString(obj, 'source'),
+    ...optionalString(obj, 'marks'),
     courses,
   };
 }

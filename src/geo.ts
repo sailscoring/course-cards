@@ -1,7 +1,7 @@
 /**
- * Great-circle geometry over the WGS84 sphere. The Earth radius in nautical
- * miles (3440.065) matches the value the HYC leg records were computed with,
- * so encoded cards reproduce those records exactly.
+ * Great-circle geometry on a sphere of the mean Earth radius (6371 km,
+ * 3440.065 NM) — the usual choice for club-course distances, where the
+ * difference from an ellipsoid is metres on legs of a mile or two.
  */
 
 import type { Position } from './types';

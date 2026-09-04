@@ -1,63 +1,40 @@
 /**
- * From a card + marks + the race-day geometry to the legs actually sailed —
- * and from there to ORC constructed-course legs.
+ * From a card, its marks, and where the race actually was, to the legs
+ * sailed: each one a distance and a true bearing.
  */
 
 import { bearingDeg, distanceNm } from './geo';
-import type {
-  Course,
-  CourseCardFile,
-  CourseLeg,
-  MarksFile,
-  OrcLeg,
-  Position,
-  RaceGeometry,
-} from './types';
+import type { CourseCardFile, CourseLeg, MarksFile, RacePositions, Waypoint } from './types';
 
 export class CourseError extends Error {}
 
-interface Waypoint {
-  label: string;
-  position: Position;
-}
-
-function markWaypoints(course: Course, marks: MarksFile): Waypoint[] {
-  const byId = new Map(marks.marks.map((m) => [m.id, m]));
-  return course.marks.map((cm) => {
-    const mark = byId.get(cm.mark);
-    if (!mark) throw new CourseError(`course ${course.id}: unknown mark "${cm.mark}"`);
-    return { label: mark.name ? `${mark.name} (${mark.id})` : mark.id, position: mark.position };
-  });
-}
-
 /**
- * Resolve a race's legs: start → (laid windward mark, when given) → the
- * course's fixed marks in order → finish. Start and finish fall back to the
- * card's nominal infrastructure when the race-day positions weren't
- * recorded; without either, that end is simply omitted and the legs run
- * between what is known.
+ * The legs of a course: start line → each of the course's marks in order.
+ * Positions come from the marks file, or from `race.marks` for marks laid on
+ * the day (a race-day position also overrides a fixed one). A mark with no
+ * position from either source is an error naming it, so the caller knows
+ * what to ask the race officer for.
  */
-export function resolveRaceLegs(
+export function courseLegs(
   card: CourseCardFile,
   marks: MarksFile,
   courseId: string,
-  raceDay: RaceGeometry = {},
+  race: RacePositions,
 ): CourseLeg[] {
   const course = card.courses.find((c) => c.id === courseId);
   if (!course) throw new CourseError(`no course "${courseId}" on the card`);
+  const byId = new Map(marks.marks.map((m) => [m.id, m]));
 
-  const waypoints: Waypoint[] = [];
-  const start = raceDay.start ?? card.infrastructure?.start;
-  const finish = raceDay.finish ?? card.infrastructure?.finish;
-  if (start) waypoints.push({ label: 'Start', position: start });
-  if (raceDay.windwardMark) {
-    waypoints.push({ label: 'Windward mark', position: raceDay.windwardMark });
-  }
-  waypoints.push(...markWaypoints(course, marks));
-  if (finish) waypoints.push({ label: 'Finish', position: finish });
-
-  if (waypoints.length < 2) {
-    throw new CourseError(`course "${courseId}": not enough positions to form a leg`);
+  const waypoints: Waypoint[] = [{ label: 'Start', position: race.start }];
+  for (const { mark: id } of course.marks) {
+    const mark = byId.get(id);
+    if (!mark) throw new CourseError(`course ${course.id}: unknown mark "${id}"`);
+    const position = race.marks?.[id] ?? mark.position;
+    if (!position) {
+      const where = mark.placement ? ` (${mark.placement})` : '';
+      throw new CourseError(`course ${course.id}: no position for mark "${id}"${where}`);
+    }
+    waypoints.push({ mark: id, label: mark.name ? `${mark.name} (${id})` : id, position });
   }
 
   const legs: CourseLeg[] = [];
@@ -65,10 +42,8 @@ export function resolveRaceLegs(
     const from = waypoints[i]!;
     const to = waypoints[i + 1]!;
     legs.push({
-      fromLabel: from.label,
-      toLabel: to.label,
-      from: from.position,
-      to: to.position,
+      from,
+      to,
       distanceNm: distanceNm(from.position, to.position),
       bearingDeg: bearingDeg(from.position, to.position),
     });
@@ -78,17 +53,4 @@ export function resolveRaceLegs(
 
 export function totalDistanceNm(legs: CourseLeg[]): number {
   return legs.reduce((sum, leg) => sum + leg.distanceNm, 0);
-}
-
-/**
- * The legs in ORC constructed-course terms (rule 402.5): distance, bearing,
- * and the wind direction — one value for the race, refined per leg by the
- * caller if the wind shifted.
- */
-export function toOrcLegs(legs: CourseLeg[], windDirectionDeg: number): OrcLeg[] {
-  return legs.map((leg) => ({
-    distanceNm: leg.distanceNm,
-    bearingDeg: leg.bearingDeg,
-    windDirectionDeg,
-  }));
 }

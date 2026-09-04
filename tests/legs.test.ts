@@ -4,90 +4,81 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import {
+  CourseError,
+  courseLegs,
+  destination,
   parseCourseCardFile,
   parseMarksFile,
-  resolveRaceLegs,
-  toOrcLegs,
   totalDistanceNm,
-  type CourseCardFile,
 } from '../src/index';
 
 function load(rel: string): unknown {
-  return JSON.parse(readFileSync(join(__dirname, '..', rel), 'utf-8'));
+  return JSON.parse(readFileSync(join(__dirname, '..', 'data', 'hyc', 'al-2025', rel), 'utf-8'));
 }
 
-const bmMarks = parseMarksFile(load('data/hyc-bm/marks.json'));
-const alMarks = parseMarksFile(load('data/hyc-al/marks.json'));
-const alCard = parseCourseCardFile(load('data/hyc-al/card.json'));
+const marks = parseMarksFile(load('marks.json'));
+const inshore = parseCourseCardFile(load('inshore.json'));
+const offshore = parseCourseCardFile(load('offshore.json'));
 
-describe('the Brass Monkeys reference record (13 Dec 2025, course 10)', () => {
-  // The hand-computed leg record from HYC's winter series — the course as
-  // actually sailed, start and finish from the committee boat's positions.
-  // The expected distances and bearings are that record's, verbatim.
-  const card: CourseCardFile = {
-    formatVersion: 1,
-    courses: [{ id: '10', marks: ['I', 'D', 'H', 'I', 'D', 'H', 'I', 'H', 'I'].map((mark) => ({ mark })) }],
-  };
-  const raceDay = {
-    start: { lat: 53 + 24.302 / 60, lng: -(6 + 4.15 / 60) },
-    finish: { lat: 53 + 24.203 / 60, lng: -(6 + 4.247 / 60) },
-  };
+// A plausible race day: committee boat off the harbour, Zephyr laid 0.6 NM
+// upwind on 190°, finish between Island and the Sound as the sheet says.
+const start = { lat: 53.4055, lng: -6.0675 };
+const race = {
+  start,
+  marks: {
+    Z: destination(start, 190, 0.6 * 1852),
+    F: { lat: 53.4085, lng: -6.0705 },
+  },
+};
 
-  it('reproduces every leg distance and bearing', () => {
-    const legs = resolveRaceLegs(card, bmMarks, '10', raceDay);
-    const expected: Array<[number, number]> = [
-      [0.423, 340.2],
-      [0.323, 84.7],
-      [1.040, 340.6],
-      [1.011, 178.6],
-      [0.323, 84.7],
-      [1.040, 340.6],
-      [1.011, 178.6],
-      [1.011, 358.6],
-      [1.011, 178.6],
-      [0.505, 170.3],
-    ];
-    expect(legs).toHaveLength(expected.length);
-    legs.forEach((leg, i) => {
-      const [dist, brg] = expected[i]!;
-      expect(leg.distanceNm, `leg ${i + 1} distance`).toBeCloseTo(dist, 3);
-      expect(leg.bearingDeg, `leg ${i + 1} bearing`).toBeCloseTo(brg, 1);
-    });
-    expect(totalDistanceNm(legs)).toBeCloseTo(7.698, 3);
-    expect(legs[0]!.fromLabel).toBe('Start');
-    expect(legs[0]!.toLabel).toBe('Island (I)');
-    expect(legs[legs.length - 1]!.toLabel).toBe('Finish');
+describe('courseLegs', () => {
+  it('walks inshore course 001: start → Z → P → W → S → F', () => {
+    const legs = courseLegs(inshore, marks, '001', race);
+    expect(legs.map((l) => l.to.mark)).toEqual(['Z', 'P', 'W', 'S', 'F']);
+    expect(legs[0]!.from).toEqual({ label: 'Start', position: start });
+    expect(legs[1]!.from.label).toBe('Zephyr (Z)');
+    expect(legs[0]!.distanceNm).toBeCloseTo(0.6, 3);
+    expect(legs[0]!.bearingDeg).toBeCloseTo(190, 1);
+    for (const leg of legs) {
+      expect(leg.distanceNm).toBeGreaterThan(0);
+      expect(leg.bearingDeg).toBeGreaterThanOrEqual(0);
+      expect(leg.bearingDeg).toBeLessThan(360);
+    }
+    expect(totalDistanceNm(legs)).toBeCloseTo(legs.reduce((s, l) => s + l.distanceNm, 0), 12);
   });
 
-  it('converts to ORC constructed-course legs with the race wind', () => {
-    const legs = toOrcLegs(resolveRaceLegs(card, bmMarks, '10', raceDay), 340);
-    expect(legs).toHaveLength(10);
-    expect(legs[0]).toEqual({
-      distanceNm: expect.closeTo(0.423, 3),
-      bearingDeg: expect.closeTo(340.2, 1),
-      windDirectionDeg: 340,
-    });
+  it('Portmarnock to West is the short leg south-south-west it is on the chart', () => {
+    // P 53°25.63' N 6°05.80' W → W 53°24.96' N 6°06.07' W: 0.67' south and
+    // 0.27' × cos(53.4°) ≈ 0.16' west, so about 0.69 NM on 193.5°.
+    const legs = courseLegs(inshore, marks, '001', race);
+    const pw = legs.find((l) => l.from.mark === 'P' && l.to.mark === 'W')!;
+    expect(pw.distanceNm).toBeCloseTo(0.69, 2);
+    expect(pw.bearingDeg).toBeCloseTo(193.5, 0);
   });
-});
 
-describe('the Autumn League card', () => {
-  it('every course resolves against the card infrastructure', () => {
-    for (const course of alCard.courses) {
-      const legs = resolveRaceLegs(alCard, alMarks, course.id);
-      expect(legs.length).toBeGreaterThanOrEqual(course.marks.length + 1);
-      expect(legs[0]!.fromLabel).toBe('Start');
-      expect(legs[legs.length - 1]!.toLabel).toBe('Finish');
-      expect(totalDistanceNm(legs)).toBeGreaterThan(1);
+  it('resolves every course on both cards once Z and F are placed', () => {
+    for (const card of [inshore, offshore]) {
+      for (const course of card.courses) {
+        const legs = courseLegs(card, marks, course.id, race);
+        expect(legs).toHaveLength(course.marks.length);
+        expect(legs[legs.length - 1]!.to.mark).toBe('F');
+      }
     }
   });
 
-  it('a laid windward mark becomes the first leg', () => {
-    const windward = { lat: 53.4255, lng: -6.089 };
-    const legs = resolveRaceLegs(alCard, alMarks, '001', { windwardMark: windward });
-    expect(legs[0]!.toLabel).toBe('Windward mark');
-    expect(legs[1]!.fromLabel).toBe('Windward mark');
-    // Race-day positions extend, not replace, the card's fixed marks.
-    const plain = resolveRaceLegs(alCard, alMarks, '001');
-    expect(legs).toHaveLength(plain.length + 1);
+  it('a race-day position overrides a fixed mark', () => {
+    const moved = { lat: 53.41, lng: -6.09 };
+    const legs = courseLegs(inshore, marks, '001', { ...race, marks: { ...race.marks, P: moved } });
+    expect(legs[1]!.to.position).toEqual(moved);
+  });
+
+  it('names the mark it cannot place', () => {
+    expect(() => courseLegs(inshore, marks, '001', { start })).toThrow(CourseError);
+    expect(() => courseLegs(inshore, marks, '001', { start })).toThrow(
+      'course 001: no position for mark "Z" (Upwind of Start Line)',
+    );
+    expect(() => courseLegs(inshore, marks, '999', race)).toThrow('no course "999"');
+    const card = { formatVersion: 1, courses: [{ id: 'x', marks: [{ mark: 'Y' }] }] };
+    expect(() => courseLegs(card, marks, 'x', race)).toThrow('unknown mark "Y"');
   });
 });

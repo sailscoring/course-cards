@@ -1,0 +1,49 @@
+{
+  "club": "Howth Yacht Club",
+  "event": "Autumn League 2025",
+  "artifacts": [
+    {
+      "output": "marks.json",
+      "tool": "extract_marks",
+      "source": "source/AL_Course_Card_Technical_Sheet.pdf",
+      "url": "https://hyc.ie/system/resources/2331/original/AL_Course_Card_Technical_Sheet.pdf",
+      "meta": {
+        "club": "HYC",
+        "name": "Autumn League 2025 racing marks",
+        "source": "https://hyc.ie/system/resources/2331/original/AL_Course_Card_Technical_Sheet.pdf"
+      }
+    },
+    {
+      "output": "offshore.json",
+      "tool": "extract_card",
+      "source": "source/AL_Offshore_Course_Card.pdf",
+      "url": "https://hyc.ie/system/resources/2329/original/AL_Offshore_Course_Card.pdf",
+      "templates": "hyc-al-2025-offshore",
+      "meta": {
+        "club": "HYC",
+        "name": "Autumn League 2025 course card, offshore committee boat starts",
+        "source": "https://hyc.ie/system/resources/2329/original/AL_Offshore_Course_Card.pdf",
+        "marks": "marks.json"
+      }
+    },
+    {
+      "output": "inshore.json",
+      "tool": "extract_card",
+      "source": "source/AL_Course_Card_Inshore_01.pdf",
+      "url": "https://hyc.ie/system/resources/2330/original/AL_Course_Card_Inshore_01.pdf",
+      "templates": "hyc-al-2025-inshore",
+      "meta": {
+        "club": "HYC",
+        "name": "Autumn League 2025 course card, inshore committee boat starts",
+        "source": "https://hyc.ie/system/resources/2330/original/AL_Course_Card_Inshore_01.pdf",
+        "marks": "marks.json"
+      }
+    },
+    {
+      "output": "bearings-magnetic.json",
+      "tool": "extract_bearings",
+      "source": "source/AL_Course_Card_Technical_Sheet.pdf",
+      "url": "https://hyc.ie/system/resources/2331/original/AL_Course_Card_Technical_Sheet.pdf"
+    }
+  ]
+}

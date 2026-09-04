@@ -11,7 +11,7 @@ export interface Position {
   lng: number;
 }
 
-/** A fixed racing mark as a club maintains it. */
+/** A racing mark as the club lists it. */
 export interface Mark {
   /** The card's label for the mark — usually a single letter. */
   id: string;
@@ -19,83 +19,81 @@ export interface Mark {
   /** Physical description, free text by convention ('conical', 'inflatable'…). */
   shape?: string;
   color?: string;
-  position: Position;
+  /** Where the mark is, for marks with a fixed position. Absent for marks laid
+   *  per race (a windward mark, a finish mark), whose position is a race-day
+   *  fact supplied by whoever computes the legs. */
+  position?: Position;
+  /** Where a per-race mark is laid, in the club's words: "Upwind of Start
+   *  Line", "Between Island Mark and Howth Sound". */
+  placement?: string;
 }
 
 export interface MarksFile {
   formatVersion: number;
   /** Who maintains these marks (club or class), free text. */
   club?: string;
+  name?: string;
+  /** Where the data came from — the club's published document. */
+  source?: string;
   marks: Mark[];
 }
 
+/** Which side a mark is left on. */
+export type Side = 'port' | 'starboard';
+
 /** One entry of a course's mark sequence. */
 export interface CourseMark {
-  /** A mark id from the accompanying marks file. */
+  /** A mark id from the marks file. */
   mark: string;
-  /** Which way the mark is left. Cards conventionally colour-code this;
-   *  absent means the card's default (port for most cards). */
-  rounding?: 'port' | 'starboard';
-  /** A passing (not rounding) mark — boxed on HYC's card. */
+  /** The side the mark is rounded, or passed, on. Absent when the card
+   *  doesn't say. */
+  side?: Side;
+  /** A passing mark, not a rounding mark — boxed on HYC's cards. */
   passing?: boolean;
 }
 
-/** One course on the card: an id and the fixed-mark sequence. The windward
- *  mark is deliberately not in the sequence — on cards like HYC's it is laid
- *  per race and its position is a race-day fact (see RaceGeometry). */
+/** One course on the card: the marks in sailing order, from the start line.
+ *  Marks laid per race (a windward mark, a finish) are in the sequence like
+ *  any other; only their positions are missing until race day. */
 export interface Course {
+  /** The number or name the race committee displays; any string. */
   id: string;
-  /** The wind direction the course is designed for. On HYC's card this is
-   *  encoded in the course number (first two digits × 10); stored explicitly
-   *  so the encoding convention stays the club's, not the format's. */
-  windDirectionDeg?: number;
   marks: CourseMark[];
-}
-
-/** The card's standing race infrastructure: nominal start/finish positions
- *  and the nominal first beat, used when the race-day facts aren't recorded. */
-export interface CardInfrastructure {
-  start?: Position;
-  finish?: Position;
-  /** Nominal length of the first beat to a laid windward mark (NM). */
-  firstUpwindDistanceNm?: number;
 }
 
 export interface CourseCardFile {
   formatVersion: number;
   club?: string;
   name?: string;
-  infrastructure?: CardInfrastructure;
+  source?: string;
+  /** The marks file this card's mark ids refer to, by name. */
+  marks?: string;
   courses: Course[];
 }
 
 /**
- * The race-day facts a card cannot know: where the start and finish actually
- * were, and — for clubs that lay their windward mark — where it was laid.
- * With these plus a course id, every leg of the race is geometry.
+ * What a card cannot know: where the race actually was. Every course starts
+ * at the start line; marks the marks file lists without a position must be
+ * given one here, and a fixed mark may be overridden if it was moved.
  */
-export interface RaceGeometry {
-  start?: Position;
-  finish?: Position;
-  /** The laid windward mark's position; boats sail start → windward mark →
-   *  the course's first fixed mark. Absent for cards whose first mark is
-   *  fixed (DBSC-style), or when it wasn't recorded. */
-  windwardMark?: Position;
+export interface RacePositions {
+  start: Position;
+  marks?: Record<string, Position>;
 }
 
-/** One computed leg: from → to as rhumb-line geometry. */
+/** One end of a leg: the start line or a mark, and where it was. */
+export interface Waypoint {
+  /** Mark id; absent for the start line. */
+  mark?: string;
+  label: string;
+  position: Position;
+}
+
+/** One leg of a course: the great-circle distance and initial true bearing
+ *  from one waypoint to the next. */
 export interface CourseLeg {
-  fromLabel: string;
-  toLabel: string;
-  from: Position;
-  to: Position;
+  from: Waypoint;
+  to: Waypoint;
   distanceNm: number;
   bearingDeg: number;
-}
-
-/** A leg in ORC constructed-course terms (rule 402.5). */
-export interface OrcLeg {
-  distanceNm: number;
-  bearingDeg: number;
-  windDirectionDeg: number;
 }

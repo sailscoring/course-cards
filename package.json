@@ -1,14 +1,16 @@
 {
   "name": "@sailscoring/course-cards",
   "version": "0.1.0",
-  "description": "Sailing marks, course cards, and leg geometry — a versioned data format and library",
+  "description": "Sailing marks, course cards, and leg geometry: a versioned data format and a dependency-free library",
   "license": "MIT",
   "repository": "github:sailscoring/course-cards",
   "main": "src/index.ts",
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "data": "python3 tools/regenerate.py",
+    "data:check": "python3 tools/regenerate.py --check"
   },
   "devDependencies": {
     "@types/node": "^26.2.0",
