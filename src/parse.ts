@@ -4,7 +4,7 @@
  * and consumers get plain typed objects.
  */
 
-import { FORMAT_VERSION, type CourseCardFile, type MarksFile, type Note, type Position, type Side } from './types';
+import { FORMAT_VERSION, type CourseCardFile, type MarksFile, type Note, type Position, type Side } from './types.js';
 
 export class FormatError extends Error {}
 

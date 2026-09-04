@@ -1,3 +1,6 @@
 node_modules/
 dist/
+site/
 __pycache__/
+.vercel/
+*.tgz

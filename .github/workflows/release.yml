@@ -1,0 +1,42 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test
+
+      - name: Check the tag matches package.json
+        run: |
+          test "v$(node -p "require('./package.json').version")" = "${GITHUB_REF_NAME}" \
+            || { echo "package.json version does not match tag ${GITHUB_REF_NAME}"; exit 1; }
+
+      - name: Build the site (for the zip) and pack the library
+        run: |
+          pnpm site
+          pnpm pack
+          cp "site/${GITHUB_REF_NAME}/course-cards-${GITHUB_REF_NAME}.zip" .
+          cp site/index.json catalogue.json
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            course-cards-${{ github.ref_name }}.zip
+            catalogue.json
+            sailscoring-course-cards-*.tgz
+          generate_release_notes: true

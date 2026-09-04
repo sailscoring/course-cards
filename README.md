@@ -27,6 +27,7 @@ laid per race went. Those are supplied to the library per race.
 ## The library
 
 ```ts
+// npm install https://github.com/sailscoring/course-cards/releases/download/v0.1.0/sailscoring-course-cards-0.1.0.tgz
 import { courseLegs, destination, parseCourseCardFile, parseMarksFile } from '@sailscoring/course-cards';
 
 const marks = parseMarksFile(JSON.parse(marksJson));
@@ -60,7 +61,9 @@ from them** by the tools in `tools/` — a text-layer parser for the
 technical sheet and a small purpose-built OCR for the two cards, which are
 pictures. The same pipeline renders each card as a self-contained HTML
 page: the course table as printed, the marks over an OpenStreetMap +
-OpenSeaMap chart, bearings and distances between marks, and the notes. See the
+OpenSeaMap chart, bearings and distances between marks, and the notes.
+Published: [HYC offshore](https://courses.sailscoring.ie/hyc/al-2025/offshore.html),
+[HYC inshore](https://courses.sailscoring.ie/hyc/al-2025/inshore.html). See the
 [data README](data/hyc/al-2025/README.md) for how, and how it was checked.
 
 ```sh
@@ -70,6 +73,35 @@ pnpm data:check  # verify the committed files are what a fresh run produces
 
 The extraction tools need Python 3, Pillow, and poppler's `pdftotext` /
 `pdftoppm`; rendering needs only Node.
+
+## Releases and the site
+
+Releases are tagged `vMAJOR.MINOR.PATCH`; the tag is also the version of
+the artifacts, and each GitHub Release attaches:
+
+- **`course-cards-vX.Y.Z.zip`** — every data set: marks and cards as JSON,
+  the rendered HTML pages, the chart image, the clubs' source PDFs and the
+  provenance manifests, plus the format spec.
+- **`catalogue.json`** — what the release contains, with the URL of every
+  artifact on the site.
+- **`sailscoring-course-cards-X.Y.Z.tgz`** — the library, packed for
+  `npm install <url>`.
+
+[courses.sailscoring.ie](https://courses.sailscoring.ie) lists the available
+course cards and serves every artifact at its own URL — unversioned for the
+current release, and under `/vX.Y.Z/` for the release it belongs to:
+
+```
+https://courses.sailscoring.ie/hyc/al-2025/offshore.json
+https://courses.sailscoring.ie/v0.1.0/hyc/al-2025/offshore.json
+https://courses.sailscoring.ie/v0.1.0/course-cards-v0.1.0.zip
+https://courses.sailscoring.ie/index.json
+```
+
+A deploy carries one release; earlier releases stay downloadable from
+GitHub. The site is built by `pnpm site` into `site/` and deployed by
+Vercel on every push to `main`. Cutting a release is bumping the version in
+`package.json`, committing, and pushing an annotated `vX.Y.Z` tag.
 
 ## Status
 

@@ -3,18 +3,38 @@
   "version": "0.1.0",
   "description": "Sailing marks, course cards, and leg geometry: a versioned data format and a dependency-free library",
   "license": "MIT",
+  "homepage": "https://courses.sailscoring.ie",
   "repository": "github:sailscoring/course-cards",
-  "main": "src/index.ts",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "docs/format.md"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
     "data": "python3 tools/regenerate.py && tsx tools/render-cards.ts",
     "data:check": "python3 tools/regenerate.py --check && tsx tools/render-cards.ts --check",
-    "render": "tsx tools/render-cards.ts"
+    "render": "tsx tools/render-cards.ts",
+    "build": "tsc -p tsconfig.build.json",
+    "prepack": "pnpm build",
+    "site": "tsx tools/build-site.ts"
   },
   "devDependencies": {
     "@types/node": "^26.2.0",
+    "fflate": "^0.8.3",
     "tsx": "^4.23.13",
     "typescript": "^5.9.0",
     "vitest": "^4.1.0"

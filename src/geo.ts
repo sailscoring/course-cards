@@ -4,7 +4,7 @@
  * difference from an ellipsoid is metres on legs of a mile or two.
  */
 
-import type { Position } from './types';
+import type { Position } from './types.js';
 
 const EARTH_RADIUS_NM = 3440.065;
 const EARTH_RADIUS_M = 6371000;

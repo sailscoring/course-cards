@@ -3,8 +3,8 @@
  * sailed: each one a distance and a true bearing.
  */
 
-import { bearingDeg, distanceNm } from './geo';
-import type { CourseCardFile, CourseLeg, MarksFile, RacePositions, Waypoint } from './types';
+import { bearingDeg, distanceNm } from './geo.js';
+import type { CourseCardFile, CourseLeg, MarksFile, RacePositions, Waypoint } from './types.js';
 
 export class CourseError extends Error {}
 
