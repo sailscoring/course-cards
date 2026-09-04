@@ -3,4 +3,5 @@ dist/
 site/
 __pycache__/
 .vercel/
+.env*
 *.tgz
