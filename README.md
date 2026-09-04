@@ -50,23 +50,29 @@ the wind was doing on each leg is the caller's knowledge, not the
 library's. The geometry primitives (`distanceNm`, `bearingDeg`,
 `destination`) are exported for the arithmetic around a race.
 
+`renderCardHtml(card, marks)` produces the card as a self-contained HTML
+page — the course table as printed, the marks with a map, bearings and
+distances between every pair of marks, and the club's notes — with no
+scripts or external resources, so it can be published as a file.
+
 ## Data
 
 `data/hyc/al-2025/` — Howth Yacht Club's Autumn League 2025: the marks
-from the course card technical sheet, and the offshore and inshore
-committee-boat-start course cards (180 courses each). The club's PDFs are
-kept alongside, and the JSON is **generated from them** by the tools in
-`tools/` — a text-layer parser for the technical sheet and a small
-purpose-built OCR for the two cards, which are pictures. See the
-[data README](data/hyc/al-2025/README.md) for how, and how it was
-checked.
+and notes from the course card technical sheet, and the offshore and
+inshore committee-boat-start course cards (180 courses each), each also
+rendered as an HTML page. The club's PDFs are kept alongside, and the JSON
+is **generated from them** by the tools in `tools/` — a text-layer parser
+for the technical sheet and a small purpose-built OCR for the two cards,
+which are pictures. See the [data README](data/hyc/al-2025/README.md) for
+how, and how it was checked.
 
 ```sh
-python3 tools/regenerate.py          # rewrite the JSON from the PDFs
-python3 tools/regenerate.py --check  # verify the committed JSON is what the PDFs say
+pnpm data        # rewrite the JSON from the PDFs, then the HTML from the JSON
+pnpm data:check  # verify the committed files are what a fresh run produces
 ```
 
-The tools need Python 3, Pillow, and poppler's `pdftotext` / `pdftoppm`.
+The extraction tools need Python 3, Pillow, and poppler's `pdftotext` /
+`pdftoppm`; rendering needs only Node.
 
 ## Status
 

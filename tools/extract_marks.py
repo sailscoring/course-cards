@@ -10,6 +10,9 @@ baseline), so the JSON is a faithful, repeatable reading of the PDF.
 Marks whose position column holds prose rather than coordinates ("Upwind of
 Start Line") are emitted with a `placement` note and no `position`: they are
 laid per race and the caller of the leg library supplies where.
+
+The sheet's explanatory text — "Navigation Marks and Obstructions" down the
+left, "Course Selection" under the marks table — is carried as `notes`.
 """
 
 import argparse
@@ -107,16 +110,59 @@ def parse_table(ws):
     return marks
 
 
+def layout_text(pdf, x, y, w, h):
+    """pdftotext -layout over one region of the page (points)."""
+    return subprocess.run(
+        ['pdftotext', '-layout', '-x', str(x), '-y', str(y), '-W', str(w), '-H', str(h), pdf, '-'],
+        check=True, capture_output=True, text=True,
+    ).stdout
+
+
+def paragraphs(lines):
+    """Rejoin wrapped lines: a paragraph starts after a blank line or on a line
+    opening with a capital or a digit; a line opening in lowercase continues."""
+    out = []
+    for raw in lines:
+        line = ' '.join(raw.split())
+        if not line:
+            out.append(None)
+        elif out and out[-1] is not None and line[0].islower():
+            out[-1] += ' ' + line
+        else:
+            out.append(line)
+    return [p for p in out if p]
+
+
+def parse_notes(pdf, ws):
+    notes = []
+    # Left column: heading then prose, from the top of the page to the bearings table.
+    bearings_y = min(w['cy'] for w in ws if w['text'] == 'Relative')
+    left = layout_text(pdf, 0, 0, 300, int(bearings_y) - 4).split('\n')
+    paras = paragraphs(left)
+    if paras:
+        notes.append({'title': paras[0].title().replace(' And ', ' and '), 'text': '\n'.join(paras[1:])})
+    # Right column: between the "Course Selection" heading and the bearings
+    # table's own "Racing Marks" title.
+    heading = next(w for w in ws if w['text'] == 'Selection')
+    table_title_y = min(w['cy'] for w in ws if w['text'] == 'Racing' and w['cy'] > heading['cy'])
+    right = layout_text(pdf, 300, int(heading['y1']) + 1, 300, int(table_title_y) - int(heading['y1']) - 8).split('\n')
+    paras = paragraphs(right)
+    if paras:
+        notes.append({'title': 'Course Selection', 'text': '\n'.join(paras)})
+    return notes
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('pdf')
     ap.add_argument('--meta', help='JSON file whose keys (club, name, source…) head the output')
     args = ap.parse_args()
     meta = json.load(open(args.meta)) if args.meta else {}
-    marks = parse_table(words(args.pdf))
+    ws = words(args.pdf)
+    marks = parse_table(ws)
     if not marks:
         sys.exit('no marks found')
-    out = {'formatVersion': 1, **meta, 'marks': marks}
+    out = {'formatVersion': 1, **meta, 'notes': parse_notes(args.pdf, ws), 'marks': marks}
     json.dump(out, sys.stdout, indent=2, ensure_ascii=False)
     sys.stdout.write('\n')
 

@@ -33,8 +33,6 @@ def extract(base, artifact, meta_path):
     source = os.path.join(base, artifact['source'])
     if tool == 'extract_marks':
         cmd = [sys.executable, os.path.join(TOOLS, 'extract_marks.py'), source, '--meta', meta_path]
-    elif tool == 'extract_bearings':
-        cmd = [sys.executable, os.path.join(TOOLS, 'extract_bearings.py'), source]
     elif tool == 'extract_card':
         cmd = [sys.executable, os.path.join(TOOLS, 'extract_card.py'), 'build', source, '--meta', meta_path,
                '--templates', os.path.join(TOOLS, 'templates', artifact['templates'])]

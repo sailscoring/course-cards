@@ -38,12 +38,6 @@
         "source": "https://hyc.ie/system/resources/2330/original/AL_Course_Card_Inshore_01.pdf",
         "marks": "marks.json"
       }
-    },
-    {
-      "output": "bearings-magnetic.json",
-      "tool": "extract_bearings",
-      "source": "source/AL_Course_Card_Technical_Sheet.pdf",
-      "url": "https://hyc.ie/system/resources/2331/original/AL_Course_Card_Technical_Sheet.pdf"
     }
   ]
 }

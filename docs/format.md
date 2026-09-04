@@ -45,6 +45,10 @@ sheet, a table of letter, name, shape, colour and position.
   (the windward mark) and Finish are such marks; a club whose windward mark
   is a fixed mark simply has a position for it.
 - `source` — the document the file was made from.
+- `notes` — the document's explanatory text, as printed, each with a
+  `title` and a `text` whose paragraphs are separated by newlines: HYC's
+  "Navigation Marks and Obstructions" and "Course Selection". A course card
+  file may carry `notes` too.
 
 ## Course card file
 

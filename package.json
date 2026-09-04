@@ -9,11 +9,13 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
-    "data": "python3 tools/regenerate.py",
-    "data:check": "python3 tools/regenerate.py --check"
+    "data": "python3 tools/regenerate.py && tsx scripts/render.ts",
+    "data:check": "python3 tools/regenerate.py --check && tsx scripts/render.ts --check",
+    "render": "tsx scripts/render.ts"
   },
   "devDependencies": {
     "@types/node": "^26.2.0",
+    "tsx": "^4.23.13",
     "typescript": "^5.9.0",
     "vitest": "^4.1.0"
   }

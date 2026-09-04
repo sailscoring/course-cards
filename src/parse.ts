@@ -4,7 +4,7 @@
  * and consumers get plain typed objects.
  */
 
-import { FORMAT_VERSION, type CourseCardFile, type MarksFile, type Position, type Side } from './types';
+import { FORMAT_VERSION, type CourseCardFile, type MarksFile, type Note, type Position, type Side } from './types';
 
 export class FormatError extends Error {}
 
@@ -34,6 +34,19 @@ function optionalString(obj: Record<string, unknown>, key: string): Record<strin
   return typeof obj[key] === 'string' ? { [key]: obj[key] } : {};
 }
 
+function optionalNotes(obj: Record<string, unknown>, path: string): { notes?: Note[] } {
+  if (obj.notes == null) return {};
+  if (!Array.isArray(obj.notes)) fail(`${path}.notes`, 'expected an array');
+  return {
+    notes: obj.notes.map((raw, i) => {
+      if (typeof raw !== 'object' || raw === null) fail(`${path}.notes[${i}]`, 'expected an object');
+      const n = raw as Record<string, unknown>;
+      if (typeof n.title !== 'string' || typeof n.text !== 'string') fail(`${path}.notes[${i}]`, 'expected title and text');
+      return { title: n.title, text: n.text };
+    }),
+  };
+}
+
 export function parseMarksFile(data: unknown): MarksFile {
   if (typeof data !== 'object' || data === null) fail('marks', 'expected an object');
   const obj = data as Record<string, unknown>;
@@ -61,6 +74,7 @@ export function parseMarksFile(data: unknown): MarksFile {
     ...optionalString(obj, 'club'),
     ...optionalString(obj, 'name'),
     ...optionalString(obj, 'source'),
+    ...optionalNotes(obj, 'marks'),
     marks,
   };
 }
@@ -103,6 +117,7 @@ export function parseCourseCardFile(data: unknown): CourseCardFile {
     ...optionalString(obj, 'name'),
     ...optionalString(obj, 'source'),
     ...optionalString(obj, 'marks'),
+    ...optionalNotes(obj, 'card'),
     courses,
   };
 }

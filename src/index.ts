@@ -6,6 +6,7 @@ export type {
   CourseMark,
   Mark,
   MarksFile,
+  Note,
   Position,
   RacePositions,
   Side,
@@ -14,3 +15,4 @@ export type {
 export { bearingDeg, destination, distanceNm } from './geo';
 export { CourseError, courseLegs, totalDistanceNm } from './legs';
 export { FormatError, parseCourseCardFile, parseMarksFile } from './parse';
+export { renderCardHtml } from './render';

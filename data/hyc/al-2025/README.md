@@ -7,12 +7,16 @@ Howth Yacht Club's Autumn League course cards, as published at hyc.ie:
 | `marks.json` | `source/AL_Course_Card_Technical_Sheet.pdf` | `tools/extract_marks.py` |
 | `offshore.json` | `source/AL_Offshore_Course_Card.pdf` | `tools/extract_card.py` |
 | `inshore.json` | `source/AL_Course_Card_Inshore_01.pdf` | `tools/extract_card.py` |
-| `bearings-magnetic.json` | `source/AL_Course_Card_Technical_Sheet.pdf` | `tools/extract_bearings.py` |
+| `offshore.html`, `inshore.html` | the JSON above | `scripts/render.ts` |
 
 `manifest.json` records each artifact's source, the URL it was fetched
-from, and the metadata that heads the output; `python3 tools/regenerate.py`
-rebuilds them all and `--check` verifies the committed files against a
-fresh extraction.
+from, and the metadata that heads the output; `pnpm data` rebuilds them all
+(extraction, then rendering) and `pnpm data:check` verifies the committed
+files against a fresh run.
+
+The HTML pages are the cards as a web page: the course table as printed,
+the marks with a map, true bearings and distances between every pair of
+marks computed from the positions, and the sheet's notes.
 
 ## How the JSON is produced
 
@@ -23,7 +27,10 @@ rejoin correctly. Positions are the sheet's degrees and decimal minutes
 converted to decimal degrees; longitudes are West, so negative. Two marks
 have prose where their coordinates would be — Zephyr, "Upwind of Start
 Line", and Finish, "Between Island Mark and Howth Sound" — and are emitted
-without a position and with that text as their `placement`.
+without a position and with that text as their `placement`. The sheet's
+two passages of explanatory text — "Navigation Marks and Obstructions" and
+"Course Selection" — are read from the page regions beside and below the
+table and carried as `notes`.
 
 **Cards.** Both cards are pictures: the offshore card's letters are vector
 outlines with no text layer, the inshore card is a 150 dpi scan (its text
@@ -38,10 +45,6 @@ letters become `side: "port"`, green `"starboard"`; a letter inside a box
 becomes `passing: true`. Courses are numbered row + column as the card's
 own instructions say (`073` is row 07, column 3).
 
-**Bearings.** The sheet's "Relative Bearings Table – Magnetic (Approx)" is
-parsed from `pdftotext -layout`. It is not part of the format; it is an
-independent published check on the marks file, used by the test suite.
-
 ## How it was checked
 
 - Every glyph on both cards matched a template with a clear margin (worst
@@ -52,13 +55,15 @@ independent published check on the marks file, used by the test suite.
   boxed marks, and all green letters were checked by eye. Structural tests
   confirm every course on both cards runs `Z … F` over marks the sheet
   lists.
-- Bearings computed from the extracted positions agree with the club's
-  magnetic bearing table to within 3° for every pair of marks once one
-  consistent offset is allowed — 6° W, the magnetic variation off Dublin
-  around 2000, so the table is old. Four marks have evidently been moved
-  since it was computed: pairs involving Cush, Island, Portmarnock or Spit
-  disagree with it by 10–25°. The positions on the technical sheet are
-  taken to be current.
+- As a one-off check, bearings computed from the extracted positions were
+  compared with the sheet's "Relative Bearings Table – Magnetic (Approx)".
+  They agree to within 3° for every pair of marks once one consistent
+  offset is allowed — 6° W, the magnetic variation off Dublin around 2000,
+  so that table is old. Four marks have evidently been moved since it was
+  computed: pairs involving Cush, Island, Portmarnock or Spit disagree with
+  it by 10–25°. The positions on the technical sheet are taken to be
+  current, and the bearings on the HTML pages are computed from them (and
+  are true, not magnetic).
 
 ## Notes on the cards
 
