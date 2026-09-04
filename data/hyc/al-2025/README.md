@@ -7,7 +7,7 @@ Howth Yacht Club's Autumn League course cards, as published at hyc.ie:
 | `marks.json` | `source/AL_Course_Card_Technical_Sheet.pdf` | `tools/extract_marks.py` |
 | `offshore.json` | `source/AL_Offshore_Course_Card.pdf` | `tools/extract_card.py` |
 | `inshore.json` | `source/AL_Course_Card_Inshore_01.pdf` | `tools/extract_card.py` |
-| `offshore.html`, `inshore.html` | the JSON above, `map/background.png` | `tools/render-cards.ts` |
+| `offshore.html`, `inshore.html`, `map/marks.svg` | the JSON above, `map/background.png` | `tools/render-cards.ts` |
 | `map/background.png`, `.json` | OpenStreetMap + OpenSeaMap tiles | `tools/fetch_map.py` |
 
 `manifest.json` records each artifact's source, the URL it was fetched

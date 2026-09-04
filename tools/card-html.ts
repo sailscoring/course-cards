@@ -218,6 +218,14 @@ function map(marks: Mark[], background?: MapBackground): string {
   return svg + '</svg>';
 }
 
+/** The map on its own, as a standalone SVG file. */
+export function renderMarksMapSvg(marks: MarksFile, background?: MapBackground): string {
+  const svg = map(marks.marks, background);
+  const size = svg.match(/viewBox="0 0 (\d+) (\d+)"/);
+  const dims = size ? ` width="${size[1]}" height="${size[2]}"` : '';
+  return '<?xml version="1.0" encoding="UTF-8"?>\n' + svg.replace('<svg ', `<svg${dims} `) + '\n';
+}
+
 function pairTable(marks: Mark[], cell: (a: Position, b: Position) => string): string {
   const fixed = marks.filter((m): m is Mark & { position: Position } => !!m.position);
   let html = '<div class="scroll"><table class="numbers"><thead><tr><th>from \\ to</th>';

@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { parseCourseCardFile, parseMarksFile } from '../src/index';
-import { formatPosition, renderCardHtml, type MapBackground } from '../tools/card-html';
+import { formatPosition, renderCardHtml, renderMarksMapSvg, type MapBackground } from '../tools/card-html';
 
 function load(rel: string): unknown {
   return JSON.parse(readFileSync(join(__dirname, '..', 'data', 'hyc', 'al-2025', rel), 'utf-8'));
@@ -76,6 +76,15 @@ describe('renderCardHtml', () => {
     const out = renderCardHtml(card, marks, { title: 'Test' });
     expect(out).toContain('<th>Course</th><th>Marks</th>');
     expect(out).toContain('<th class="row">Olympic</th>');
+  });
+});
+
+describe('renderMarksMapSvg', () => {
+  it('is a standalone SVG of the fixed marks', () => {
+    const svg = renderMarksMapSvg(marks);
+    expect(svg.startsWith('<?xml version="1.0"')).toBe(true);
+    expect(svg).toMatch(/<svg width="640" height="\d+" xmlns=/);
+    expect((svg.match(/<circle /g) ?? []).length).toBe(21);
   });
 });
 

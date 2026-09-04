@@ -74,7 +74,7 @@ interface SetEntry {
   event: string;
   marks: { file: string; count: number; source?: string };
   cards: CardEntry[];
-  chart?: { file: string; layers: string[] };
+  map?: { svg: string; background: string; layers: string[] };
 }
 
 const sets: SetEntry[] = [];
@@ -108,7 +108,9 @@ for (const manifest of manifests(join(root, 'data'))) {
       ...(marksArtifact.url ? { source: marksArtifact.url } : {}),
     },
     cards,
-    ...(m.map ? { chart: { file: `${rel}/${m.map.background}`, layers: m.map.layers } } : {}),
+    ...(m.map
+      ? { map: { svg: `${rel}/${dirname(m.map.background)}/marks.svg`, background: `${rel}/${m.map.background}`, layers: m.map.layers } }
+      : {}),
   });
 }
 
@@ -181,7 +183,7 @@ const setHtml = sets
             <a href="${esc(s.marks.file)}">JSON</a> ·
             <a href="${esc(versionDir + '/' + s.marks.file)}">JSON v${esc(version)}</a>${
               s.marks.source ? ` · <a href="${esc(s.marks.source)}">club's PDF</a>` : ''
-            }${s.chart ? ` · <a href="${esc(s.chart.file)}">chart</a>` : ''}</div>
+            }${s.map ? ` · <a href="${esc(s.map.svg)}">map</a> · <a href="${esc(s.map.background)}">chart background</a>` : ''}</div>
         </li>
       </ul>
       <p class="sub">Provenance and checks: <a href="${esc(s.path)}/README.md">${esc(s.path)}/README.md</a> · <a href="${esc(s.path)}/manifest.json">manifest</a></p>
