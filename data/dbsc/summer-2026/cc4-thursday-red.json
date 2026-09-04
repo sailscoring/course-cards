@@ -1,0 +1,3427 @@
+{
+  "formatVersion": 1,
+  "club": "DBSC",
+  "name": "Summer Series 2026 course card CC4, Thursday, Red Fleet",
+  "source": "https://dbsc.ie/wp-content/uploads/2026/04/CC4_Thursday_Red_2026_v1.pdf",
+  "marks": "marks.json",
+  "notes": [
+    {
+      "title": "Course sections",
+      "text": "A 000°, B 022°, C 045°, D 067°, E 090°, F 112°, G 135°, H 157°, J 180°, K 202°, L 225°, M 247°, N 270°, P 292°, Q 315°, R 337°"
+    },
+    {
+      "title": "Card notes",
+      "text": "W/L courses 1-5\nRTC Courses 6-8\nAll marks to be rounded to Port\nFinishing line approximately upwind of the last mark."
+    },
+    {
+      "title": "Marks, bearings and distances",
+      "text": "Mark positions may vary slightly. All figures are approximate. Warning: Some direct paths are obstructed."
+    }
+  ],
+  "courses": [
+    {
+      "id": "A1",
+      "marks": [
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "A2",
+      "marks": [
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "A3",
+      "marks": [
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "A4",
+      "marks": [
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "A5",
+      "marks": [
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "A6",
+      "marks": [
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "A7",
+      "marks": [
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "A8",
+      "marks": [
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "B1",
+      "marks": [
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "B2",
+      "marks": [
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "B3",
+      "marks": [
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "B4",
+      "marks": [
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "B5",
+      "marks": [
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "B6",
+      "marks": [
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "B7",
+      "marks": [
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "B8",
+      "marks": [
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "C1",
+      "marks": [
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "C2",
+      "marks": [
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "C3",
+      "marks": [
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "C4",
+      "marks": [
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "C5",
+      "marks": [
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "C6",
+      "marks": [
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "C7",
+      "marks": [
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "C8",
+      "marks": [
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "D1",
+      "marks": [
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "D2",
+      "marks": [
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "D3",
+      "marks": [
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "D4",
+      "marks": [
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "D5",
+      "marks": [
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "D6",
+      "marks": [
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "D7",
+      "marks": [
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "D8",
+      "marks": [
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "E1",
+      "marks": [
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "E2",
+      "marks": [
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "E3",
+      "marks": [
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "E4",
+      "marks": [
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "E5",
+      "marks": [
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "E6",
+      "marks": [
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "E7",
+      "marks": [
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "E8",
+      "marks": [
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "F1",
+      "marks": [
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "F2",
+      "marks": [
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "F3",
+      "marks": [
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "F4",
+      "marks": [
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "F5",
+      "marks": [
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "F6",
+      "marks": [
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "F7",
+      "marks": [
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "F8",
+      "marks": [
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "G1",
+      "marks": [
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "G2",
+      "marks": [
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "G3",
+      "marks": [
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "G4",
+      "marks": [
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "G5",
+      "marks": [
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "G6",
+      "marks": [
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "G7",
+      "marks": [
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "G8",
+      "marks": [
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "H1",
+      "marks": [
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "H2",
+      "marks": [
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "H3",
+      "marks": [
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "H4",
+      "marks": [
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "H5",
+      "marks": [
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "H6",
+      "marks": [
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "H7",
+      "marks": [
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "H8",
+      "marks": [
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "J1",
+      "marks": [
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "J2",
+      "marks": [
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "J3",
+      "marks": [
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "J4",
+      "marks": [
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "J5",
+      "marks": [
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "J6",
+      "marks": [
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "J7",
+      "marks": [
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "J8",
+      "marks": [
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "K1",
+      "marks": [
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "K2",
+      "marks": [
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "K3",
+      "marks": [
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "K4",
+      "marks": [
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "K5",
+      "marks": [
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "K6",
+      "marks": [
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "K7",
+      "marks": [
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "K8",
+      "marks": [
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "L1",
+      "marks": [
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "L2",
+      "marks": [
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "L3",
+      "marks": [
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "L4",
+      "marks": [
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "L5",
+      "marks": [
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "L6",
+      "marks": [
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "L7",
+      "marks": [
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "L8",
+      "marks": [
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "M1",
+      "marks": [
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "M2",
+      "marks": [
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "M3",
+      "marks": [
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "M4",
+      "marks": [
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "M5",
+      "marks": [
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "M6",
+      "marks": [
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "M7",
+      "marks": [
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "M8",
+      "marks": [
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "N1",
+      "marks": [
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "N2",
+      "marks": [
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "N3",
+      "marks": [
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "N4",
+      "marks": [
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "N5",
+      "marks": [
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "N6",
+      "marks": [
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "N7",
+      "marks": [
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "N8",
+      "marks": [
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "P1",
+      "marks": [
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "P2",
+      "marks": [
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "P3",
+      "marks": [
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "P4",
+      "marks": [
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "P5",
+      "marks": [
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "P6",
+      "marks": [
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "P7",
+      "marks": [
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "P8",
+      "marks": [
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "Q1",
+      "marks": [
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "Q2",
+      "marks": [
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "Q3",
+      "marks": [
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "Q4",
+      "marks": [
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "Q5",
+      "marks": [
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "Q6",
+      "marks": [
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "Q7",
+      "marks": [
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "Q8",
+      "marks": [
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "R1",
+      "marks": [
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "R2",
+      "marks": [
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "R3",
+      "marks": [
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "R4",
+      "marks": [
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "R5",
+      "marks": [
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "R6",
+      "marks": [
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "R7",
+      "marks": [
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "R8",
+      "marks": [
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        }
+      ]
+    }
+  ]
+}

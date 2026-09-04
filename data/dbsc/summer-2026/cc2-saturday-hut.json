@@ -1,0 +1,3894 @@
+{
+  "formatVersion": 1,
+  "club": "DBSC",
+  "name": "Summer Series 2026 course card CC2, Saturday, hut starts",
+  "source": "https://dbsc.ie/wp-content/uploads/2026/04/CC2_Saturday_Hut_2026_v1.pdf",
+  "marks": "marks.json",
+  "notes": [
+    {
+      "title": "Course sections",
+      "text": "A 000°, B 022°, C 045°, D 067°, E 090°, F 112°, G 135°, H 157°, J 180°, K 202°, L 225°, M 247°, N 270°, P 292°, Q 315°, R 337°"
+    },
+    {
+      "title": "Card notes",
+      "text": "Marks in red, suffixed p, to be rounded to Port, except Turning (X) to be passed to Port.\nMarks in green, suffixed s, to be rounded to Starboard. Restriction around hut - see SI H5.10.\nStart line is a transit above the hut, with limit mark orange, black, green or yellow, as signalled.\nFinish line is between an orange line on the corner of the hut and the orange limit mark."
+    },
+    {
+      "title": "Marks, bearings and distances",
+      "text": "Mark positions may vary slightly. All figures are approximate. Warning: Some direct paths are obstructed."
+    }
+  ],
+  "courses": [
+    {
+      "id": "A1",
+      "marks": [
+        {
+          "mark": "E",
+          "side": "port"
+        },
+        {
+          "mark": "C",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "F",
+          "side": "port"
+        },
+        {
+          "mark": "C",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "M",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "A2",
+      "marks": [
+        {
+          "mark": "E",
+          "side": "port"
+        },
+        {
+          "mark": "C",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "G",
+          "side": "port"
+        },
+        {
+          "mark": "K",
+          "side": "starboard"
+        },
+        {
+          "mark": "M",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "A3",
+      "marks": [
+        {
+          "mark": "B",
+          "side": "starboard"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "G",
+          "side": "port"
+        },
+        {
+          "mark": "K",
+          "side": "starboard"
+        },
+        {
+          "mark": "M",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "A4",
+      "marks": [
+        {
+          "mark": "B",
+          "side": "starboard"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "G",
+          "side": "port"
+        },
+        {
+          "mark": "K",
+          "side": "starboard"
+        },
+        {
+          "mark": "M",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "A5",
+      "marks": [
+        {
+          "mark": "B",
+          "side": "starboard"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "J",
+          "side": "port"
+        },
+        {
+          "mark": "K",
+          "side": "starboard"
+        },
+        {
+          "mark": "M",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "A6",
+      "marks": [
+        {
+          "mark": "B",
+          "side": "starboard"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "J",
+          "side": "port"
+        },
+        {
+          "mark": "K",
+          "side": "starboard"
+        },
+        {
+          "mark": "M",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "A7",
+      "marks": [
+        {
+          "mark": "B",
+          "side": "starboard"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "M",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "A8",
+      "marks": [
+        {
+          "mark": "B",
+          "side": "starboard"
+        },
+        {
+          "mark": "H",
+          "side": "port"
+        },
+        {
+          "mark": "M",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "B1",
+      "marks": [
+        {
+          "mark": "F",
+          "side": "port"
+        },
+        {
+          "mark": "B",
+          "side": "starboard"
+        },
+        {
+          "mark": "E",
+          "side": "starboard"
+        },
+        {
+          "mark": "G",
+          "side": "starboard"
+        },
+        {
+          "mark": "W",
+          "side": "starboard"
+        },
+        {
+          "mark": "J",
+          "side": "port"
+        },
+        {
+          "mark": "B",
+          "side": "starboard"
+        },
+        {
+          "mark": "M",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "B2",
+      "marks": [
+        {
+          "mark": "F",
+          "side": "port"
+        },
+        {
+          "mark": "B",
+          "side": "starboard"
+        },
+        {
+          "mark": "E",
+          "side": "starboard"
+        },
+        {
+          "mark": "G",
+          "side": "starboard"
+        },
+        {
+          "mark": "W",
+          "side": "starboard"
+        },
+        {
+          "mark": "J",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "B3",
+      "marks": [
+        {
+          "mark": "M",
+          "side": "starboard"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "J",
+          "side": "port"
+        },
+        {
+          "mark": "L",
+          "side": "starboard"
+        },
+        {
+          "mark": "D",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "B4",
+      "marks": [
+        {
+          "mark": "M",
+          "side": "starboard"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "B",
+          "side": "starboard"
+        },
+        {
+          "mark": "M",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "B5",
+      "marks": [
+        {
+          "mark": "M",
+          "side": "starboard"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "J",
+          "side": "port"
+        },
+        {
+          "mark": "B",
+          "side": "starboard"
+        },
+        {
+          "mark": "M",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "B6",
+      "marks": [
+        {
+          "mark": "M",
+          "side": "starboard"
+        },
+        {
+          "mark": "H",
+          "side": "port"
+        },
+        {
+          "mark": "J",
+          "side": "port"
+        },
+        {
+          "mark": "B",
+          "side": "starboard"
+        },
+        {
+          "mark": "M",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "B7",
+      "marks": [
+        {
+          "mark": "M",
+          "side": "starboard"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "J",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "B8",
+      "marks": [
+        {
+          "mark": "M",
+          "side": "starboard"
+        },
+        {
+          "mark": "G",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "C1",
+      "marks": [
+        {
+          "mark": "F",
+          "side": "port"
+        },
+        {
+          "mark": "L",
+          "side": "starboard"
+        },
+        {
+          "mark": "E",
+          "side": "starboard"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "H",
+          "side": "starboard"
+        },
+        {
+          "mark": "G",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "C2",
+      "marks": [
+        {
+          "mark": "F",
+          "side": "port"
+        },
+        {
+          "mark": "L",
+          "side": "starboard"
+        },
+        {
+          "mark": "D",
+          "side": "starboard"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "B",
+          "side": "starboard"
+        },
+        {
+          "mark": "M",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "C3",
+      "marks": [
+        {
+          "mark": "K",
+          "side": "starboard"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "L",
+          "side": "starboard"
+        },
+        {
+          "mark": "E",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "C4",
+      "marks": [
+        {
+          "mark": "K",
+          "side": "starboard"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "L",
+          "side": "starboard"
+        },
+        {
+          "mark": "D",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "C5",
+      "marks": [
+        {
+          "mark": "J",
+          "side": "port"
+        },
+        {
+          "mark": "L",
+          "side": "starboard"
+        },
+        {
+          "mark": "E",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "C6",
+      "marks": [
+        {
+          "mark": "K",
+          "side": "starboard"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "B",
+          "side": "starboard"
+        },
+        {
+          "mark": "M",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "C7",
+      "marks": [
+        {
+          "mark": "J",
+          "side": "port"
+        },
+        {
+          "mark": "B",
+          "side": "starboard"
+        },
+        {
+          "mark": "M",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "C8",
+      "marks": [
+        {
+          "mark": "J",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "D1",
+      "marks": [
+        {
+          "mark": "J",
+          "side": "port"
+        },
+        {
+          "mark": "D",
+          "side": "port"
+        },
+        {
+          "mark": "C",
+          "side": "port"
+        },
+        {
+          "mark": "F",
+          "side": "port"
+        },
+        {
+          "mark": "D",
+          "side": "port"
+        },
+        {
+          "mark": "B",
+          "side": "port"
+        },
+        {
+          "mark": "G",
+          "side": "port"
+        },
+        {
+          "mark": "L",
+          "side": "port"
+        },
+        {
+          "mark": "J",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "D2",
+      "marks": [
+        {
+          "mark": "J",
+          "side": "port"
+        },
+        {
+          "mark": "D",
+          "side": "port"
+        },
+        {
+          "mark": "C",
+          "side": "port"
+        },
+        {
+          "mark": "F",
+          "side": "port"
+        },
+        {
+          "mark": "C",
+          "side": "port"
+        },
+        {
+          "mark": "M",
+          "side": "starboard"
+        },
+        {
+          "mark": "L",
+          "side": "port"
+        },
+        {
+          "mark": "J",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "D3",
+      "marks": [
+        {
+          "mark": "K",
+          "side": "starboard"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "starboard"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "starboard"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "starboard"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "D4",
+      "marks": [
+        {
+          "mark": "K",
+          "side": "starboard"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "starboard"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "starboard"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "D5",
+      "marks": [
+        {
+          "mark": "K",
+          "side": "starboard"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "starboard"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "starboard"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "D6",
+      "marks": [
+        {
+          "mark": "K",
+          "side": "starboard"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "starboard"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "D7",
+      "marks": [
+        {
+          "mark": "K",
+          "side": "starboard"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "starboard"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "D8",
+      "marks": [
+        {
+          "mark": "K",
+          "side": "starboard"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "E1",
+      "marks": [
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "C",
+          "side": "starboard"
+        },
+        {
+          "mark": "G",
+          "side": "starboard"
+        },
+        {
+          "mark": "L",
+          "side": "port"
+        },
+        {
+          "mark": "J",
+          "side": "port"
+        },
+        {
+          "mark": "B",
+          "side": "port"
+        },
+        {
+          "mark": "J",
+          "side": "port"
+        },
+        {
+          "mark": "M",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "E2",
+      "marks": [
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "C",
+          "side": "starboard"
+        },
+        {
+          "mark": "G",
+          "side": "starboard"
+        },
+        {
+          "mark": "L",
+          "side": "port"
+        },
+        {
+          "mark": "J",
+          "side": "port"
+        },
+        {
+          "mark": "M",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "E3",
+      "marks": [
+        {
+          "mark": "N",
+          "side": "starboard"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "K",
+          "side": "port"
+        },
+        {
+          "mark": "A",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "E4",
+      "marks": [
+        {
+          "mark": "N",
+          "side": "starboard"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "H",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "E5",
+      "marks": [
+        {
+          "mark": "N",
+          "side": "starboard"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "E6",
+      "marks": [
+        {
+          "mark": "N",
+          "side": "starboard"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "E7",
+      "marks": [
+        {
+          "mark": "N",
+          "side": "starboard"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "E8",
+      "marks": [
+        {
+          "mark": "N",
+          "side": "starboard"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "F1",
+      "marks": [
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "D",
+          "side": "starboard"
+        },
+        {
+          "mark": "G",
+          "side": "starboard"
+        },
+        {
+          "mark": "C",
+          "side": "port"
+        },
+        {
+          "mark": "J",
+          "side": "starboard"
+        },
+        {
+          "mark": "L",
+          "side": "port"
+        },
+        {
+          "mark": "H",
+          "side": "port"
+        },
+        {
+          "mark": "L",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "F2",
+      "marks": [
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "D",
+          "side": "starboard"
+        },
+        {
+          "mark": "G",
+          "side": "starboard"
+        },
+        {
+          "mark": "C",
+          "side": "port"
+        },
+        {
+          "mark": "J",
+          "side": "starboard"
+        },
+        {
+          "mark": "L",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "F3",
+      "marks": [
+        {
+          "mark": "P",
+          "side": "starboard"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "starboard"
+        },
+        {
+          "mark": "P",
+          "side": "starboard"
+        },
+        {
+          "mark": "Y",
+          "side": "starboard"
+        },
+        {
+          "mark": "K",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "F4",
+      "marks": [
+        {
+          "mark": "P",
+          "side": "starboard"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "K",
+          "side": "port"
+        },
+        {
+          "mark": "L",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "F5",
+      "marks": [
+        {
+          "mark": "P",
+          "side": "starboard"
+        },
+        {
+          "mark": "V",
+          "side": "starboard"
+        },
+        {
+          "mark": "P",
+          "side": "starboard"
+        },
+        {
+          "mark": "Y",
+          "side": "starboard"
+        },
+        {
+          "mark": "L",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "F6",
+      "marks": [
+        {
+          "mark": "P",
+          "side": "starboard"
+        },
+        {
+          "mark": "V",
+          "side": "starboard"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "F7",
+      "marks": [
+        {
+          "mark": "P",
+          "side": "starboard"
+        },
+        {
+          "mark": "Y",
+          "side": "starboard"
+        },
+        {
+          "mark": "K",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "F8",
+      "marks": [
+        {
+          "mark": "P",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "G1",
+      "marks": [
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "G",
+          "side": "port"
+        },
+        {
+          "mark": "D",
+          "side": "port"
+        },
+        {
+          "mark": "J",
+          "side": "starboard"
+        },
+        {
+          "mark": "B",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "starboard"
+        },
+        {
+          "mark": "L",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "G2",
+      "marks": [
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "G",
+          "side": "port"
+        },
+        {
+          "mark": "D",
+          "side": "port"
+        },
+        {
+          "mark": "J",
+          "side": "starboard"
+        },
+        {
+          "mark": "B",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "starboard"
+        },
+        {
+          "mark": "L",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "G3",
+      "marks": [
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "B",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "starboard"
+        },
+        {
+          "mark": "H",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "G4",
+      "marks": [
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "B",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "starboard"
+        },
+        {
+          "mark": "H",
+          "side": "port"
+        },
+        {
+          "mark": "A",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "G5",
+      "marks": [
+        {
+          "mark": "Q",
+          "side": "starboard"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "H",
+          "side": "port"
+        },
+        {
+          "mark": "A",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "G6",
+      "marks": [
+        {
+          "mark": "Q",
+          "side": "starboard"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "H",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "G7",
+      "marks": [
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "H",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "G8",
+      "marks": [
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "H1",
+      "marks": [
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "E",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "starboard"
+        },
+        {
+          "mark": "D",
+          "side": "port"
+        },
+        {
+          "mark": "K",
+          "side": "starboard"
+        },
+        {
+          "mark": "C",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "H2",
+      "marks": [
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "E",
+          "side": "port"
+        },
+        {
+          "mark": "J",
+          "side": "starboard"
+        },
+        {
+          "mark": "C",
+          "side": "port"
+        },
+        {
+          "mark": "K",
+          "side": "starboard"
+        },
+        {
+          "mark": "L",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "H3",
+      "marks": [
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "starboard"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "starboard"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "L",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "H4",
+      "marks": [
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "starboard"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "starboard"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "H",
+          "side": "port"
+        },
+        {
+          "mark": "L",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "H5",
+      "marks": [
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "starboard"
+        },
+        {
+          "mark": "R",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "L",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "H6",
+      "marks": [
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "starboard"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "H",
+          "side": "port"
+        },
+        {
+          "mark": "L",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "H7",
+      "marks": [
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "starboard"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "H8",
+      "marks": [
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "H",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "J1",
+      "marks": [
+        {
+          "mark": "M",
+          "side": "starboard"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "F",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "starboard"
+        },
+        {
+          "mark": "D",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "J2",
+      "marks": [
+        {
+          "mark": "M",
+          "side": "starboard"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "F",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "starboard"
+        },
+        {
+          "mark": "C",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "J3",
+      "marks": [
+        {
+          "mark": "M",
+          "side": "starboard"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "F",
+          "side": "port"
+        },
+        {
+          "mark": "J",
+          "side": "starboard"
+        },
+        {
+          "mark": "C",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "J4",
+      "marks": [
+        {
+          "mark": "M",
+          "side": "starboard"
+        },
+        {
+          "mark": "V",
+          "side": "starboard"
+        },
+        {
+          "mark": "D",
+          "side": "port"
+        },
+        {
+          "mark": "B",
+          "side": "starboard"
+        },
+        {
+          "mark": "C",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "J5",
+      "marks": [
+        {
+          "mark": "M",
+          "side": "starboard"
+        },
+        {
+          "mark": "V",
+          "side": "starboard"
+        },
+        {
+          "mark": "D",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "J6",
+      "marks": [
+        {
+          "mark": "M",
+          "side": "starboard"
+        },
+        {
+          "mark": "K",
+          "side": "starboard"
+        },
+        {
+          "mark": "D",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "J7",
+      "marks": [
+        {
+          "mark": "M",
+          "side": "starboard"
+        },
+        {
+          "mark": "K",
+          "side": "starboard"
+        },
+        {
+          "mark": "C",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "J8",
+      "marks": [
+        {
+          "mark": "M",
+          "side": "starboard"
+        },
+        {
+          "mark": "H",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "K1",
+      "marks": [
+        {
+          "mark": "F",
+          "side": "starboard"
+        },
+        {
+          "mark": "G",
+          "side": "starboard"
+        },
+        {
+          "mark": "V",
+          "side": "starboard"
+        },
+        {
+          "mark": "C",
+          "side": "starboard"
+        },
+        {
+          "mark": "E",
+          "side": "starboard"
+        },
+        {
+          "mark": "B",
+          "side": "port"
+        },
+        {
+          "mark": "G",
+          "side": "starboard"
+        },
+        {
+          "mark": "V",
+          "side": "starboard"
+        },
+        {
+          "mark": "H",
+          "side": "port"
+        }
+      ]
+    },
+    {
+      "id": "K2",
+      "marks": [
+        {
+          "mark": "G",
+          "side": "starboard"
+        },
+        {
+          "mark": "V",
+          "side": "starboard"
+        },
+        {
+          "mark": "C",
+          "side": "starboard"
+        },
+        {
+          "mark": "E",
+          "side": "starboard"
+        },
+        {
+          "mark": "B",
+          "side": "port"
+        },
+        {
+          "mark": "F",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "K3",
+      "marks": [
+        {
+          "mark": "J",
+          "side": "starboard"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "starboard"
+        },
+        {
+          "mark": "T",
+          "side": "starboard"
+        },
+        {
+          "mark": "D",
+          "side": "port"
+        },
+        {
+          "mark": "A",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "K4",
+      "marks": [
+        {
+          "mark": "J",
+          "side": "starboard"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "D",
+          "side": "port"
+        },
+        {
+          "mark": "A",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "K5",
+      "marks": [
+        {
+          "mark": "J",
+          "side": "starboard"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "starboard"
+        },
+        {
+          "mark": "R",
+          "side": "starboard"
+        },
+        {
+          "mark": "H",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "K6",
+      "marks": [
+        {
+          "mark": "J",
+          "side": "starboard"
+        },
+        {
+          "mark": "W",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "port"
+        },
+        {
+          "mark": "H",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "K7",
+      "marks": [
+        {
+          "mark": "G",
+          "side": "starboard"
+        },
+        {
+          "mark": "V",
+          "side": "starboard"
+        },
+        {
+          "mark": "H",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "K8",
+      "marks": [
+        {
+          "mark": "J",
+          "side": "starboard"
+        },
+        {
+          "mark": "V",
+          "side": "starboard"
+        },
+        {
+          "mark": "H",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "L1",
+      "marks": [
+        {
+          "mark": "G",
+          "side": "port"
+        },
+        {
+          "mark": "H",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "starboard"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "G",
+          "side": "port"
+        },
+        {
+          "mark": "K",
+          "side": "starboard"
+        },
+        {
+          "mark": "F",
+          "side": "port"
+        },
+        {
+          "mark": "A",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "L2",
+      "marks": [
+        {
+          "mark": "G",
+          "side": "port"
+        },
+        {
+          "mark": "H",
+          "side": "port"
+        },
+        {
+          "mark": "S",
+          "side": "starboard"
+        },
+        {
+          "mark": "T",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "port"
+        },
+        {
+          "mark": "F",
+          "side": "port"
+        },
+        {
+          "mark": "A",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "L3",
+      "marks": [
+        {
+          "mark": "J",
+          "side": "port"
+        },
+        {
+          "mark": "F",
+          "side": "port"
+        },
+        {
+          "mark": "B",
+          "side": "starboard"
+        },
+        {
+          "mark": "E",
+          "side": "port"
+        },
+        {
+          "mark": "L",
+          "side": "starboard"
+        },
+        {
+          "mark": "C",
+          "side": "starboard"
+        },
+        {
+          "mark": "A",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "L4",
+      "marks": [
+        {
+          "mark": "J",
+          "side": "port"
+        },
+        {
+          "mark": "F",
+          "side": "port"
+        },
+        {
+          "mark": "B",
+          "side": "starboard"
+        },
+        {
+          "mark": "E",
+          "side": "port"
+        },
+        {
+          "mark": "A",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "L5",
+      "marks": [
+        {
+          "mark": "J",
+          "side": "port"
+        },
+        {
+          "mark": "F",
+          "side": "port"
+        },
+        {
+          "mark": "B",
+          "side": "starboard"
+        },
+        {
+          "mark": "D",
+          "side": "port"
+        },
+        {
+          "mark": "A",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "L6",
+      "marks": [
+        {
+          "mark": "J",
+          "side": "port"
+        },
+        {
+          "mark": "E",
+          "side": "port"
+        },
+        {
+          "mark": "L",
+          "side": "starboard"
+        },
+        {
+          "mark": "C",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "L7",
+      "marks": [
+        {
+          "mark": "J",
+          "side": "port"
+        },
+        {
+          "mark": "E",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "L8",
+      "marks": [
+        {
+          "mark": "J",
+          "side": "port"
+        },
+        {
+          "mark": "M",
+          "side": "port"
+        },
+        {
+          "mark": "A",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "M1",
+      "marks": [
+        {
+          "mark": "A",
+          "side": "starboard"
+        },
+        {
+          "mark": "F",
+          "side": "port"
+        },
+        {
+          "mark": "C",
+          "side": "port"
+        },
+        {
+          "mark": "F",
+          "side": "port"
+        },
+        {
+          "mark": "C",
+          "side": "port"
+        },
+        {
+          "mark": "G",
+          "side": "starboard"
+        },
+        {
+          "mark": "L",
+          "side": "port"
+        },
+        {
+          "mark": "J",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "M2",
+      "marks": [
+        {
+          "mark": "A",
+          "side": "starboard"
+        },
+        {
+          "mark": "F",
+          "side": "port"
+        },
+        {
+          "mark": "C",
+          "side": "port"
+        },
+        {
+          "mark": "G",
+          "side": "starboard"
+        },
+        {
+          "mark": "L",
+          "side": "port"
+        },
+        {
+          "mark": "J",
+          "side": "starboard"
+        },
+        {
+          "mark": "A",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "M3",
+      "marks": [
+        {
+          "mark": "A",
+          "side": "starboard"
+        },
+        {
+          "mark": "F",
+          "side": "port"
+        },
+        {
+          "mark": "C",
+          "side": "port"
+        },
+        {
+          "mark": "G",
+          "side": "starboard"
+        },
+        {
+          "mark": "B",
+          "side": "port"
+        },
+        {
+          "mark": "J",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "M4",
+      "marks": [
+        {
+          "mark": "A",
+          "side": "starboard"
+        },
+        {
+          "mark": "M",
+          "side": "starboard"
+        },
+        {
+          "mark": "G",
+          "side": "starboard"
+        },
+        {
+          "mark": "L",
+          "side": "port"
+        },
+        {
+          "mark": "J",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "M5",
+      "marks": [
+        {
+          "mark": "A",
+          "side": "starboard"
+        },
+        {
+          "mark": "M",
+          "side": "starboard"
+        },
+        {
+          "mark": "G",
+          "side": "starboard"
+        },
+        {
+          "mark": "L",
+          "side": "port"
+        },
+        {
+          "mark": "K",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "M6",
+      "marks": [
+        {
+          "mark": "A",
+          "side": "starboard"
+        },
+        {
+          "mark": "M",
+          "side": "starboard"
+        },
+        {
+          "mark": "G",
+          "side": "starboard"
+        },
+        {
+          "mark": "B",
+          "side": "port"
+        },
+        {
+          "mark": "K",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "M7",
+      "marks": [
+        {
+          "mark": "A",
+          "side": "starboard"
+        },
+        {
+          "mark": "M",
+          "side": "starboard"
+        },
+        {
+          "mark": "J",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "M8",
+      "marks": [
+        {
+          "mark": "A",
+          "side": "starboard"
+        },
+        {
+          "mark": "J",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "N1",
+      "marks": [
+        {
+          "mark": "A",
+          "side": "starboard"
+        },
+        {
+          "mark": "F",
+          "side": "port"
+        },
+        {
+          "mark": "D",
+          "side": "port"
+        },
+        {
+          "mark": "G",
+          "side": "starboard"
+        },
+        {
+          "mark": "C",
+          "side": "port"
+        },
+        {
+          "mark": "J",
+          "side": "starboard"
+        },
+        {
+          "mark": "L",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "N2",
+      "marks": [
+        {
+          "mark": "A",
+          "side": "starboard"
+        },
+        {
+          "mark": "M",
+          "side": "starboard"
+        },
+        {
+          "mark": "G",
+          "side": "starboard"
+        },
+        {
+          "mark": "C",
+          "side": "port"
+        },
+        {
+          "mark": "J",
+          "side": "starboard"
+        },
+        {
+          "mark": "L",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "N3",
+      "marks": [
+        {
+          "mark": "A",
+          "side": "starboard"
+        },
+        {
+          "mark": "H",
+          "side": "starboard"
+        },
+        {
+          "mark": "Q",
+          "side": "starboard"
+        },
+        {
+          "mark": "T",
+          "side": "starboard"
+        },
+        {
+          "mark": "Y",
+          "side": "starboard"
+        },
+        {
+          "mark": "P",
+          "side": "starboard"
+        },
+        {
+          "mark": "W",
+          "side": "starboard"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "N4",
+      "marks": [
+        {
+          "mark": "A",
+          "side": "starboard"
+        },
+        {
+          "mark": "H",
+          "side": "starboard"
+        },
+        {
+          "mark": "P",
+          "side": "starboard"
+        },
+        {
+          "mark": "W",
+          "side": "starboard"
+        },
+        {
+          "mark": "Y",
+          "side": "starboard"
+        },
+        {
+          "mark": "W",
+          "side": "starboard"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "N5",
+      "marks": [
+        {
+          "mark": "A",
+          "side": "starboard"
+        },
+        {
+          "mark": "H",
+          "side": "starboard"
+        },
+        {
+          "mark": "P",
+          "side": "starboard"
+        },
+        {
+          "mark": "W",
+          "side": "starboard"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "N6",
+      "marks": [
+        {
+          "mark": "A",
+          "side": "starboard"
+        },
+        {
+          "mark": "H",
+          "side": "starboard"
+        },
+        {
+          "mark": "P",
+          "side": "starboard"
+        },
+        {
+          "mark": "W",
+          "side": "starboard"
+        },
+        {
+          "mark": "V",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "N7",
+      "marks": [
+        {
+          "mark": "A",
+          "side": "starboard"
+        },
+        {
+          "mark": "H",
+          "side": "starboard"
+        },
+        {
+          "mark": "N",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "N8",
+      "marks": [
+        {
+          "mark": "A",
+          "side": "starboard"
+        },
+        {
+          "mark": "H",
+          "side": "starboard"
+        },
+        {
+          "mark": "A",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "P1",
+      "marks": [
+        {
+          "mark": "A",
+          "side": "starboard"
+        },
+        {
+          "mark": "G",
+          "side": "port"
+        },
+        {
+          "mark": "D",
+          "side": "port"
+        },
+        {
+          "mark": "J",
+          "side": "starboard"
+        },
+        {
+          "mark": "C",
+          "side": "starboard"
+        },
+        {
+          "mark": "M",
+          "side": "starboard"
+        },
+        {
+          "mark": "P",
+          "side": "starboard"
+        },
+        {
+          "mark": "L",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "P2",
+      "marks": [
+        {
+          "mark": "A",
+          "side": "starboard"
+        },
+        {
+          "mark": "G",
+          "side": "port"
+        },
+        {
+          "mark": "D",
+          "side": "port"
+        },
+        {
+          "mark": "J",
+          "side": "starboard"
+        },
+        {
+          "mark": "C",
+          "side": "starboard"
+        },
+        {
+          "mark": "M",
+          "side": "starboard"
+        },
+        {
+          "mark": "N",
+          "side": "starboard"
+        },
+        {
+          "mark": "L",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "P3",
+      "marks": [
+        {
+          "mark": "A",
+          "side": "starboard"
+        },
+        {
+          "mark": "B",
+          "side": "starboard"
+        },
+        {
+          "mark": "Q",
+          "side": "starboard"
+        },
+        {
+          "mark": "W",
+          "side": "starboard"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "K",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "P4",
+      "marks": [
+        {
+          "mark": "A",
+          "side": "starboard"
+        },
+        {
+          "mark": "B",
+          "side": "starboard"
+        },
+        {
+          "mark": "Q",
+          "side": "starboard"
+        },
+        {
+          "mark": "W",
+          "side": "starboard"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "P5",
+      "marks": [
+        {
+          "mark": "A",
+          "side": "starboard"
+        },
+        {
+          "mark": "B",
+          "side": "starboard"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "K",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "P6",
+      "marks": [
+        {
+          "mark": "A",
+          "side": "starboard"
+        },
+        {
+          "mark": "B",
+          "side": "starboard"
+        },
+        {
+          "mark": "Q",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "P7",
+      "marks": [
+        {
+          "mark": "A",
+          "side": "starboard"
+        },
+        {
+          "mark": "B",
+          "side": "starboard"
+        },
+        {
+          "mark": "Y",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "P8",
+      "marks": [
+        {
+          "mark": "A",
+          "side": "starboard"
+        },
+        {
+          "mark": "B",
+          "side": "starboard"
+        },
+        {
+          "mark": "V",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "Q1",
+      "marks": [
+        {
+          "mark": "L",
+          "side": "starboard"
+        },
+        {
+          "mark": "G",
+          "side": "port"
+        },
+        {
+          "mark": "E",
+          "side": "port"
+        },
+        {
+          "mark": "J",
+          "side": "starboard"
+        },
+        {
+          "mark": "D",
+          "side": "port"
+        },
+        {
+          "mark": "P",
+          "side": "starboard"
+        },
+        {
+          "mark": "K",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "Q2",
+      "marks": [
+        {
+          "mark": "L",
+          "side": "starboard"
+        },
+        {
+          "mark": "G",
+          "side": "port"
+        },
+        {
+          "mark": "E",
+          "side": "port"
+        },
+        {
+          "mark": "J",
+          "side": "starboard"
+        },
+        {
+          "mark": "D",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "Q3",
+      "marks": [
+        {
+          "mark": "L",
+          "side": "starboard"
+        },
+        {
+          "mark": "S",
+          "side": "starboard"
+        },
+        {
+          "mark": "P",
+          "side": "starboard"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "starboard"
+        },
+        {
+          "mark": "K",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "Q4",
+      "marks": [
+        {
+          "mark": "L",
+          "side": "starboard"
+        },
+        {
+          "mark": "S",
+          "side": "starboard"
+        },
+        {
+          "mark": "P",
+          "side": "starboard"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "starboard"
+        },
+        {
+          "mark": "K",
+          "side": "port"
+        },
+        {
+          "mark": "V",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "Q5",
+      "marks": [
+        {
+          "mark": "L",
+          "side": "starboard"
+        },
+        {
+          "mark": "S",
+          "side": "starboard"
+        },
+        {
+          "mark": "P",
+          "side": "starboard"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "Q6",
+      "marks": [
+        {
+          "mark": "L",
+          "side": "starboard"
+        },
+        {
+          "mark": "Q",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "Q7",
+      "marks": [
+        {
+          "mark": "L",
+          "side": "starboard"
+        },
+        {
+          "mark": "Y",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "Q8",
+      "marks": [
+        {
+          "mark": "L",
+          "side": "starboard"
+        },
+        {
+          "mark": "V",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "R1",
+      "marks": [
+        {
+          "mark": "L",
+          "side": "starboard"
+        },
+        {
+          "mark": "J",
+          "side": "starboard"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "E",
+          "side": "port"
+        },
+        {
+          "mark": "Q",
+          "side": "starboard"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "R2",
+      "marks": [
+        {
+          "mark": "L",
+          "side": "starboard"
+        },
+        {
+          "mark": "J",
+          "side": "starboard"
+        },
+        {
+          "mark": "Q",
+          "side": "starboard"
+        },
+        {
+          "mark": "M",
+          "side": "port"
+        },
+        {
+          "mark": "T",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "R3",
+      "marks": [
+        {
+          "mark": "L",
+          "side": "starboard"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "M",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "R4",
+      "marks": [
+        {
+          "mark": "L",
+          "side": "starboard"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "M",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "R5",
+      "marks": [
+        {
+          "mark": "L",
+          "side": "starboard"
+        },
+        {
+          "mark": "S",
+          "side": "port"
+        },
+        {
+          "mark": "K",
+          "side": "port"
+        },
+        {
+          "mark": "Y",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "R6",
+      "marks": [
+        {
+          "mark": "L",
+          "side": "starboard"
+        },
+        {
+          "mark": "P",
+          "side": "port"
+        },
+        {
+          "mark": "N",
+          "side": "port"
+        },
+        {
+          "mark": "W",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "R7",
+      "marks": [
+        {
+          "mark": "L",
+          "side": "starboard"
+        },
+        {
+          "mark": "B",
+          "side": "starboard"
+        },
+        {
+          "mark": "T",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    },
+    {
+      "id": "R8",
+      "marks": [
+        {
+          "mark": "L",
+          "side": "starboard"
+        },
+        {
+          "mark": "V",
+          "side": "starboard"
+        },
+        {
+          "mark": "X",
+          "side": "port",
+          "passing": true
+        }
+      ]
+    }
+  ]
+}

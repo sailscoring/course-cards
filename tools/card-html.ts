@@ -50,6 +50,7 @@ const CSS = `
   .courses { width: 100%; table-layout: fixed; }
   .courses th.row, .courses thead th:first-child { width: 2.2em; text-align: center; font-family: ui-monospace, monospace; }
   .courses tr:nth-child(even) td { background: #fdf7d8; }
+  .sections { display: grid; grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr)); gap: .75rem 1.5rem; }
   .port { color: #c81e1e; }
   .stbd { color: #1a8a3c; }
   .passing { outline: 1.5px solid #222; outline-offset: 1px; }
@@ -79,12 +80,26 @@ function courseCell(course: Course): string {
 }
 
 /** Cards numbered like HYC's — two digits of row, one of column — lay out as
- *  the printed grid; anything else lists one course per row. */
+ *  the printed grid; cards lettered like DBSC's — a letter for the group, a
+ *  digit for the course — as the printed sections, one small table per
+ *  letter; anything else lists one course per row. */
 function courseTable(card: CourseCardFile): string {
   const byId = new Map(card.courses.map((c) => [c.id, c]));
   const gridded = card.courses.every((c) => /^\d{3}$/.test(c.id));
+  const sectioned = card.courses.every((c) => /^[A-Z]\d$/.test(c.id));
   let html = '';
-  if (gridded) {
+  if (sectioned) {
+    const letters = [...new Set(card.courses.map((c) => c.id[0]!))].sort();
+    html += '<div class="sections">';
+    for (const letter of letters) {
+      html += `<table class="courses section"><thead><tr><th class="row">${letter}</th><th></th></tr></thead><tbody>`;
+      for (const course of card.courses.filter((c) => c.id[0] === letter)) {
+        html += `<tr><th class="row">${esc(course.id.slice(1))}</th><td title="Course ${esc(course.id)}">${courseCell(course)}</td></tr>`;
+      }
+      html += '</tbody></table>';
+    }
+    html += '</div>';
+  } else if (gridded) {
     const rows = [...new Set(card.courses.map((c) => c.id.slice(0, 2)))].sort();
     const cols = [...new Set(card.courses.map((c) => c.id.slice(2)))].sort();
     html += '<div class="scroll"><table class="courses"><thead><tr><th></th>';
@@ -121,10 +136,19 @@ const SWATCH: Record<string, string> = {
   white: '#fff',
 };
 
+/** The swatch colour for a colour description: its first named colour
+ *  ("yellow/black" → yellow), grey when none is known. */
+function swatchOf(color: string | undefined): string {
+  for (const word of (color ?? '').toLowerCase().split(/[^a-z]+/)) {
+    if (SWATCH[word]) return SWATCH[word];
+  }
+  return '#888';
+}
+
 function marksTable(marks: MarksFile): string {
   let html = '<table><thead><tr><th></th><th>Name</th><th>Shape</th><th>Colour</th><th>Position</th></tr></thead><tbody>';
   for (const m of marks.marks) {
-    const swatch = m.color ? `<span class="swatch" style="background:${SWATCH[m.color.toLowerCase()] ?? '#ccc'}"></span>` : '';
+    const swatch = m.color ? `<span class="swatch" style="background:${swatchOf(m.color)}"></span>` : '';
     html +=
       `<tr><th>${esc(m.id)}</th><td>${esc(m.name ?? '')}</td><td>${esc(m.shape ?? '')}</td>` +
       `<td>${swatch}${esc(m.color ?? '')}</td>` +
@@ -208,7 +232,7 @@ function map(marks: Mark[], background?: MapBackground): string {
   for (const m of fixed) {
     const cx = x(m.position.lng).toFixed(1);
     const cy = y(m.position.lat).toFixed(1);
-    const fill = SWATCH[(m.color ?? '').toLowerCase()] ?? '#888';
+    const fill = swatchOf(m.color);
     svg += `<circle cx="${cx}" cy="${cy}" r="${5 * u}" fill="${fill}" stroke="#fff" stroke-width="${1.5 * u}"><title>${esc(m.id)} ${esc(m.name ?? '')}</title></circle>`;
     svg += `<text x="${(+cx + 8 * u).toFixed(1)}" y="${(+cy + 4 * u).toFixed(1)}" ${font(13)} font-weight="700" fill="#111" stroke="#fff" stroke-width="${3 * u}" paint-order="stroke">${esc(m.id)}</text>`;
   }

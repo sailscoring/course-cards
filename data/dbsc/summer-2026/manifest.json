@@ -1,0 +1,156 @@
+{
+  "club": "Dublin Bay Sailing Club",
+  "event": "Summer Series 2026",
+  "artifacts": [
+    {
+      "output": "marks.json",
+      "tool": "extract_dbsc_marks",
+      "source": "source/DBSC_Marks_Bearings_Distances_2026_v1.pdf",
+      "url": "https://dbsc.ie/wp-content/uploads/2026/04/DBSC_Marks_Bearings_Distances_2026_v1.pdf",
+      "supplement": {
+        "source": "source/machine-readable/DBSC_Marks_2026.csv",
+        "url": "https://dbsc.ie/wp-content/uploads/2026/04/DBSC_MarksCourses_2026.zip",
+        "ids": [
+          "2",
+          "3",
+          "Z"
+        ]
+      },
+      "meta": {
+        "club": "DBSC",
+        "name": "Racing marks 2026",
+        "source": "https://dbsc.ie/wp-content/uploads/2026/04/DBSC_Marks_Bearings_Distances_2026_v1.pdf"
+      }
+    },
+    {
+      "output": "cc1-saturday-cv.json",
+      "tool": "extract_dbsc_card",
+      "source": "source/CC1_Saturday_CV_2026_v1.pdf",
+      "url": "https://dbsc.ie/wp-content/uploads/2026/04/CC1_Saturday_CV_2026_v1.pdf",
+      "meta": {
+        "club": "DBSC",
+        "name": "Summer Series 2026 course card CC1, Saturday, committee vessel starts",
+        "source": "https://dbsc.ie/wp-content/uploads/2026/04/CC1_Saturday_CV_2026_v1.pdf",
+        "marks": "marks.json"
+      },
+      "notesSource": "source/DBSC_Marks_Bearings_Distances_2026_v1.pdf"
+    },
+    {
+      "output": "cc2-saturday-hut.json",
+      "tool": "extract_dbsc_card",
+      "source": "source/CC2_Saturday_Hut_2026_v1.pdf",
+      "url": "https://dbsc.ie/wp-content/uploads/2026/04/CC2_Saturday_Hut_2026_v1.pdf",
+      "meta": {
+        "club": "DBSC",
+        "name": "Summer Series 2026 course card CC2, Saturday, hut starts",
+        "source": "https://dbsc.ie/wp-content/uploads/2026/04/CC2_Saturday_Hut_2026_v1.pdf",
+        "marks": "marks.json"
+      },
+      "notesSource": "source/DBSC_Marks_Bearings_Distances_2026_v1.pdf"
+    },
+    {
+      "output": "cc3-thursday-blue.json",
+      "tool": "extract_dbsc_card",
+      "source": "source/CC3_Thursday_Blue_2026_v1.pdf",
+      "url": "https://dbsc.ie/wp-content/uploads/2026/04/CC3_Thursday_Blue_2026_v1.pdf",
+      "meta": {
+        "club": "DBSC",
+        "name": "Summer Series 2026 course card CC3, Thursday, Blue Fleet",
+        "source": "https://dbsc.ie/wp-content/uploads/2026/04/CC3_Thursday_Blue_2026_v1.pdf",
+        "marks": "marks.json"
+      },
+      "notesSource": "source/DBSC_Marks_Bearings_Distances_2026_v1.pdf"
+    },
+    {
+      "output": "cc4-thursday-red.json",
+      "tool": "extract_dbsc_card",
+      "source": "source/CC4_Thursday_Red_2026_v1.pdf",
+      "url": "https://dbsc.ie/wp-content/uploads/2026/04/CC4_Thursday_Red_2026_v1.pdf",
+      "meta": {
+        "club": "DBSC",
+        "name": "Summer Series 2026 course card CC4, Thursday, Red Fleet",
+        "source": "https://dbsc.ie/wp-content/uploads/2026/04/CC4_Thursday_Red_2026_v1.pdf",
+        "marks": "marks.json"
+      },
+      "notesSource": "source/DBSC_Marks_Bearings_Distances_2026_v1.pdf"
+    },
+    {
+      "output": "cc5-tuesday-hut.json",
+      "tool": "extract_dbsc_card",
+      "source": "source/CC5_Tuesday_Hut_2026_v1.pdf",
+      "url": "https://dbsc.ie/wp-content/uploads/2026/04/CC5_Tuesday_Hut_2026_v1.pdf",
+      "meta": {
+        "club": "DBSC",
+        "name": "Summer Series 2026 course card CC5, Tuesday, hut starts",
+        "source": "https://dbsc.ie/wp-content/uploads/2026/04/CC5_Tuesday_Hut_2026_v1.pdf",
+        "marks": "marks.json"
+      },
+      "notesSource": "source/DBSC_Marks_Bearings_Distances_2026_v1.pdf"
+    }
+  ],
+  "checks": {
+    "tool": "check_dbsc",
+    "items": [
+      {
+        "check": "card-csv",
+        "card": "cc1-saturday-cv.json",
+        "csv": "source/machine-readable/CC1_Sat_CV_2026.csv",
+        "url": "https://dbsc.ie/wp-content/uploads/2026/04/DBSC_MarksCourses_2026.zip"
+      },
+      {
+        "check": "card-csv",
+        "card": "cc2-saturday-hut.json",
+        "csv": "source/machine-readable/CC2_Sat_Hut_2026.csv",
+        "url": "https://dbsc.ie/wp-content/uploads/2026/04/DBSC_MarksCourses_2026.zip",
+        "expected": [
+          {
+            "course": "K1",
+            "pdf": "FsGsVsCsEsBpGsVsHp",
+            "csv": "FsGsVsCsEsBpGsVsHpXp",
+            "note": "The PDF prints K1 without the Turning mark X every other course on this card ends with; the CSV has it. The PDF is the official document, so the JSON follows it."
+          }
+        ]
+      },
+      {
+        "check": "card-csv",
+        "card": "cc3-thursday-blue.json",
+        "csv": "source/machine-readable/CC3_Thu_Blue_2026.csv",
+        "url": "https://dbsc.ie/wp-content/uploads/2026/04/DBSC_MarksCourses_2026.zip"
+      },
+      {
+        "check": "card-csv",
+        "card": "cc4-thursday-red.json",
+        "csv": "source/machine-readable/CC4_Thu_Red_2026.csv",
+        "url": "https://dbsc.ie/wp-content/uploads/2026/04/DBSC_MarksCourses_2026.zip"
+      },
+      {
+        "check": "card-csv",
+        "card": "cc5-tuesday-hut.json",
+        "csv": "source/machine-readable/CC5_Tue_Hut_2026.csv",
+        "url": "https://dbsc.ie/wp-content/uploads/2026/04/DBSC_MarksCourses_2026.zip"
+      },
+      {
+        "check": "marks-csv",
+        "marks": "marks.json",
+        "csv": "source/machine-readable/DBSC_Marks_2026.csv",
+        "gpx": "source/machine-readable/DBSC_Marks_2026.gpx",
+        "url": "https://dbsc.ie/wp-content/uploads/2026/04/DBSC_MarksCourses_2026.zip"
+      },
+      {
+        "check": "marks-table",
+        "marks": "marks.json",
+        "pdf": "source/DBSC_Marks_Bearings_Distances_2026_v1.pdf"
+      }
+    ]
+  },
+  "map": {
+    "background": "map/background.png",
+    "marks": "marks.json",
+    "layers": [
+      "osm",
+      "openseamap"
+    ],
+    "zoom": 14,
+    "paddingMinutes": 0.6
+  }
+}

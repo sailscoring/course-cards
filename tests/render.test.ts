@@ -71,6 +71,25 @@ describe('renderCardHtml', () => {
     expect(html).toContain('Therefore Course 073 is the third course in from the left on line 07');
   });
 
+  it('lays DBSC’s lettered courses out as one section per letter', () => {
+    const card = parseCourseCardFile(
+      JSON.parse(readFileSync(join(__dirname, '..', 'data', 'dbsc', 'summer-2026', 'cc2-saturday-hut.json'), 'utf-8')),
+    );
+    const dbscMarks = parseMarksFile(
+      JSON.parse(readFileSync(join(__dirname, '..', 'data', 'dbsc', 'summer-2026', 'marks.json'), 'utf-8')),
+    );
+    const out = renderCardHtml(card, dbscMarks);
+    expect((out.match(/<table class="courses section">/g) ?? []).length).toBe(16);
+    expect(out).toContain('<th class="row">B</th><th></th></tr></thead><tbody><tr><th class="row">1</th><td title="Course B1">');
+    // B2: F B E G W J X — X boxed (passing), the rest by side
+    expect(out).toContain(
+      '<td title="Course B2"><span class="port">F</span> <span class="stbd">B</span> <span class="stbd">E</span> ' +
+        '<span class="stbd">G</span> <span class="stbd">W</span> <span class="port">J</span> <span class="port passing">X</span></td>',
+    );
+    // a two-colour mark gets its first colour's swatch
+    expect(out).toContain('<span class="swatch" style="background:#f2d02d"></span>yellow/black');
+  });
+
   it('falls back to a list for cards not numbered as a grid', () => {
     const card = { formatVersion: 1, courses: [{ id: 'Olympic', marks: [{ mark: 'A' }, { mark: 'K' }] }] };
     const out = renderCardHtml(card, marks, { title: 'Test' });

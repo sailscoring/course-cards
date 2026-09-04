@@ -1,0 +1,239 @@
+{
+  "formatVersion": 1,
+  "club": "DBSC",
+  "name": "Racing marks 2026",
+  "source": "https://dbsc.ie/wp-content/uploads/2026/04/DBSC_Marks_Bearings_Distances_2026_v1.pdf",
+  "marks": [
+    {
+      "id": "A",
+      "name": "Salthill",
+      "color": "orange",
+      "position": {
+        "lat": 53.306,
+        "lng": -6.15
+      }
+    },
+    {
+      "id": "B",
+      "name": "Saoirse",
+      "color": "green",
+      "position": {
+        "lat": 53.317,
+        "lng": -6.135833
+      }
+    },
+    {
+      "id": "C",
+      "name": "Seapoint",
+      "color": "black",
+      "position": {
+        "lat": 53.324667,
+        "lng": -6.143333
+      }
+    },
+    {
+      "id": "D",
+      "name": "South Bull",
+      "color": "orange",
+      "position": {
+        "lat": 53.333333,
+        "lng": -6.138333
+      }
+    },
+    {
+      "id": "E",
+      "name": "South Bar",
+      "color": "yellow/black",
+      "position": {
+        "lat": 53.337,
+        "lng": -6.124167
+      }
+    },
+    {
+      "id": "F",
+      "name": "Bligh",
+      "color": "yellow/orange",
+      "position": {
+        "lat": 53.334667,
+        "lng": -6.111667
+      }
+    },
+    {
+      "id": "G",
+      "name": "New Ross",
+      "color": "yellow/blk/wh",
+      "position": {
+        "lat": 53.326667,
+        "lng": -6.105
+      }
+    },
+    {
+      "id": "H",
+      "name": "Harbour",
+      "color": "yellow",
+      "position": {
+        "lat": 53.312333,
+        "lng": -6.1295
+      }
+    },
+    {
+      "id": "J",
+      "name": "Asgard",
+      "color": "yellow/black",
+      "position": {
+        "lat": 53.3185,
+        "lng": -6.109333
+      }
+    },
+    {
+      "id": "K",
+      "name": "Boyd",
+      "color": "orange",
+      "position": {
+        "lat": 53.314167,
+        "lng": -6.122833
+      }
+    },
+    {
+      "id": "L",
+      "name": "Merrion",
+      "color": "black/yellow",
+      "position": {
+        "lat": 53.314667,
+        "lng": -6.152
+      }
+    },
+    {
+      "id": "M",
+      "name": "Middle",
+      "color": "yellow",
+      "position": {
+        "lat": 53.325833,
+        "lng": -6.124667
+      }
+    },
+    {
+      "id": "N",
+      "name": "Molly",
+      "color": "yellow/black",
+      "position": {
+        "lat": 53.304667,
+        "lng": -6.104667
+      }
+    },
+    {
+      "id": "O",
+      "name": "Orange Start",
+      "color": "orange",
+      "position": {
+        "lat": 53.306333,
+        "lng": -6.132
+      }
+    },
+    {
+      "id": "P",
+      "name": "Poldy",
+      "color": "yellow/orange",
+      "position": {
+        "lat": 53.297,
+        "lng": -6.09
+      }
+    },
+    {
+      "id": "Q",
+      "name": "Island",
+      "color": "black",
+      "position": {
+        "lat": 53.290833,
+        "lng": -6.093
+      }
+    },
+    {
+      "id": "R",
+      "name": "Bulloch",
+      "color": "orange",
+      "position": {
+        "lat": 53.288,
+        "lng": -6.102667
+      }
+    },
+    {
+      "id": "S",
+      "name": "East",
+      "color": "yellow/green",
+      "position": {
+        "lat": 53.302667,
+        "lng": -6.094667
+      }
+    },
+    {
+      "id": "T",
+      "name": "Battery",
+      "color": "green/white",
+      "position": {
+        "lat": 53.292,
+        "lng": -6.110633
+      }
+    },
+    {
+      "id": "V",
+      "name": "Pier",
+      "color": "orange",
+      "position": {
+        "lat": 53.301667,
+        "lng": -6.114
+      }
+    },
+    {
+      "id": "W",
+      "name": "Bay",
+      "color": "black",
+      "position": {
+        "lat": 53.2955,
+        "lng": -6.118333
+      }
+    },
+    {
+      "id": "X",
+      "name": "Turning",
+      "color": "yellow nav mk",
+      "position": {
+        "lat": 53.307167,
+        "lng": -6.139
+      }
+    },
+    {
+      "id": "Y",
+      "name": "Omega",
+      "color": "yellow",
+      "position": {
+        "lat": 53.296333,
+        "lng": -6.103833
+      }
+    },
+    {
+      "id": "2",
+      "name": "Black Start",
+      "position": {
+        "lat": 53.306867,
+        "lng": -6.134433
+      }
+    },
+    {
+      "id": "3",
+      "name": "Green Start",
+      "position": {
+        "lat": 53.306933,
+        "lng": -6.136333
+      }
+    },
+    {
+      "id": "Z",
+      "name": "Zebra",
+      "position": {
+        "lat": 53.312333,
+        "lng": -6.102667
+      }
+    }
+  ]
+}

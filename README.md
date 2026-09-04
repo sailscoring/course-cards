@@ -53,18 +53,28 @@ library's. The geometry primitives (`distanceNm`, `bearingDeg`,
 
 ## Data
 
-`data/hyc/al-2025/` — Howth Yacht Club's Autumn League 2025: the marks
-from the course card technical sheet, and the offshore and inshore
-committee-boat-start course cards (180 courses each) with the sheet's
-notes. The club's PDFs are kept alongside, and the JSON is **generated
-from them** by the tools in `tools/` — a text-layer parser for the
-technical sheet and a small purpose-built OCR for the two cards, which are
-pictures. The same pipeline renders each card as a self-contained HTML
-page: the course table as printed, the marks over an OpenStreetMap +
-OpenSeaMap chart, bearings and distances between marks, and the notes.
-Published: [HYC offshore](https://courses.sailscoring.ie/hyc/al-2025/offshore.html),
-[HYC inshore](https://courses.sailscoring.ie/hyc/al-2025/inshore.html). See the
-[data README](data/hyc/al-2025/README.md) for how, and how it was checked.
+Each club's PDFs are kept alongside its JSON, and the JSON is **generated
+from them** by the tools in `tools/`. The same pipeline renders each card
+as a self-contained HTML page: the course table as printed, the marks over
+an OpenStreetMap + OpenSeaMap chart, bearings and distances between marks,
+and the notes. Every data set has a README saying how, and how it was
+checked.
+
+- `data/hyc/al-2025/` — Howth Yacht Club's Autumn League 2025: the marks
+  from the course card technical sheet, and the offshore and inshore
+  committee-boat-start course cards (180 courses each) with the sheet's
+  notes. The technical sheet is parsed from its text layer; the two cards
+  are pictures, read by a small purpose-built OCR. Published:
+  [offshore](https://courses.sailscoring.ie/hyc/al-2025/offshore.html),
+  [inshore](https://courses.sailscoring.ie/hyc/al-2025/inshore.html);
+  [README](data/hyc/al-2025/README.md).
+- `data/dbsc/summer-2026/` — Dublin Bay Sailing Club's Summer Series 2026:
+  the 26 marks from the club's marks, bearings and distances sheet, and the
+  five keelboat course cards (Saturday committee vessel and hut, Thursday
+  Blue and Red fleets, Tuesday hut; 592 courses), all read from the PDFs'
+  text layers and cross-checked against the club's own machine-readable
+  CSV/GPX files — which agree apart from one course, recorded in the
+  manifest. [README](data/dbsc/summer-2026/README.md).
 
 ```sh
 pnpm data        # rewrite the JSON from the PDFs, then the HTML from the JSON
@@ -72,7 +82,7 @@ pnpm data:check  # verify the committed files are what a fresh run produces
 ```
 
 The extraction tools need Python 3, Pillow, and poppler's `pdftotext` /
-`pdftoppm`; rendering needs only Node.
+`pdftoppm` / `pdfinfo`; rendering needs only Node.
 
 ## Releases and the site
 

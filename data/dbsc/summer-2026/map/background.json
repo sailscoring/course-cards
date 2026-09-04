@@ -1,0 +1,18 @@
+{
+  "bounds": {
+    "south": 53.278,
+    "west": -6.168737796374858,
+    "north": 53.347,
+    "east": -6.073262203625142
+  },
+  "projection": "EPSG:3857",
+  "zoom": 14,
+  "width": 1112,
+  "height": 1346,
+  "layers": [
+    "osm",
+    "openseamap"
+  ],
+  "attribution": "\u00a9 OpenStreetMap contributors \u00b7 \u00a9 OpenSeaMap contributors",
+  "fetched": "2026-09-04"
+}

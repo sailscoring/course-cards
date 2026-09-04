@@ -82,12 +82,12 @@ for (const manifest of manifests(join(root, 'data'))) {
   const base = dirname(manifest);
   const rel = relative(join(root, 'data'), base);
   const m = JSON.parse(readFileSync(manifest, 'utf-8')) as Manifest;
-  const marksArtifact = m.artifacts.find((a) => a.tool === 'extract_marks');
+  const marksArtifact = m.artifacts.find((a) => a.tool.endsWith('_marks'));
   if (!marksArtifact) throw new Error(`${rel}: no marks artifact`);
   const marks = parseMarksFile(JSON.parse(readFileSync(join(base, marksArtifact.output), 'utf-8')));
   const cards: CardEntry[] = [];
   for (const a of m.artifacts) {
-    if (a.tool !== 'extract_card') continue;
+    if (!a.tool.endsWith('_card')) continue;
     const card = parseCourseCardFile(JSON.parse(readFileSync(join(base, a.output), 'utf-8')));
     cards.push({
       id: a.output.replace(/\.json$/, ''),

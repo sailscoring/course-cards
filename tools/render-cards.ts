@@ -53,7 +53,7 @@ for (const manifest of manifests(join(root, 'data'))) {
     background = { ...sidecar, png: readFileSync(png) };
   }
   for (const artifact of artifacts) {
-    if (artifact.tool !== 'extract_card') continue;
+    if (!artifact.tool.endsWith('_card')) continue;
     const marksName = artifact.meta?.marks;
     if (!marksName) throw new Error(`${artifact.output}: no marks file named in meta`);
     const card = parseCourseCardFile(JSON.parse(readFileSync(join(base, artifact.output), 'utf-8')));
@@ -61,7 +61,7 @@ for (const manifest of manifests(join(root, 'data'))) {
     emit(join(base, artifact.output.replace(/\.json$/, '.html')), renderCardHtml(card, marks, { background }));
   }
   if (map) {
-    const marksArtifact = artifacts.find((a) => a.tool === 'extract_marks');
+    const marksArtifact = artifacts.find((a) => a.tool.endsWith('_marks'));
     if (!marksArtifact) throw new Error(`${manifest}: chart but no marks artifact`);
     const marks = parseMarksFile(JSON.parse(readFileSync(join(base, marksArtifact.output), 'utf-8')));
     emit(join(base, dirname(map.background), 'marks.svg'), renderMarksMapSvg(marks, background));
