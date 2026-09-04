@@ -16,8 +16,11 @@ from, and the metadata that heads the output; `pnpm data` rebuilds them all
 files against a fresh run.
 
 The HTML pages are the cards as a web page: the course table as printed,
-the marks over a chart, true bearings and distances between every pair of
-marks computed from the positions, and the sheet's notes.
+the marks over a chart on which a picked course is drawn with its legs
+numbered and tabulated (true bearing and distance, computed from the
+positions; a leg from the start line or touching Z or F, which the card
+cannot place, is listed without them), true bearings and distances between
+every pair of marks, and the sheet's notes.
 
 **Chart.** The map background is OpenStreetMap with the OpenSeaMap seamark
 overlay (the real buoys and lights), fetched once at zoom 14 for the marks'

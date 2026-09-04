@@ -1,15 +1,17 @@
 /**
  * A course card as a self-contained HTML page: the course table as the club
- * prints it, the marks with a map, mark-to-mark bearings and distances, and
- * the club's explanatory notes. No scripts; inline CSS and an inline SVG
- * map, so the page can be published anywhere as a file.
+ * prints it, each course drawn on a chart of the marks when it is picked,
+ * with its legs' bearings and distances, mark-to-mark bearings and
+ * distances, and the club's explanatory notes. No scripts — the picker is a
+ * radio button per course and a CSS `:has()` rule — inline CSS and an
+ * inline SVG map, so the page can be published anywhere as a file.
  *
  * Part of the artifact pipeline (see render-cards.ts), not of the published
  * library, which it consumes like any other client.
  */
 
 import { bearingDeg, distanceNm } from '../src/index';
-import type { Course, CourseCardFile, Mark, MarksFile, Note, Position } from '../src/index';
+import type { Course, CourseCardFile, CourseMark, Mark, MarksFile, Note, Position } from '../src/index';
 
 export interface RenderOptions {
   /** Page title; defaults to the card's name. */
@@ -50,7 +52,33 @@ const CSS = `
   .courses { width: 100%; table-layout: fixed; }
   .courses th.row, .courses thead th:first-child { width: 2.2em; text-align: center; font-family: ui-monospace, monospace; }
   .courses tr:nth-child(even) td { background: #fdf7d8; }
-  .sections { display: grid; grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr)); gap: .75rem 1.5rem; }
+  .courses td { padding: 0; }
+  .courses label { display: block; padding: .3rem .5rem; cursor: pointer; }
+  .courses label:hover { background: #e6efff; }
+  .courses input { position: absolute; opacity: 0; width: 0; height: 0; }
+  .courses input:focus-visible + span { outline: 2px solid #0b57d0; }
+  .courses td:has(input:checked) { background: #cfe0ff !important; box-shadow: inset 0 0 0 2px #0b57d0; }
+  .courses-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(20rem, 30rem); gap: 1.5rem; align-items: start; }
+  .course-view { position: sticky; top: 0; max-height: 100vh; overflow-y: auto; }
+  @media (max-width: 64rem) {
+    .courses-layout { grid-template-columns: 1fr; }
+    .course-view { order: -1; max-height: 50vh; background: #fff; border-bottom: 1px solid #ccc; z-index: 1; }
+    .map svg { max-height: 36vh; width: auto; max-width: 100%; }
+  }
+  .course, .legs { display: none; }
+  .legs h3 { font-size: 1rem; margin: .75rem 0 .25rem; }
+  .legs .unplaced td { color: #777; }
+  .legs tfoot td { font-weight: 700; }
+  .legs p { color: #555; font-size: 12px; margin: .3rem 0 0; }
+  .pick { color: #555; font-size: 12px; }
+  body:has(.courses input:checked) .pick { display: none; }
+  .leg { fill: none; stroke: #0b57d0; }
+  .ah { fill: #0b57d0; }
+  .ln { fill: #0b57d0; stroke: #fff; paint-order: stroke; font-weight: 700; text-anchor: middle; }
+  .rp { fill: none; stroke: #c81e1e; }
+  .rs { fill: none; stroke: #1a8a3c; }
+  .rn { fill: none; stroke: #333; }
+  .sections { display: grid; grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr)); gap: .75rem 1.5rem; }
   .port { color: #c81e1e; }
   .stbd { color: #1a8a3c; }
   .passing { outline: 1.5px solid #222; outline-offset: 1px; }
@@ -59,17 +87,24 @@ const CSS = `
   .numbers td, .numbers th { text-align: right; font-family: ui-monospace, monospace; font-size: 12px; padding: .15rem .35rem; }
   .numbers th:first-child { text-align: center; }
   .scroll { overflow-x: auto; }
-  .marks-layout { display: flex; flex-wrap: wrap; gap: 2rem; align-items: flex-start; }
-  .map { flex: 1 1 24rem; min-width: 20rem; max-width: 40rem; margin: 0; }
+  .map { margin: 0; }
   .map svg { width: 100%; height: auto; border: 1px solid #ccc; background: #f4f9fd; }
   .map figcaption { color: #555; font-size: 12px; margin-top: .3rem; }
   .note p { margin: .3rem 0; max-width: 46rem; }
   .swatch { display: inline-block; width: .8em; height: .8em; border: 1px solid #555; vertical-align: -1px; margin-right: .3em; }
-  @media print { body { padding: 0; } h2 { break-after: avoid; } }
+  @media print { body { padding: 0; } h2 { break-after: avoid; } .course-view { position: static; max-height: none; overflow: visible; } }
 `;
 
+/** An HTML id fragment for a course: its id with anything but letters and
+ *  digits spelled as its code, so "041" and "B3" survive and odd ids do too. */
+function courseKey(course: Course): string {
+  return course.id.replace(/[^A-Za-z0-9]/g, (c) => `_${c.charCodeAt(0).toString(16)}`);
+}
+
+/** The course's marks as printed, wrapped in a label around the radio button
+ *  that picks the course for the chart. */
 function courseCell(course: Course): string {
-  return course.marks
+  const seq = course.marks
     .map((m) => {
       const classes = [m.side === 'starboard' ? 'stbd' : m.side === 'port' ? 'port' : '', m.passing ? 'passing' : '']
         .filter(Boolean)
@@ -77,6 +112,7 @@ function courseCell(course: Course): string {
       return `<span class="${classes}">${esc(m.mark)}</span>`;
     })
     .join(' ');
+  return `<label><input type="radio" name="course" id="pick-${courseKey(course)}"><span>${seq}</span></label>`;
 }
 
 /** Cards numbered like HYC's — two digits of row, one of column — lay out as
@@ -123,7 +159,9 @@ function courseTable(card: CourseCardFile): string {
   }
   html +=
     '<p class="legend">All marks are rounding marks except those in a <span class="passing">box</span>, which are passing marks. ' +
-    '<span class="port">Red</span> marks are rounded or passed to port, <span class="stbd">green</span> to starboard.</p>';
+    '<span class="port">Red</span> marks are rounded or passed to port, <span class="stbd">green</span> to starboard. ' +
+    'Select a course to draw it on the chart: its legs are numbered in sailing order, a leg sailed again is drawn beside ' +
+    'the first, and a ring shows the side each mark is left on.</p>';
   return html;
 }
 
@@ -175,12 +213,19 @@ const my = (lat: number): number => {
   return (1 - Math.log(Math.tan(φ) + 1 / Math.cos(φ)) / Math.PI) / 2;
 };
 
-/** An inline SVG of the fixed marks over the background (or a plain grid
- *  when there is none): Web Mercator, north up, minute grid, one-mile scale
- *  bar. Marks laid per race are not on it. */
-function map(marks: Mark[], background?: MapBackground): string {
-  const fixed = marks.filter((m): m is Mark & { position: Position } => !!m.position);
-  if (fixed.length < 2) return '';
+/** The projection of a chart: Web Mercator, north up, over `bounds`, in
+ *  pixels of `width` × `height`; `u` scales stroke widths and type with the
+ *  image so they look the same on screen whatever its resolution. */
+interface Chart {
+  bounds: MapBackground['bounds'];
+  width: number;
+  height: number;
+  u: number;
+  x(lng: number): number;
+  y(lat: number): number;
+}
+
+function chart(fixed: Array<Mark & { position: Position }>, background?: MapBackground): Chart {
   let bounds: MapBackground['bounds'];
   let width: number;
   let height: number;
@@ -201,12 +246,137 @@ function map(marks: Mark[], background?: MapBackground): string {
     width = 640;
     height = Math.round((width * (my(bounds.south) - my(bounds.north))) / (mx(bounds.east) - mx(bounds.west)));
   }
-  const x = (lng: number): number => ((mx(lng) - mx(bounds.west)) / (mx(bounds.east) - mx(bounds.west))) * width;
-  const y = (lat: number): number => ((my(lat) - my(bounds.north)) / (my(bounds.south) - my(bounds.north))) * height;
-  const u = width / 640; // sizes scale with the image so they look the same on screen
+  return {
+    bounds,
+    width,
+    height,
+    u: width / 640,
+    x: (lng) => ((mx(lng) - mx(bounds.west)) / (mx(bounds.east) - mx(bounds.west))) * width,
+    y: (lat) => ((my(lat) - my(bounds.north)) / (my(bounds.south) - my(bounds.north))) * height,
+  };
+}
+
+/** One end of a course leg on the page: the start line or a mark, placed
+ *  when the card gives it a position. */
+interface LegEnd {
+  id: string;
+  position?: Position;
+  side?: CourseMark['side'];
+  passing?: boolean;
+}
+
+/** The course's legs in sailing order: start line → each mark. Only a leg
+ *  whose both ends the card places has a bearing and distance. */
+function courseLegEnds(course: Course, byId: Map<string, Mark>): LegEnd[] {
+  return [
+    { id: 'Start' },
+    ...course.marks.map((cm) => ({ id: cm.mark, position: byId.get(cm.mark)?.position, side: cm.side, passing: cm.passing })),
+  ];
+}
+
+/** A course drawn on the chart, hidden until picked: its placeable legs as
+ *  numbered arrows, a repeated leg in its own lane beside the first, and a
+ *  ring on each mark for the side it is left on. Legs from the start line
+ *  or touching a mark laid per race are not drawn — the card cannot place
+ *  them. */
+function courseOverlay(course: Course, byId: Map<string, Mark>, c: Chart): string {
+  const { u, x, y } = c;
+  const f = (n: number): string => n.toFixed(1);
+  const ends = courseLegEnds(course, byId);
+  let g = `<g class="course" id="course-${courseKey(course)}">`;
+  const traversals = new Map<string, number>();
+  for (let i = 0; i < ends.length - 1; i++) {
+    const a = ends[i]!;
+    const b = ends[i + 1]!;
+    if (!a.position || !b.position) continue;
+    const key = [a.id, b.id].sort().join('\0');
+    const n = traversals.get(key) ?? 0;
+    traversals.set(key, n + 1);
+    const ax = x(a.position.lng);
+    const ay = y(a.position.lat);
+    const dx = x(b.position.lng) - ax;
+    const dy = y(b.position.lat) - ay;
+    const len = Math.hypot(dx, dy) || 1;
+    const ux = dx / len;
+    const uy = dy / len;
+    // a lane to the right of travel: the first pass just off the mark-to-mark
+    // line, each repeat further out; both ends stop short of the mark's ring
+    const off = (3 + 7 * n) * u;
+    const trim = 12 * u;
+    const x1 = ax - uy * off + ux * trim;
+    const y1 = ay + ux * off + uy * trim;
+    const x2 = ax + dx - uy * off - ux * trim;
+    const y2 = ay + dy + ux * off - uy * trim;
+    g += `<path class="leg" d="M${f(x1)} ${f(y1)}L${f(x2)} ${f(y2)}" stroke-width="${f(2.5 * u)}"/>`;
+    const mxp = (x1 + x2) / 2;
+    const myp = (y1 + y2) / 2;
+    const deg = (Math.atan2(dy, dx) * 180) / Math.PI;
+    g += `<use href="#ah" transform="translate(${f(mxp)} ${f(myp)}) rotate(${f(deg)}) scale(${f(u)})"/>`;
+    // the leg number beyond the lane, staggered along a repeated leg
+    const nx = mxp - uy * 8 * u + ux * 14 * u * n;
+    const ny = myp + ux * 8 * u + uy * 14 * u * n;
+    g += `<text class="ln" x="${f(nx)}" y="${f(ny + 4 * u)}" font-size="${f(11 * u)}" stroke-width="${f(3 * u)}">${i + 1}</text>`;
+  }
+  for (const e of ends) {
+    if (!e.position) continue;
+    const cls = e.side === 'port' ? 'rp' : e.side === 'starboard' ? 'rs' : 'rn';
+    const dash = e.passing ? ` stroke-dasharray="${f(3 * u)} ${f(3 * u)}"` : '';
+    g += `<circle class="${cls}" cx="${f(x(e.position.lng))}" cy="${f(y(e.position.lat))}" r="${f(9 * u)}" stroke-width="${f(2.5 * u)}"${dash}/>`;
+  }
+  return g + '</g>';
+}
+
+/** The legs of a course as a table, hidden until the course is picked:
+ *  number, ends, true bearing and distance — blank for a leg the card
+ *  cannot place — and the total of the placed legs. */
+function legTable(course: Course, byId: Map<string, Mark>): string {
+  const ends = courseLegEnds(course, byId);
+  let total = 0;
+  let unplaced = false;
+  let rows = '';
+  for (let i = 0; i < ends.length - 1; i++) {
+    const a = ends[i]!;
+    const b = ends[i + 1]!;
+    if (a.position && b.position) {
+      const d = distanceNm(a.position, b.position);
+      total += d;
+      rows +=
+        `<tr><th>${i + 1}</th><td>${esc(a.id)}</td><td>${esc(b.id)}</td>` +
+        `<td>${String(Math.round(bearingDeg(a.position, b.position)) % 360).padStart(3, '0')}</td><td>${d.toFixed(2)}</td></tr>`;
+    } else {
+      unplaced = true;
+      rows += `<tr class="unplaced"><th>${i + 1}</th><td>${esc(a.id)}</td><td>${esc(b.id)}</td><td>—</td><td>—</td></tr>`;
+    }
+  }
+  return (
+    `<div class="legs" id="legs-${courseKey(course)}"><h3>Course ${esc(course.id)}</h3>` +
+    `<table class="numbers"><thead><tr><th>Leg</th><th>From</th><th>To</th><th>° true</th><th>NM</th></tr></thead>` +
+    `<tbody>${rows}</tbody><tfoot><tr><td colspan="4">Legs between placed marks</td><td>${total.toFixed(2)}</td></tr></tfoot></table>` +
+    (unplaced ? '<p>A leg from the start line, or to or from a mark laid per race, has no position on the card.</p>' : '') +
+    '</div>'
+  );
+}
+
+/** The CSS that reveals a picked course's overlay and leg table. */
+function pickRules(courses: Course[]): string {
+  return courses
+    .map((c) => `body:has(#pick-${courseKey(c)}:checked) #course-${courseKey(c)}, body:has(#pick-${courseKey(c)}:checked) #legs-${courseKey(c)}`)
+    .join(',\n') + ' { display: block; }';
+}
+
+/** An inline SVG of the fixed marks over the background (or a plain grid
+ *  when there is none): Web Mercator, north up, minute grid, one-mile scale
+ *  bar. Marks laid per race are not on it. With `courses`, each course's
+ *  overlay is included, hidden until picked. */
+function map(marks: Mark[], background?: MapBackground, courses: Course[] = []): string {
+  const fixed = marks.filter((m): m is Mark & { position: Position } => !!m.position);
+  if (fixed.length < 2) return '';
+  const c = chart(fixed, background);
+  const { bounds, width, height, u, x, y } = c;
   const font = (px: number): string => `font-size="${(px * u).toFixed(1)}"`;
 
   let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="Map of the marks">`;
+  if (courses.length) svg += '<defs><path id="ah" class="ah" d="M7 0L-5 5L-5 -5z"/></defs>';
   if (background) {
     const b64 = Buffer.from(background.png).toString('base64');
     svg += `<image href="data:image/png;base64,${b64}" x="0" y="0" width="${width}" height="${height}"/>`;
@@ -229,6 +399,8 @@ function map(marks: Mark[], background?: MapBackground): string {
   svg += `<text x="${width - 20 * u - bar / 2}" y="${height - 26 * u}" ${font(11)} text-anchor="middle" fill="#222">1 NM</text>`;
   svg += `<text x="${width - 14 * u}" y="${18 * u}" ${font(12)} text-anchor="middle" fill="#222">N</text>`;
   svg += `<path d="M ${width - 14 * u} ${22 * u} l ${4 * u} ${12 * u} l ${-4 * u} ${-3 * u} l ${-4 * u} ${3 * u} z" fill="#222"/>`;
+  const byId = new Map(marks.map((m) => [m.id, m]));
+  svg += courses.map((course) => courseOverlay(course, byId, c)).join('');
   for (const m of fixed) {
     const cx = x(m.position.lng).toFixed(1);
     const cy = y(m.position.lat).toFixed(1);
@@ -284,15 +456,21 @@ export function renderCardHtml(card: CourseCardFile, marks: MarksFile, options: 
   const sources = [card.source, marks.source].filter((s): s is string => !!s);
   const meta = [card.club, ...sources.map((s) => `<a href="${esc(s)}">${esc(s)}</a>`)].filter(Boolean).join(' · ');
   const allNotes = card.notes ?? [];
+  const byId = new Map(marks.marks.map((m) => [m.id, m]));
+  const chartSvg = map(marks.marks, options.background, card.courses);
+  const caption =
+    (options.background ? `Chart: ${esc(options.background.attribution)}. ` : '') + 'Marks laid per race are not shown.';
   return (
     `<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">` +
-    `<title>${esc(title)}</title><style>${CSS}</style></head><body>\n` +
+    `<title>${esc(title)}</title><style>${CSS}${pickRules(card.courses)}\n</style></head><body>\n` +
     `<h1>${esc(title)}</h1><p class="meta">${meta}</p>\n` +
-    `<h2>Courses</h2>${courseTable(card)}\n` +
-    `<h2>Marks</h2><div class="marks-layout"><div>${marksTable(marks)}</div>` +
-    `<figure class="map">${map(marks.marks, options.background)}` +
-    (options.background ? `<figcaption>Chart: ${esc(options.background.attribution)}. Marks laid per race are not shown.</figcaption>` : '') +
-    `</figure></div>\n` +
+    `<h2>Courses</h2><div class="courses-layout"><div>${courseTable(card)}</div>` +
+    (chartSvg
+      ? `<aside class="course-view"><figure class="map">${chartSvg}<figcaption>${caption}</figcaption></figure>` +
+        `<p class="pick">Select a course to draw it on the chart.</p>${card.courses.map((c) => legTable(c, byId)).join('')}</aside>`
+      : '') +
+    `</div>\n` +
+    `<h2>Marks</h2>${marksTable(marks)}\n` +
     `<h2>Bearings between marks (° true)</h2>${pairTable(marks.marks, (a, b) => String(Math.round(bearingDeg(a, b)) % 360).padStart(3, '0'))}\n` +
     `<h2>Distances between marks (NM)</h2>${pairTable(marks.marks, (a, b) => distanceNm(a, b).toFixed(2))}\n` +
     notes(allNotes) +

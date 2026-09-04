@@ -56,9 +56,11 @@ library's. The geometry primitives (`distanceNm`, `bearingDeg`,
 Each club's PDFs are kept alongside its JSON, and the JSON is **generated
 from them** by the tools in `tools/`. The same pipeline renders each card
 as a self-contained HTML page: the course table as printed, the marks over
-an OpenStreetMap + OpenSeaMap chart, bearings and distances between marks,
-and the notes. Every data set has a README saying how, and how it was
-checked.
+an OpenStreetMap + OpenSeaMap chart — pick a course and it is drawn there,
+leg by leg, with each leg's true bearing and distance — bearings and
+distances between marks, and the notes. No scripts: the picker is a radio
+button per course and a CSS rule. Every data set has a README saying how,
+and how it was checked.
 
 - `data/hyc/al-2025/` — Howth Yacht Club's Autumn League 2025: the marks
   from the course card technical sheet, and the offshore and inshore
