@@ -59,8 +59,8 @@ notes. The club's PDFs are kept alongside, and the JSON is **generated
 from them** by the tools in `tools/` — a text-layer parser for the
 technical sheet and a small purpose-built OCR for the two cards, which are
 pictures. The same pipeline renders each card as a self-contained HTML
-page: the course table as printed, the marks with a map, bearings and
-distances between marks, and the notes. See the
+page: the course table as printed, the marks over an OpenStreetMap +
+OpenSeaMap chart, bearings and distances between marks, and the notes. See the
 [data README](data/hyc/al-2025/README.md) for how, and how it was checked.
 
 ```sh

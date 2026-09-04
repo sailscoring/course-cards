@@ -41,5 +41,15 @@
       },
       "notesSource": "source/AL_Course_Card_Technical_Sheet.pdf"
     }
-  ]
+  ],
+  "map": {
+    "background": "map/background.png",
+    "marks": "marks.json",
+    "layers": [
+      "osm",
+      "openseamap"
+    ],
+    "zoom": 14,
+    "paddingMinutes": 0.6
+  }
 }

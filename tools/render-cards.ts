@@ -12,7 +12,7 @@ import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from '
 import { dirname, join, relative } from 'node:path';
 
 import { parseCourseCardFile, parseMarksFile } from '../src/index';
-import { renderCardHtml } from './card-html';
+import { renderCardHtml, type MapBackground } from './card-html';
 
 const root = join(import.meta.dirname, '..');
 const check = process.argv.includes('--check');
@@ -28,16 +28,23 @@ function* manifests(dir: string): Generator<string> {
 let failures = 0;
 for (const manifest of manifests(join(root, 'data'))) {
   const base = dirname(manifest);
-  const { artifacts } = JSON.parse(readFileSync(manifest, 'utf-8')) as {
+  const { artifacts, map } = JSON.parse(readFileSync(manifest, 'utf-8')) as {
     artifacts: Array<{ output: string; tool: string; meta?: { marks?: string } }>;
+    map?: { background: string };
   };
+  let background: MapBackground | undefined;
+  if (map) {
+    const png = join(base, map.background);
+    const sidecar = JSON.parse(readFileSync(png.replace(/\.png$/, '.json'), 'utf-8')) as Omit<MapBackground, 'png'>;
+    background = { ...sidecar, png: readFileSync(png) };
+  }
   for (const artifact of artifacts) {
     if (artifact.tool !== 'extract_card') continue;
     const marksName = artifact.meta?.marks;
     if (!marksName) throw new Error(`${artifact.output}: no marks file named in meta`);
     const card = parseCourseCardFile(JSON.parse(readFileSync(join(base, artifact.output), 'utf-8')));
     const marks = parseMarksFile(JSON.parse(readFileSync(join(base, marksName), 'utf-8')));
-    const html = renderCardHtml(card, marks);
+    const html = renderCardHtml(card, marks, { background });
     const out = join(base, artifact.output.replace(/\.json$/, '.html'));
     const rel = relative(root, out);
     if (check) {

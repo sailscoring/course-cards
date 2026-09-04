@@ -14,6 +14,8 @@ import type { Course, CourseCardFile, Mark, MarksFile, Note, Position } from '..
 export interface RenderOptions {
   /** Page title; defaults to the card's name. */
   title?: string;
+  /** Chart imagery under the marks; without it the map is a plain grid. */
+  background?: MapBackground;
 }
 
 function esc(text: string): string {
@@ -57,8 +59,9 @@ const CSS = `
   .numbers th:first-child { text-align: center; }
   .scroll { overflow-x: auto; }
   .marks-layout { display: flex; flex-wrap: wrap; gap: 2rem; align-items: flex-start; }
-  .map { flex: 1 1 24rem; min-width: 20rem; }
+  .map { flex: 1 1 24rem; min-width: 20rem; max-width: 40rem; margin: 0; }
   .map svg { width: 100%; height: auto; border: 1px solid #ccc; background: #f4f9fd; }
+  .map figcaption { color: #555; font-size: 12px; margin-top: .3rem; }
   .note p { margin: .3rem 0; max-width: 46rem; }
   .swatch { display: inline-block; width: .8em; height: .8em; border: 1px solid #555; vertical-align: -1px; margin-right: .3em; }
   @media print { body { padding: 0; } h2 { break-after: avoid; } }
@@ -130,50 +133,87 @@ function marksTable(marks: MarksFile): string {
   return html + '</tbody></table>';
 }
 
-/** An inline SVG of the fixed marks: north up, equirectangular, minute grid,
- *  one-mile scale bar. Marks laid per race are not on it. */
-function map(marks: Mark[]): string {
+/** A raster background for the map: a Web Mercator image covering exactly
+ *  `bounds`, as fetched by tools/fetch_map.py, with the attribution its
+ *  sources require. */
+export interface MapBackground {
+  png: Uint8Array;
+  bounds: { south: number; west: number; north: number; east: number };
+  width: number;
+  height: number;
+  attribution: string;
+}
+
+// Web Mercator on the unit square.
+const mx = (lng: number): number => (lng + 180) / 360;
+const my = (lat: number): number => {
+  const φ = (lat * Math.PI) / 180;
+  return (1 - Math.log(Math.tan(φ) + 1 / Math.cos(φ)) / Math.PI) / 2;
+};
+
+/** An inline SVG of the fixed marks over the background (or a plain grid
+ *  when there is none): Web Mercator, north up, minute grid, one-mile scale
+ *  bar. Marks laid per race are not on it. */
+function map(marks: Mark[], background?: MapBackground): string {
   const fixed = marks.filter((m): m is Mark & { position: Position } => !!m.position);
   if (fixed.length < 2) return '';
-  const lats = fixed.map((m) => m.position.lat);
-  const lngs = fixed.map((m) => m.position.lng);
-  const midLat = (Math.min(...lats) + Math.max(...lats)) / 2;
-  const k = Math.cos((midLat * Math.PI) / 180); // minutes of longitude per minute of latitude
-  const pad = 0.6 / 60; // 0.6′ around the marks
-  const minLat = Math.min(...lats) - pad;
-  const maxLat = Math.max(...lats) + pad;
-  const minLng = Math.min(...lngs) - pad / k;
-  const maxLng = Math.max(...lngs) + pad / k;
-  const width = 640;
-  const scale = width / ((maxLng - minLng) * k); // px per degree of latitude
-  const height = Math.round((maxLat - minLat) * scale);
-  const x = (lng: number): number => (lng - minLng) * k * scale;
-  const y = (lat: number): number => (maxLat - lat) * scale;
+  let bounds: MapBackground['bounds'];
+  let width: number;
+  let height: number;
+  if (background) {
+    ({ bounds, width, height } = background);
+  } else {
+    const lats = fixed.map((m) => m.position.lat);
+    const lngs = fixed.map((m) => m.position.lng);
+    const midLat = (Math.min(...lats) + Math.max(...lats)) / 2;
+    const pad = 0.6 / 60; // 0.6′ around the marks
+    const k = Math.cos((midLat * Math.PI) / 180);
+    bounds = {
+      south: Math.min(...lats) - pad,
+      north: Math.max(...lats) + pad,
+      west: Math.min(...lngs) - pad / k,
+      east: Math.max(...lngs) + pad / k,
+    };
+    width = 640;
+    height = Math.round((width * (my(bounds.south) - my(bounds.north))) / (mx(bounds.east) - mx(bounds.west)));
+  }
+  const x = (lng: number): number => ((mx(lng) - mx(bounds.west)) / (mx(bounds.east) - mx(bounds.west))) * width;
+  const y = (lat: number): number => ((my(lat) - my(bounds.north)) / (my(bounds.south) - my(bounds.north))) * height;
+  const u = width / 640; // sizes scale with the image so they look the same on screen
+  const font = (px: number): string => `font-size="${(px * u).toFixed(1)}"`;
 
   let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="Map of the marks">`;
-  svg += '<g stroke="#b9cbe0" stroke-width="1" font-size="11" fill="#5b6b7c">';
-  for (let lat = Math.ceil(minLat * 60) / 60; lat < maxLat; lat += 1 / 60) {
+  if (background) {
+    const b64 = Buffer.from(background.png).toString('base64');
+    svg += `<image href="data:image/png;base64,${b64}" x="0" y="0" width="${width}" height="${height}"/>`;
+  }
+  svg += `<g stroke="${background ? '#5b6b7c' : '#b9cbe0'}" stroke-opacity="${background ? 0.35 : 1}" stroke-width="${u}" ${font(11)} fill="#3b4b5c">`;
+  for (let lat = Math.ceil(bounds.south * 60) / 60; lat < bounds.north; lat += 1 / 60) {
     const yy = y(lat).toFixed(1);
     svg += `<line x1="0" y1="${yy}" x2="${width}" y2="${yy}"/>`;
-    svg += `<text x="3" y="${(y(lat) - 3).toFixed(1)}" stroke="none">${formatPosition({ lat, lng: 0 }).split(' ').slice(0, 3).join(' ')}</text>`;
+    svg += `<text x="${3 * u}" y="${(y(lat) - 3 * u).toFixed(1)}" stroke="none">${formatPosition({ lat, lng: 0 }).split(' ').slice(0, 3).join(' ')}</text>`;
   }
-  for (let lng = Math.ceil(minLng * 60) / 60; lng < maxLng; lng += 1 / 60) {
+  for (let lng = Math.ceil(bounds.west * 60) / 60; lng < bounds.east; lng += 1 / 60) {
     const xx = x(lng).toFixed(1);
     svg += `<line x1="${xx}" y1="0" x2="${xx}" y2="${height}"/>`;
-    svg += `<text x="${(x(lng) + 3).toFixed(1)}" y="${height - 4}" stroke="none">${formatPosition({ lat: 0, lng }).split(' ').slice(3).join(' ')}</text>`;
+    svg += `<text x="${(x(lng) + 3 * u).toFixed(1)}" y="${height - 4 * u}" stroke="none">${formatPosition({ lat: 0, lng }).split(' ').slice(3).join(' ')}</text>`;
   }
   svg += '</g>';
   // scale bar: one minute of latitude is one nautical mile
-  const bar = scale / 60;
-  svg += `<g stroke="#222" stroke-width="2"><line x1="${width - 20 - bar}" y1="${height - 20}" x2="${width - 20}" y2="${height - 20}"/></g>`;
-  svg += `<text x="${width - 20 - bar / 2}" y="${height - 26}" font-size="11" text-anchor="middle" fill="#222">1 NM</text>`;
-  svg += `<text x="${width - 14}" y="18" font-size="12" text-anchor="middle" fill="#222">N</text><path d="M ${width - 14} 22 l 4 12 l -4 -3 l -4 3 z" fill="#222"/>`;
+  const bar = y(bounds.south) - y(bounds.south + 1 / 60);
+  svg += `<g stroke="#222" stroke-width="${2 * u}"><line x1="${width - 20 * u - bar}" y1="${height - 20 * u}" x2="${width - 20 * u}" y2="${height - 20 * u}"/></g>`;
+  svg += `<text x="${width - 20 * u - bar / 2}" y="${height - 26 * u}" ${font(11)} text-anchor="middle" fill="#222">1 NM</text>`;
+  svg += `<text x="${width - 14 * u}" y="${18 * u}" ${font(12)} text-anchor="middle" fill="#222">N</text>`;
+  svg += `<path d="M ${width - 14 * u} ${22 * u} l ${4 * u} ${12 * u} l ${-4 * u} ${-3 * u} l ${-4 * u} ${3 * u} z" fill="#222"/>`;
   for (const m of fixed) {
     const cx = x(m.position.lng).toFixed(1);
     const cy = y(m.position.lat).toFixed(1);
     const fill = SWATCH[(m.color ?? '').toLowerCase()] ?? '#888';
-    svg += `<circle cx="${cx}" cy="${cy}" r="5" fill="${fill}" stroke="#111" stroke-width="1"><title>${esc(m.id)} ${esc(m.name ?? '')}</title></circle>`;
-    svg += `<text x="${(+cx + 8).toFixed(1)}" y="${(+cy + 4).toFixed(1)}" font-size="13" font-weight="700" fill="#111">${esc(m.id)}</text>`;
+    svg += `<circle cx="${cx}" cy="${cy}" r="${5 * u}" fill="${fill}" stroke="#fff" stroke-width="${1.5 * u}"><title>${esc(m.id)} ${esc(m.name ?? '')}</title></circle>`;
+    svg += `<text x="${(+cx + 8 * u).toFixed(1)}" y="${(+cy + 4 * u).toFixed(1)}" ${font(13)} font-weight="700" fill="#111" stroke="#fff" stroke-width="${3 * u}" paint-order="stroke">${esc(m.id)}</text>`;
+  }
+  if (background) {
+    svg += `<text x="${3 * u}" y="${height - 4 * u}" ${font(10)} fill="#222" stroke="#fff" stroke-width="${3 * u}" paint-order="stroke">${esc(background.attribution)}</text>`;
   }
   return svg + '</svg>';
 }
@@ -217,7 +257,10 @@ export function renderCardHtml(card: CourseCardFile, marks: MarksFile, options: 
     `<title>${esc(title)}</title><style>${CSS}</style></head><body>\n` +
     `<h1>${esc(title)}</h1><p class="meta">${meta}</p>\n` +
     `<h2>Courses</h2>${courseTable(card)}\n` +
-    `<h2>Marks</h2><div class="marks-layout"><div>${marksTable(marks)}</div><div class="map">${map(marks.marks)}</div></div>\n` +
+    `<h2>Marks</h2><div class="marks-layout"><div>${marksTable(marks)}</div>` +
+    `<figure class="map">${map(marks.marks, options.background)}` +
+    (options.background ? `<figcaption>Chart: ${esc(options.background.attribution)}. Marks laid per race are not shown.</figcaption>` : '') +
+    `</figure></div>\n` +
     `<h2>Bearings between marks (° true)</h2>${pairTable(marks.marks, (a, b) => String(Math.round(bearingDeg(a, b)) % 360).padStart(3, '0'))}\n` +
     `<h2>Distances between marks (NM)</h2>${pairTable(marks.marks, (a, b) => distanceNm(a, b).toFixed(2))}\n` +
     notes(allNotes) +

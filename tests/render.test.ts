@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { parseCourseCardFile, parseMarksFile } from '../src/index';
-import { formatPosition, renderCardHtml } from '../tools/card-html';
+import { formatPosition, renderCardHtml, type MapBackground } from '../tools/card-html';
 
 function load(rel: string): unknown {
   return JSON.parse(readFileSync(join(__dirname, '..', 'data', 'hyc', 'al-2025', rel), 'utf-8'));
@@ -40,6 +40,22 @@ describe('renderCardHtml', () => {
     expect(html).toContain('<em>Upwind of Start Line</em>');
     expect((html.match(/<circle /g) ?? []).length).toBe(21);
     expect(html).toContain('1 NM');
+    expect(html).not.toContain('<image');
+  });
+
+  it('embeds the chart background and its attribution when given one', () => {
+    const png = join(__dirname, '..', 'data', 'hyc', 'al-2025', 'map', 'background.png');
+    const sidecar = JSON.parse(readFileSync(png.replace(/\.png$/, '.json'), 'utf-8')) as Omit<MapBackground, 'png'>;
+    const background: MapBackground = { ...sidecar, png: readFileSync(png) };
+    const out = renderCardHtml(inshore, marks, { background });
+    expect(out).toContain(`viewBox="0 0 ${sidecar.width} ${sidecar.height}"`);
+    expect(out).toContain('<image href="data:image/png;base64,iVBOR');
+    expect(out.match(/OpenSeaMap contributors/g)?.length).toBeGreaterThanOrEqual(2);
+    // Island sits inside the image, a little east of centre
+    const island = marks.marks.find((m) => m.id === 'I')!.position!;
+    const { west, east } = sidecar.bounds;
+    expect(island.lng).toBeGreaterThan(west);
+    expect(island.lng).toBeLessThan(east);
   });
 
   it('tabulates true bearings and distances between the fixed marks', () => {
