@@ -1,0 +1,98 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
+import { describe, expect, it } from 'vitest';
+
+import { parseCourseCardFile, parseMarksFile } from '../src/index';
+
+function load(rel: string): unknown {
+  return JSON.parse(readFileSync(join(__dirname, '..', 'data', 'hyc', 'al-2026', rel), 'utf-8'));
+}
+
+const marks = parseMarksFile(load('marks.json'));
+const cards = {
+  offshore: parseCourseCardFile(load('offshore.json')),
+  inshore: parseCourseCardFile(load('inshore.json')),
+};
+
+describe('the HYC Autumn League 2026 marks file', () => {
+  it('is the 2025 technical sheet’s, the club having published no 2026 one', () => {
+    const al2025 = parseMarksFile(
+      JSON.parse(readFileSync(join(__dirname, '..', 'data', 'hyc', 'al-2025', 'marks.json'), 'utf-8')),
+    );
+    expect(marks.marks).toEqual(al2025.marks);
+    expect(marks.source).toBe(al2025.source);
+  });
+});
+
+describe.each(Object.entries(cards))('the HYC Autumn League 2026 %s draft card', (name, card) => {
+  it('has the card’s 18 × 4 courses, lettered A–T without I or O', () => {
+    expect(card.marks).toBe('marks.json');
+    const letters = 'ABCDEFGHJKLMNPQRST'.split('');
+    expect(card.courses.map((c) => c.id)).toEqual(letters.flatMap((l) => [1, 2, 3, 4].map((n) => `${l}${n}`)));
+  });
+
+  it('names itself a draft, and carries the card’s heading, wind rows and notes', () => {
+    expect(card.name).toMatch(/^Autumn League 2026 course card, (off|in)shore — 6 September 2026 draft$/);
+    expect(card.notes?.map((n) => n.title)).toEqual(['Card heading', 'Wind direction', 'Card notes']);
+    expect(card.notes![0]!.text).toContain('HYC COURSE CARD - 2026 Rev 0 (xx/yy/2026)');
+    // 000° to 340° in 20° steps, one row per course letter.
+    const winds = card.notes![1]!.text.split('\n').at(-1)!;
+    expect(winds).toBe(
+      'A 000°, B 020°, C 040°, D 060°, E 080°, F 100°, G 120°, H 140°, J 160°, K 180°, ' +
+        'L 200°, M 220°, N 240°, P 260°, Q 280°, R 300°, S 320°, T 340°',
+    );
+    expect(card.notes![2]!.text).toContain('This course card forms part of the Sailing Instructions.');
+  });
+
+  it('has no start line: the 2026 sailing instructions are not published, so there is none to quote', () => {
+    expect(card.startLine).toBeUndefined();
+    for (const course of card.courses) expect(course.marks[0]!.mark, course.id).toBe('Z');
+  });
+
+  it('every mark is one the sheet lists, rounded to a side the card’s colours give', () => {
+    const known = new Set(marks.marks.map((m) => m.id));
+    for (const course of card.courses) {
+      for (const cm of course.marks) {
+        expect(known.has(cm.mark), `${course.id}: mark ${cm.mark}`).toBe(true);
+        expect(cm.side, `${course.id}: mark ${cm.mark}`).toBeDefined();
+        expect(cm.passing, `${course.id}: mark ${cm.mark}`).toBeUndefined();
+      }
+    }
+  });
+
+  it('carries the length the card prints for every course', () => {
+    for (const course of card.courses) {
+      expect(course.distanceNm, course.id).toBeGreaterThan(3);
+      expect(course.distanceNm, course.id).toBeLessThan(15);
+    }
+  });
+
+  it('spot checks against the printed card', () => {
+    const text = (id: string) => {
+      const course = card.courses.find((c) => c.id === id)!;
+      // lowercase: starboard
+      const seq = course.marks.map((m) => (m.side === 'starboard' ? m.mark.toLowerCase() : m.mark)).join(' ');
+      return `${seq} ${course.distanceNm!.toFixed(1)}`;
+    };
+    const expected: Record<string, Record<string, string>> = {
+      offshore: {
+        A1: 'Z U I h g 7.4',
+        C1: 'Z p u k 5.5',
+        D4: 'Z p a I e g 11.9',
+        K3: 'Z O A K A g 12.6',
+        K4: 'Z O A K A g 12.6', // the same course printed twice
+        T4: 'Z V D U V K U g 12.9',
+      },
+      inshore: {
+        A1: 'Z P W P W 4.8',
+        E4: 'Z V C K V W O C i 10.7',
+        N3: 'Z V H W o C 8.0',
+        Q4: 'Z I D W D W C I W 10.8',
+        R4: 'Z I D W D W C I W 10.8', // the 300° row repeats the 280° row
+        T4: 'Z W C P C P C P 10.0',
+      },
+    };
+    for (const [id, want] of Object.entries(expected[name]!)) expect(text(id), id).toBe(want);
+  });
+});

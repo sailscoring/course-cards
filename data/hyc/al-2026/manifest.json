@@ -1,0 +1,135 @@
+{
+  "club": "Howth Yacht Club",
+  "event": "Autumn League 2026 (draft cards)",
+  "artifacts": [
+    {
+      "output": "marks.json",
+      "tool": "extract_marks",
+      "source": "../al-2025/source/AL_Course_Card_Technical_Sheet.pdf",
+      "url": "https://hyc.ie/system/resources/2331/original/AL_Course_Card_Technical_Sheet.pdf",
+      "why": "The club has not published a 2026 technical sheet; the 2025 one is the current list of the marks these cards name. That its positions are still the ones the cards were laid out on is not assumed — check_hyc_al.py recomputes every printed distance from them.",
+      "meta": {
+        "club": "HYC",
+        "name": "Autumn League racing marks, from the 2025 course card technical sheet",
+        "source": "https://hyc.ie/system/resources/2331/original/AL_Course_Card_Technical_Sheet.pdf"
+      }
+    },
+    {
+      "output": "offshore.json",
+      "tool": "extract_hyc_al_card",
+      "source": "source/AL_Offshore_Course_Card_2026_draft.docx",
+      "meta": {
+        "club": "HYC",
+        "name": "Autumn League 2026 course card, offshore — 6 September 2026 draft",
+        "source": "source/AL_Offshore_Course_Card_2026_draft.docx",
+        "marks": "marks.json"
+      }
+    },
+    {
+      "output": "inshore.json",
+      "tool": "extract_hyc_al_card",
+      "source": "source/AL_Inshore_Course_Card_2026_draft.xlsx",
+      "meta": {
+        "club": "HYC",
+        "name": "Autumn League 2026 course card, inshore — 6 September 2026 draft",
+        "source": "source/AL_Inshore_Course_Card_2026_draft.xlsx",
+        "marks": "marks.json"
+      }
+    }
+  ],
+  "checks": {
+    "tool": "check_hyc_al",
+    "items": [
+      {
+        "check": "distances",
+        "card": "offshore.json",
+        "marks": "marks.json",
+        "toleranceNm": 0.2,
+        "model": {
+          "firstBeatNm": 0.67,
+          "secondLegNm": 0.4,
+          "upwindFactor": 1.4,
+          "upwindWindowDeg": 45,
+          "finishVia": "Q",
+          "finishRunNm": 0.36
+        },
+        "expected": [
+          {
+            "course": "D4",
+            "note": "The cell reads Z P A I <space> E G, with a stray non-breaking space where the deleted text of an edit would be; 0.58 NM of course is missing against the printed 11.9."
+          },
+          {
+            "course": "G2",
+            "note": "Printed 7.1 for Z O U O H G, 1.33 NM short, and only 0.2 more than G1's Z O U G. Z O H O H G would give 7.07."
+          },
+          {
+            "course": "H4",
+            "note": "Printed 11.5 for Z A E U K H G, 0.63 NM short. Ending at K rather than G would give 11.49."
+          },
+          {
+            "course": "N2",
+            "note": "Printed 9.1 for Z E O I G, 1.81 NM long; no single change of mark accounts for it. The figure fits the row's progression, so the sequence looks short rather than the distance wrong."
+          }
+        ]
+      },
+      {
+        "check": "distances",
+        "card": "inshore.json",
+        "marks": "marks.json",
+        "toleranceNm": 0.15,
+        "model": {
+          "firstBeatNm": 0.5,
+          "secondLegNm": 0.3,
+          "upwindFactor": 1.5,
+          "upwindWindowDeg": 45,
+          "finishVia": "S",
+          "finishRunNm": 0.2
+        },
+        "expected": [
+          {
+            "course": "B2",
+            "note": "Printed 5.7 for Z W C U C, 0.78 NM short."
+          },
+          {
+            "course": "E1",
+            "note": "The whole 080° row is 0.33 NM short, which is exactly the 50% not added to its last leg, C to I: 082° in a 080° wind is as upwind as a leg gets."
+          },
+          {
+            "course": "E2",
+            "note": "As E1: the 080° row's C–I leg is not lengthened for beating."
+          },
+          {
+            "course": "E3",
+            "note": "As E1: the 080° row's C–I leg is not lengthened for beating."
+          },
+          {
+            "course": "E4",
+            "note": "As E1: the 080° row's C–I leg is not lengthened for beating."
+          },
+          {
+            "course": "G3",
+            "note": "Printed 9.5 for Z V W D W D V C; F3 prints 9.68 for the same course, and nothing in the 100° and 120° rows makes a leg of it upwind in one and not the other."
+          },
+          {
+            "course": "K3",
+            "note": "Printed 9.2 for Z V P W P W V U, 0.34 NM short."
+          },
+          {
+            "course": "P4",
+            "note": "Printed 9.6 for Z I D W C I W C I W C, 0.6 NM short, and only 0.5 more than P3 for two more marks."
+          }
+        ]
+      }
+    ]
+  },
+  "map": {
+    "background": "map/background.png",
+    "marks": "marks.json",
+    "layers": [
+      "osm",
+      "openseamap"
+    ],
+    "zoom": 14,
+    "paddingMinutes": 0.6
+  }
+}

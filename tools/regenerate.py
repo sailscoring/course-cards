@@ -102,6 +102,8 @@ def extract(base, artifact, meta_path):
             cmd += ['--overrides', os.path.join(base, artifact['overrides'])]
     elif tool == 'extract_dbsc_card':
         cmd = [sys.executable, os.path.join(TOOLS, 'extract_dbsc_card.py'), source, '--meta', meta_path]
+    elif tool == 'extract_hyc_al_card':
+        cmd = [sys.executable, os.path.join(TOOLS, 'extract_hyc_al_card.py'), source, '--meta', meta_path]
     elif tool in ('extract_hyc_si_marks', 'extract_hyc_si_card'):
         cmd = [sys.executable, os.path.join(TOOLS, 'extract_hyc_si.py'), tool.rsplit('_', 1)[1], source, '--meta', meta_path]
         if artifact.get('details'):
