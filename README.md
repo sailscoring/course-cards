@@ -140,20 +140,44 @@ Vercel on every push to `main`.
 1. Bump `version` in `package.json` and commit.
 2. `git tag -a vX.Y.Z -m "…"`, then push `main` and the tag.
 3. The release workflow tests, checks the tag matches `package.json`, attaches
-   the assets to a GitHub Release, and publishes to npm.
+   the assets to a GitHub Release, and **stages** the npm publish.
+4. Approve the staged version — see below. **Until you do, nothing is
+   installable from npm.** A green release workflow is not a finished release.
 
 A re-run of a failed release uses the workflow file as it stood *at the tag*,
 so a fix to the workflow only takes effect on a new tag.
 
 ### Publishing to npm
 
-Publishing uses npm's **trusted publishing**: the workflow proves its identity
-to the registry over GitHub's OIDC, so there is no token in the repository,
+Publishing uses npm's **trusted publishing** with **staged publishing**, and
+the two do different jobs.
+
+Trusted publishing removes the credential: the workflow proves its identity to
+the registry over GitHub's OIDC, so there is no token in the repository,
 nothing to rotate, no expiry to track, and provenance is attached
 automatically. It replaced a granular access token in September 2026, when npm
 began restricting tokens that bypass two-factor authentication — such a token
 can no longer publish directly, and CI cannot answer an OTP prompt, so no
 token-based publish from Actions can succeed.
+
+Staged publishing puts a person back in the loop. The trusted publisher is
+configured **stage-only**, so the workflow runs `npm stage publish` and can do
+nothing more: the tarball lands in a staging queue, and a maintainer promotes
+it with 2FA. A compromised workflow can therefore stage something, but cannot
+put it in front of anyone.
+
+Approving a staged version, from a terminal that can answer a 2FA prompt:
+
+```sh
+npm stage list                  # versions awaiting approval
+npm stage view <stage-id>       # inspect the tarball before promoting it
+npm stage approve <stage-id>    # promote it; prompts for 2FA
+npm stage reject <stage-id>     # or discard it
+```
+
+`approve` and `reject` need interactive authentication and cannot use an OIDC
+token, so they are never automatable — by design. The package page on
+npmjs.com does the same job.
 
 The trust is configured on the registry side, at npmjs.com →
 `@sailscoring/course-cards` → **Settings** → **Trusted Publisher** → GitHub
@@ -169,7 +193,7 @@ Actions:
 Every field is case-sensitive and matched exactly, so **renaming
 `release.yml`, the repository, or the org breaks publishing** until the
 registry side is updated to match. The symptom is an authentication error or
-an OTP prompt on the publish step, not a helpful message about mismatched
+an OTP prompt on the stage step, not a helpful message about mismatched
 configuration.
 
 The job needs `id-token: write` (it has it) and npm 11.5.1 or newer, which is

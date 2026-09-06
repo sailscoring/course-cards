@@ -48,13 +48,20 @@ jobs:
       # rotate, and provenance is generated automatically. The trust lives on
       # npmjs.com — package settings name this repository and this file by
       # name — so renaming this workflow breaks publishing until it is updated
-      # there. See README.md, "Publishing to npm".
-      - name: Publish to npm
+      # there.
+      #
+      # `stage publish`, not `publish`: the trusted publisher is configured
+      # stage-only, so this uploads the tarball to the staging queue and stops.
+      # Nothing is installable until a human approves it with 2FA, which no CI
+      # job can do and none should be able to. See README.md, "Publishing to
+      # npm" — the release is not finished when this workflow goes green.
+      - name: Stage the npm publish
         run: |
-          if ! npm publish; then
-            echo "::error title=npm publish failed::Check the npm error above. 'Unable to authenticate' or an OTP prompt usually means the trusted publisher on npmjs.com does not match this workflow — organization, repository and the workflow filename are case-sensitive and must be exact. See README.md, 'Publishing to npm'."
+          if ! npm stage publish; then
+            echo "::error title=npm stage publish failed::Check the npm error above. An authentication error or an OTP prompt usually means the trusted publisher on npmjs.com does not match this workflow — organization, repository and the workflow filename are case-sensitive and must be exact. See README.md, 'Publishing to npm'."
             exit 1
           fi
+          echo "::notice title=Staged, not published::The tarball is in npm's staging queue and is NOT installable yet. Approve it: 'npm stage list' then 'npm stage approve <id>', or from the package page on npmjs.com."
 
       - uses: softprops/action-gh-release@v2
         if: ${{ always() }}
