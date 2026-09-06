@@ -319,8 +319,26 @@ def cmd_build(args):
         for p in problems:
             print('  ' + p, file=sys.stderr)
         sys.exit(1)
-    out = {'formatVersion': 1, **meta, **({'notes': notes} if notes else {}), 'courses': courses}
+    out = course_card_file(meta, json.load(open(args.start_line)) if args.start_line else None, notes, courses)
     emit(out, sys.stdout)
+
+
+FORMAT_VERSION = 2
+
+def course_card_file(meta, start, notes, courses):
+    """A card as the format has it. Its `startLine` — read from the club's
+    sailing instructions by tools/extract_start_line.py — heads the file, and
+    every course begins there, so the first leg runs from the start line to
+    the first mark the card names."""
+    if start:
+        courses = [{**c, 'marks': [{'mark': start['id']}] + c['marks']} for c in courses]
+    return {
+        'formatVersion': FORMAT_VERSION,
+        **meta,
+        **({'startLine': start} if start else {}),
+        **({'notes': notes} if notes else {}),
+        'courses': courses,
+    }
 
 
 def emit(card, fh):
@@ -346,6 +364,7 @@ def main():
     b.add_argument('--templates', required=True)
     b.add_argument('--meta')
     b.add_argument('--notes', help='JSON list of {title, text} notes to carry on the card')
+    b.add_argument('--start-line', help="JSON for the card's start line, from tools/extract_start_line.py")
     b.add_argument('--overrides', help='JSON {"<course>/<glyph index>": "<LETTER>"} for glyphs verified by eye')
     b.add_argument('--review', help='directory to write crops of unresolved glyphs into')
     b.set_defaults(func=cmd_build)

@@ -4,7 +4,7 @@
  * and consumers get plain typed objects.
  */
 
-import { FORMAT_VERSION, type CourseCardFile, type MarksFile, type Note, type Position, type Side } from './types.js';
+import { FORMAT_VERSION, type CourseCardFile, type Mark, type MarksFile, type Note, type Position, type Side, type StartLine } from './types.js';
 
 export class FormatError extends Error {}
 
@@ -47,28 +47,30 @@ function optionalNotes(obj: Record<string, unknown>, path: string): { notes?: No
   };
 }
 
+/** The fields every mark carries, the start line included. */
+function checkMark(raw: unknown, path: string, seen?: Set<string>): Mark {
+  if (typeof raw !== 'object' || raw === null) fail(path, 'expected an object');
+  const m = raw as Record<string, unknown>;
+  if (typeof m.id !== 'string' || !m.id) fail(`${path}.id`, 'expected an id');
+  if (seen?.has(m.id)) fail(`${path}.id`, `duplicate mark id "${m.id}"`);
+  seen?.add(m.id);
+  return {
+    id: m.id,
+    ...optionalString(m, 'name'),
+    ...optionalString(m, 'shape'),
+    ...optionalString(m, 'color'),
+    ...(m.position != null ? { position: checkPosition(m.position, `${path}.position`) } : {}),
+    ...optionalString(m, 'placement'),
+  };
+}
+
 export function parseMarksFile(data: unknown): MarksFile {
   if (typeof data !== 'object' || data === null) fail('marks', 'expected an object');
   const obj = data as Record<string, unknown>;
   const formatVersion = checkVersion(obj.formatVersion, 'marks.formatVersion');
   if (!Array.isArray(obj.marks) || obj.marks.length === 0) fail('marks.marks', 'expected marks');
   const ids = new Set<string>();
-  const marks = obj.marks.map((raw, i) => {
-    const path = `marks.marks[${i}]`;
-    if (typeof raw !== 'object' || raw === null) fail(path, 'expected an object');
-    const m = raw as Record<string, unknown>;
-    if (typeof m.id !== 'string' || !m.id) fail(`${path}.id`, 'expected an id');
-    if (ids.has(m.id)) fail(`${path}.id`, `duplicate mark id "${m.id}"`);
-    ids.add(m.id);
-    return {
-      id: m.id,
-      ...optionalString(m, 'name'),
-      ...optionalString(m, 'shape'),
-      ...optionalString(m, 'color'),
-      ...(m.position != null ? { position: checkPosition(m.position, `${path}.position`) } : {}),
-      ...optionalString(m, 'placement'),
-    };
-  });
+  const marks = obj.marks.map((raw, i) => checkMark(raw, `marks.marks[${i}]`, ids));
   return {
     formatVersion,
     ...optionalString(obj, 'club'),
@@ -83,6 +85,13 @@ export function parseCourseCardFile(data: unknown): CourseCardFile {
   const obj = data as Record<string, unknown>;
   const formatVersion = checkVersion(obj.formatVersion, 'card.formatVersion');
   if (!Array.isArray(obj.courses) || obj.courses.length === 0) fail('card.courses', 'expected courses');
+
+  // The start line is a mark, plus the instruction that defines it.
+  let startLine: { startLine?: StartLine } = {};
+  if (obj.startLine != null) {
+    const raw = obj.startLine as Record<string, unknown>;
+    startLine = { startLine: { ...checkMark(raw, 'card.startLine'), ...optionalString(raw, 'source') } };
+  }
 
   const ids = new Set<string>();
   const courses = obj.courses.map((raw, i) => {
@@ -116,6 +125,7 @@ export function parseCourseCardFile(data: unknown): CourseCardFile {
     ...optionalString(obj, 'name'),
     ...optionalString(obj, 'source'),
     ...optionalString(obj, 'marks'),
+    ...startLine,
     ...optionalNotes(obj, 'card'),
     courses,
   };

@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { parseCourseCardFile, parseMarksFile } from '../src/index';
+import { printed } from './printed';
 
 function load(rel: string): unknown {
   return JSON.parse(readFileSync(join(__dirname, '..', 'data', 'dbsc', 'summer-2026', rel), 'utf-8'));
@@ -55,10 +56,24 @@ describe.each(Object.entries(cards))('the DBSC 2026 %s card', (name, card) => {
     expect(card.courses.map((c) => c.id)).toEqual(expected);
   });
 
+  it('every course begins at the start line the supplement defines', () => {
+    const hut = name.endsWith('-hut');
+    expect(card.startLine).toMatchObject({ id: 'SL', name: 'Start line' });
+    expect(card.startLine!.position).toBeUndefined();
+    expect(card.startLine!.source).toContain(hut ? 'supplement H' : 'supplement B');
+    // Supplement H's line is a fixed transit at the West Pier hut;
+    // supplement B's is wherever the committee vessel anchors.
+    expect(card.startLine!.placement).toContain(
+      hut ? 'a transit formed by bringing in line the two triangles above the West Pier Hut' : 'a red and white staff on the committee vessel',
+    );
+    expect(marks.marks.some((m) => m.id === 'SL')).toBe(false);
+    for (const course of card.courses) expect(course.marks[0]!.mark, course.id).toBe('SL');
+  });
+
   it('every mark of every course is on the marks file, with a side', () => {
     const known = new Set(marks.marks.map((m) => m.id));
     for (const course of card.courses) {
-      for (const cm of course.marks) {
+      for (const cm of printed(card, course.id)) {
         expect(known.has(cm.mark), `${course.id}: mark ${cm.mark}`).toBe(true);
         expect(cm.side, `${course.id}: mark ${cm.mark}`).toBeDefined();
       }
@@ -78,9 +93,8 @@ describe.each(Object.entries(cards))('the DBSC 2026 %s card', (name, card) => {
 
   it('spot checks against the printed card', () => {
     const text = (id: string) =>
-      card.courses
-        .find((c) => c.id === id)!
-        .marks.map((m) => `${m.mark}${m.side === 'port' ? 'p' : 's'}${m.passing ? '*' : ''}`)
+      printed(card, id)
+        .map((m) => `${m.mark}${m.side === 'port' ? 'p' : 's'}${m.passing ? '*' : ''}`)
         .join(' ');
     const expected: Record<string, Record<string, string>> = {
       'cc1-saturday-cv': { A1: 'Ep Cp Np Fp Ws Mp As', H8: 'Yp Sp Bp', L1: 'Wp Ss Tp Qp Gp Ks Gp Ks Fp', R8: 'Cs Js Hs' },
@@ -97,7 +111,7 @@ describe('the DBSC cards’ conventions', () => {
   it('the Red Fleet card rounds everything to port, as its note says', () => {
     const card = cards['cc4-thursday-red'];
     expect(card.notes![1]!.text).toContain('All marks to be rounded to Port');
-    for (const c of card.courses) for (const m of c.marks) expect(m.side, c.id).toBe('port');
+    for (const c of card.courses) for (const m of printed(card, c.id)) expect(m.side, c.id).toBe('port');
   });
 
   it('the hut cards pass the Turning mark X rather than rounding it, and it ends every course', () => {

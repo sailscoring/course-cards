@@ -1,4 +1,4 @@
-# The course-cards format, version 1
+# The course-cards format, version 2
 
 Two JSON file kinds. Every file carries `formatVersion` (an integer); a
 reader must refuse a version newer than it understands and accept anything
@@ -11,7 +11,7 @@ sheet, a table of letter, name, shape, colour and position.
 
 ```json
 {
-  "formatVersion": 1,
+  "formatVersion": 2,
   "club": "HYC",
   "name": "Autumn League 2025 racing marks",
   "source": "https://hyc.ie/system/resources/2331/original/AL_Course_Card_Technical_Sheet.pdf",
@@ -52,15 +52,22 @@ The card a club prints: the courses, each an ordered sequence of marks.
 
 ```json
 {
-  "formatVersion": 1,
+  "formatVersion": 2,
   "club": "HYC",
   "name": "Autumn League 2025 course card, inshore committee boat starts",
   "source": "https://hyc.ie/system/resources/2330/original/AL_Course_Card_Inshore_01.pdf",
   "marks": "marks.json",
+  "startLine": {
+    "id": "SL",
+    "name": "Start line",
+    "placement": "The starting area will be Northwest of Ireland's Eye. The Starting Line shall be between an orange buoy with an orange flag (to be passed to port) and a red/white pole or the mainmast of the Committee Starting Vessel that will display an orange flag.",
+    "source": "HYC Autumn League 2025 sailing instructions 6.2 A and B"
+  },
   "courses": [
     {
       "id": "041",
       "marks": [
+        { "mark": "SL" },
         { "mark": "Z", "side": "port" },
         { "mark": "W", "side": "port" },
         { "mark": "C", "side": "port" },
@@ -74,6 +81,21 @@ The card a club prints: the courses, each an ordered sequence of marks.
 ```
 
 - `marks` — the marks file the card's mark ids refer to, by name.
+- `startLine` — where the race starts. A card names the marks of a course
+  but not the line it begins at: that is in the club's **sailing
+  instructions**, so it is read from them and carried here. It is a mark in
+  every respect — the same `id`, `name`, `shape`, `color`, `position` and
+  `placement` — plus a `source` saying which instruction defines it. Its id
+  resolves ahead of the marks file, so a club whose start line is one of its
+  own marks can say so. A line laid on the day has a `placement` in the
+  club's own words and no `position`, exactly like HYC's Zephyr; a fixed one
+  — DBSC's transit at the West Pier hut — could carry a `position`.
+
+  The start line belongs to the card, not to the marks file, because one
+  marks file serves cards that start in different places: HYC's Autumn
+  League offshore and inshore cards share a technical sheet but start north
+  and north-west of Ireland's Eye respectively, and DBSC's five cards share
+  a marks sheet but start either at a committee vessel or at the hut.
 - `notes` — the club's explanatory text that goes with the card, as
   printed, each with a `title` and a `text` whose paragraphs are separated
   by newlines: HYC's "Navigation Marks and Obstructions" and "Course
@@ -82,14 +104,18 @@ The card a club prints: the courses, each an ordered sequence of marks.
   three-digit numbers encode the first beat's bearing (first two digits ×
   10) and a column on the card (third digit); the format stores the number
   as printed and leaves the club's encoding convention to the club.
-- `courses[].marks` — every mark of the course in sailing order, starting
-  after the start line. Marks laid per race are in the sequence like any
-  other: HYC's courses all read `Z … F`. `side` is the side the mark is left
-  on — `"port"` or `"starboard"` — and absent when the card doesn't say.
-  `passing: true` marks a passing (not rounding) mark, boxed on HYC's cards.
+- `courses[].marks` — every mark of the course in sailing order, beginning
+  with the card's start line, so the first leg runs from the line to the
+  first mark the club prints. Marks laid per race are in the sequence like
+  any other: HYC's courses all read `SL Z … F`. `side` is the side the mark
+  is left on — `"port"` or `"starboard"` — and absent when the card doesn't
+  say, as it doesn't for a start line. `passing: true` marks a passing (not
+  rounding) mark, boxed on HYC's cards.
 
-A course card says nothing about where the start line is, or the
-race-by-race positions of its laid marks: those are not the card's to know.
+A course card says where the start line is only as well as the sailing
+instructions do — usually a description, not a position — and says nothing
+about the race-by-race positions of its laid marks. Those are not the
+card's to know.
 
 ## Race positions (per race, not part of the card)
 
@@ -97,23 +123,34 @@ What the leg library needs beyond the two files:
 
 ```json
 {
-  "start": { "lat": 53.4055, "lng": -6.0675 },
   "marks": {
+    "SL": { "lat": 53.4055, "lng": -6.0675 },
     "Z": { "lat": 53.39566, "lng": -6.07025 },
     "F": { "lat": 53.4085, "lng": -6.0705 }
   }
 }
 ```
 
-`start` is where the start line was; `marks` gives positions for the marks
-laid on the day, and may also override a fixed mark that was moved. The
-sailed course is then `start → the course's marks in order`, and each leg's
-distance and true bearing follow from the positions. A laid mark's position
-typically comes from the committee boat's log — "1,000 m upwind at 250°" —
-for which the library provides the great-circle `destination` helper.
+`marks` gives positions for everything the card cannot place — the start
+line, the marks laid on the day — and may also override a fixed mark that
+was moved. The sailed course is then the course's marks in order, and each
+leg's distance and true bearing follow from the positions. A laid mark's
+position typically comes from the committee boat's log — "1,000 m upwind at
+250°" — for which the library provides the great-circle `destination`
+helper. A mark with no position from either source is an error naming it and
+quoting where the club says it goes, so the caller knows what to ask the
+race officer for.
 
 ## Versioning
 
 `formatVersion` bumps when a change would make an older reader mis-read a
-file — new optional fields ride along without a bump. Version 1 is the
-initial format.
+file — new optional fields ride along without a bump.
+
+- **Version 1** — the initial format. Courses began at the first mark the
+  card printed, and the start line was supplied per race, outside the files.
+- **Version 2** — the start line is a mark of the course. A card carries a
+  `startLine`, and every course begins with it. A version 1 reader would
+  mis-read a version 2 card: it would take the start line for an ordinary
+  mark and add a leg to it from a start position of its own. In the library,
+  `RacePositions.start` is gone with it — the line's position is given in
+  `marks` under its id, like any other mark laid on the day.

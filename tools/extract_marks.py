@@ -19,6 +19,9 @@ import subprocess
 import sys
 import xml.etree.ElementTree as ET
 
+sys.path.insert(0, __file__.rsplit("/", 1)[0])
+from extract_card import FORMAT_VERSION  # noqa: E402
+
 WORD_RE = re.compile(r'<word xMin="([\d.]+)" yMin="([\d.]+)" xMax="([\d.]+)" yMax="([\d.]+)">(.*?)</word>')
 
 # Column x-ranges (PDF points) of the Racing Marks table on the sheet.
@@ -117,7 +120,7 @@ def main():
     marks = parse_table(ws)
     if not marks:
         sys.exit('no marks found')
-    out = {'formatVersion': 1, **meta, 'marks': marks}
+    out = {'formatVersion': FORMAT_VERSION, **meta, 'marks': marks}
     json.dump(out, sys.stdout, indent=2, ensure_ascii=False)
     sys.stdout.write('\n')
 

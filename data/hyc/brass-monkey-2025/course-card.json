@@ -1,9 +1,15 @@
 {
-  "formatVersion": 1,
+  "formatVersion": 2,
   "club": "HYC",
   "name": "Brass Monkey Winter Series 2025 course card",
   "source": "https://hyc.ie/system/resources/2365/original/Brass_Monkey_SI_Winter_2025_.pdf",
   "marks": "marks.json",
+  "startLine": {
+    "id": "SL",
+    "name": "Start line",
+    "placement": "The Race Area will be Northwest of Ireland’s Eye. The starting line will be between the red and white pole displaying an orange flag on the Committee Vessel and either a cylindrical orange buoy or an orange buoy with a flag on top. Boats shall keep clear of the starting line until their warning signal.",
+    "source": "HYC Brass Monkey Winter Series 2025 sailing instructions 8.1 and 12.1"
+  },
   "notes": [
     {
       "title": "Wind",
@@ -30,6 +36,9 @@
     {
       "id": "1",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "H",
           "side": "port"
@@ -62,6 +71,9 @@
     {
       "id": "2",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "H",
           "side": "port"
@@ -103,6 +115,9 @@
       "id": "3",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "H",
           "side": "port"
         },
@@ -134,6 +149,9 @@
     {
       "id": "4",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "H",
           "side": "port"
@@ -175,6 +193,9 @@
       "id": "5",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "D",
           "side": "port"
         },
@@ -206,6 +227,9 @@
     {
       "id": "6",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "D",
           "side": "port"
@@ -243,6 +267,9 @@
       "id": "7",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "I",
           "side": "port"
         },
@@ -275,6 +302,9 @@
       "id": "8",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "I",
           "side": "port"
         },
@@ -306,6 +336,9 @@
     {
       "id": "9",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "I",
           "side": "port"
@@ -342,6 +375,9 @@
     {
       "id": "10",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "I",
           "side": "port"
@@ -387,6 +423,9 @@
       "id": "11",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "C",
           "side": "port"
         },
@@ -422,6 +461,9 @@
     {
       "id": "12",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "C",
           "side": "port"
@@ -463,6 +505,9 @@
       "id": "13",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "W",
           "side": "port"
         },
@@ -498,6 +543,9 @@
     {
       "id": "14",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "W",
           "side": "port"
@@ -535,6 +583,9 @@
       "id": "15",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "P",
           "side": "port"
         },
@@ -570,6 +621,9 @@
     {
       "id": "16",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "P",
           "side": "port"

@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { FormatError, parseCourseCardFile, parseMarksFile } from '../src/index';
+import { printed } from './printed';
 
 function load(rel: string): unknown {
   return JSON.parse(readFileSync(join(__dirname, '..', 'data', 'hyc', 'al-2025', rel), 'utf-8'));
@@ -63,23 +64,33 @@ describe.each(Object.entries(cards))('the HYC Autumn League 2025 %s card', (name
     expect(card.notes![1]!.text).toContain('Course 073 is the third course in from the left on line 07');
   });
 
-  it('every course runs from the laid windward mark to the finish over known marks', () => {
-    const known = new Set(marks.marks.map((m) => m.id));
+  it('starts at the line the sailing instructions define, quoted', () => {
+    expect(card.startLine).toMatchObject({ id: 'SL', name: 'Start line' });
+    expect(card.startLine!.position).toBeUndefined();
+    expect(card.startLine!.placement).toContain('of Ireland’s Eye');
+    expect(card.startLine!.source).toMatch(/^HYC Autumn League 2025 sailing instructions 6\.[12] A and B$/);
+    // The start line is the card's, not the club's: it differs between the
+    // two cards over one marks file, and is not a mark on the sheet.
+    expect(marks.marks.some((m) => m.id === 'SL')).toBe(false);
+  });
+
+  it('every course runs from the start line over the laid windward mark to the finish', () => {
+    const known = new Set([...marks.marks.map((m) => m.id), card.startLine!.id]);
     for (const course of card.courses) {
-      expect(course.marks[0]!.mark, course.id).toBe('Z');
+      expect(course.marks[0]!.mark, course.id).toBe('SL');
+      expect(course.marks[1]!.mark, course.id).toBe('Z');
       expect(course.marks[course.marks.length - 1]!.mark, course.id).toBe('F');
       for (const cm of course.marks) {
         expect(known.has(cm.mark), `${course.id}: mark ${cm.mark}`).toBe(true);
-        expect(cm.side, `${course.id}: mark ${cm.mark}`).toBeDefined();
+        if (cm.mark !== 'SL') expect(cm.side, `${course.id}: mark ${cm.mark}`).toBeDefined();
       }
     }
   });
 
   it('spot checks against the printed card', () => {
     const text = (id: string) =>
-      card.courses
-        .find((c) => c.id === id)!
-        .marks.map((m) => {
+      printed(card, id)
+        .map((m) => {
           const letter = m.side === 'starboard' ? m.mark.toLowerCase() : m.mark;
           return m.passing ? `[${letter}]` : letter;
         })
@@ -113,8 +124,18 @@ describe.each(Object.entries(cards))('the HYC Autumn League 2025 %s card', (name
 
 describe('the parsers', () => {
   it('refuse a newer format version', () => {
-    expect(() => parseMarksFile({ formatVersion: 2, marks: [] })).toThrow(FormatError);
-    expect(() => parseCourseCardFile({ formatVersion: 2, courses: [] })).toThrow(/newer/);
+    expect(() => parseMarksFile({ formatVersion: 3, marks: [] })).toThrow(FormatError);
+    expect(() => parseCourseCardFile({ formatVersion: 3, courses: [] })).toThrow(/newer/);
+  });
+
+  it('read a card’s start line as the mark it is', () => {
+    const card = parseCourseCardFile({
+      formatVersion: 2,
+      startLine: { id: 'SL', name: 'Start line', placement: 'Off the pier', source: 'SI 4.2', extra: 1 },
+      courses: [{ id: '1', marks: [{ mark: 'SL' }, { mark: 'A', side: 'port' }] }],
+    });
+    expect(card.startLine).toEqual({ id: 'SL', name: 'Start line', placement: 'Off the pier', source: 'SI 4.2' });
+    expect(() => parseCourseCardFile({ formatVersion: 2, startLine: { name: 'no id' }, courses: [] })).toThrow(FormatError);
   });
 
   it('reject duplicate ids and bad sides', () => {

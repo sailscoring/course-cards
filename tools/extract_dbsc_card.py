@@ -26,6 +26,7 @@ import re
 import subprocess
 import sys
 
+from extract_card import course_card_file
 from extract_dbsc_marks import lines, words
 
 TOKEN_RE = re.compile(r'([A-Z0-9])([ps])?')
@@ -159,12 +160,14 @@ def main():
     ap.add_argument('pdf')
     ap.add_argument('--meta', help='JSON file whose keys (club, name, source, marks…) head the output')
     ap.add_argument('--notes', help='JSON list of {title, text} notes to carry after the card\'s own')
+    ap.add_argument('--start-line', help="JSON for the card's start line, from tools/extract_start_line.py")
     args = ap.parse_args()
     meta = json.load(open(args.meta)) if args.meta else {}
     courses, notes = build(args.pdf)
     if args.notes:
         notes += json.load(open(args.notes))
-    out = {'formatVersion': 1, **meta, 'notes': notes, 'courses': courses}
+    start = json.load(open(args.start_line)) if args.start_line else None
+    out = course_card_file(meta, start, notes, courses)
     json.dump(out, sys.stdout, indent=2, ensure_ascii=False)
     sys.stdout.write('\n')
 

@@ -22,20 +22,22 @@ const offshore = parseCourseCardFile(load('offshore.json'));
 
 // A plausible race day: committee boat off the harbour, Zephyr laid 0.6 NM
 // upwind on 190°, finish between Island and the Sound as the sheet says.
+// The start line is a mark of the course like the other two, so it is placed
+// the same way.
 const start = { lat: 53.4055, lng: -6.0675 };
 const race = {
-  start,
   marks: {
+    SL: start,
     Z: destination(start, 190, 0.6 * 1852),
     F: { lat: 53.4085, lng: -6.0705 },
   },
 };
 
 describe('courseLegs', () => {
-  it('walks inshore course 001: start → Z → P → W → S → F', () => {
+  it('walks inshore course 001: SL → Z → P → W → S → F', () => {
     const legs = courseLegs(inshore, marks, '001', race);
     expect(legs.map((l) => l.to.mark)).toEqual(['Z', 'P', 'W', 'S', 'F']);
-    expect(legs[0]!.from).toEqual({ label: 'Start', position: start });
+    expect(legs[0]!.from).toEqual({ mark: 'SL', label: 'Start line (SL)', position: start });
     expect(legs[1]!.from.label).toBe('Zephyr (Z)');
     expect(legs[0]!.distanceNm).toBeCloseTo(0.6, 3);
     expect(legs[0]!.bearingDeg).toBeCloseTo(190, 1);
@@ -60,7 +62,8 @@ describe('courseLegs', () => {
     for (const card of [inshore, offshore]) {
       for (const course of card.courses) {
         const legs = courseLegs(card, marks, course.id, race);
-        expect(legs).toHaveLength(course.marks.length);
+        expect(course.marks[0]!.mark).toBe(card.startLine!.id);
+        expect(legs).toHaveLength(course.marks.length - 1);
         expect(legs[legs.length - 1]!.to.mark).toBe('F');
       }
     }
@@ -72,13 +75,24 @@ describe('courseLegs', () => {
     expect(legs[1]!.to.position).toEqual(moved);
   });
 
-  it('names the mark it cannot place', () => {
-    expect(() => courseLegs(inshore, marks, '001', { start })).toThrow(CourseError);
-    expect(() => courseLegs(inshore, marks, '001', { start })).toThrow(
+  it('names the mark it cannot place, and quotes where the club says it goes', () => {
+    expect(() => courseLegs(inshore, marks, '001', { marks: { SL: start } })).toThrow(CourseError);
+    expect(() => courseLegs(inshore, marks, '001', { marks: { SL: start } })).toThrow(
       'course 001: no position for mark "Z" (Upwind of Start Line)',
     );
+    expect(() => courseLegs(inshore, marks, '001', {})).toThrow(
+      /no position for mark "SL" \(The starting area will be Northwest of Ireland/,
+    );
     expect(() => courseLegs(inshore, marks, '999', race)).toThrow('no course "999"');
-    const card = { formatVersion: 1, courses: [{ id: 'x', marks: [{ mark: 'Y' }] }] };
+    const card = { formatVersion: 2, courses: [{ id: 'x', marks: [{ mark: 'Y' }] }] };
     expect(() => courseLegs(card, marks, 'x', race)).toThrow('unknown mark "Y"');
+  });
+
+  it('the start line comes from the card, not the marks file', () => {
+    expect(marks.marks.some((m) => m.id === 'SL')).toBe(false);
+    expect(inshore.startLine).toMatchObject({ id: 'SL', name: 'Start line' });
+    expect(inshore.startLine!.placement).toMatch(/Northwest of Ireland/);
+    expect(offshore.startLine!.placement).toMatch(/North of Ireland/);
+    expect(inshore.startLine!.source).toBe('HYC Autumn League 2025 sailing instructions 6.2 A and B');
   });
 });

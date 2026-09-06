@@ -9,11 +9,13 @@ import type { CourseCardFile, CourseLeg, MarksFile, RacePositions, Waypoint } fr
 export class CourseError extends Error {}
 
 /**
- * The legs of a course: start line → each of the course's marks in order.
- * Positions come from the marks file, or from `race.marks` for marks laid on
- * the day (a race-day position also overrides a fixed one). A mark with no
- * position from either source is an error naming it, so the caller knows
- * what to ask the race officer for.
+ * The legs of a course: each of the course's marks in order, the first of
+ * which is the card's start line. Positions come from the marks file, or
+ * from `race.marks` for marks laid on the day — the line itself, a windward
+ * mark, a finish (a race-day position also overrides a fixed one). A mark
+ * with no position from either source is an error naming it and quoting
+ * where the club says it goes, so the caller knows what to ask the race
+ * officer for.
  */
 export function courseLegs(
   card: CourseCardFile,
@@ -24,8 +26,9 @@ export function courseLegs(
   const course = card.courses.find((c) => c.id === courseId);
   if (!course) throw new CourseError(`no course "${courseId}" on the card`);
   const byId = new Map(marks.marks.map((m) => [m.id, m]));
+  if (card.startLine) byId.set(card.startLine.id, card.startLine);
 
-  const waypoints: Waypoint[] = [{ label: 'Start', position: race.start }];
+  const waypoints: Waypoint[] = [];
   for (const { mark: id } of course.marks) {
     const mark = byId.get(id);
     if (!mark) throw new CourseError(`course ${course.id}: unknown mark "${id}"`);

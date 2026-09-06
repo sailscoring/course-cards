@@ -19,7 +19,9 @@ Two file kinds, plain JSON, specified in [`docs/format.md`](docs/format.md):
   and either a fixed position or a note on where the mark is laid per race
   ("Upwind of Start Line").
 - **Course card** — the courses as ordered mark sequences, each mark with
-  the side it is left on and whether it is a passing mark.
+  the side it is left on and whether it is a passing mark, and the **start
+  line** every course begins at, read from the club's sailing instructions
+  and quoted from them.
 
 A card cannot know where the start line was on the day, nor where the marks
 laid per race went. Those are supplied to the library per race.
@@ -35,8 +37,8 @@ const card = parseCourseCardFile(JSON.parse(cardJson));
 
 const start = { lat: 53.4055, lng: -6.0675 };
 const legs = courseLegs(card, marks, '041', {
-  start,
   marks: {
+    SL: start, // where the line was: the card quotes the SI, not a position
     Z: destination(start, 190, 1000), // laid 1,000 m upwind on 190°
     F: { lat: 53.4085, lng: -6.0705 },
   },
@@ -44,9 +46,10 @@ const legs = courseLegs(card, marks, '041', {
 // legs[i] = { from, to, distanceNm, bearingDeg }
 ```
 
-`courseLegs` walks start → each of the course's marks and returns every
-leg's great-circle distance and initial true bearing; a mark it cannot
-place is an error naming the mark and where the club says it is laid. What
+`courseLegs` walks the course's marks — the first of which is the card's
+start line — and returns every leg's great-circle distance and initial true
+bearing; a mark it cannot place is an error naming the mark and quoting
+where the club says it is laid. What
 the wind was doing on each leg is the caller's knowledge, not the
 library's. The geometry primitives (`distanceNm`, `bearingDeg`,
 `destination`) are exported for the arithmetic around a race.
@@ -61,7 +64,17 @@ after a build, in CI and again on the packed artifact before it is published.
 ## Data
 
 Each club's PDFs are kept alongside its JSON, and the JSON is **generated
-from them** by the tools in `tools/`. The same pipeline renders each card
+from them** by the tools in `tools/`. A card's PDF is not the whole story:
+the club's **sailing instructions** are what define the start line every
+course begins at, say which card is used when, and give the conventions the
+card's letters are printed under. Each data set therefore keeps the sailing
+instructions that bear on its courses in `source/` too — only those; a
+club's amendments are kept when they change something a card depends on and
+left out when they do not, and the manifest records which and why. Every one
+gets a Markdown sidecar (`foo.pdf` → `foo.md`, by `tools/pdf_markdown.py`)
+so its text is greppable and diffable without a PDF viewer, following the
+practice of the sibling `reference-docs` store; the PDF stays the source of
+truth and the sidecar is regenerated and verified like every other artifact. The same pipeline renders each card
 as a self-contained HTML page: the course table as printed, the marks over
 an OpenStreetMap + OpenSeaMap chart — pick a course and it is drawn there,
 leg by leg, with each leg's true bearing and distance — bearings and
@@ -73,7 +86,9 @@ and how it was checked.
   from the course card technical sheet, and the offshore and inshore
   committee-boat-start course cards (180 courses each) with the sheet's
   notes. The technical sheet is parsed from its text layer; the two cards
-  are pictures, read by a small purpose-built OCR. Published:
+  are pictures, read by a small purpose-built OCR. The two start lines —
+  north and north-west of Ireland's Eye — come from SI 6.1 and 6.2.
+  Published:
   [offshore](https://courses.sailscoring.ie/hyc/al-2025/offshore.html),
   [inshore](https://courses.sailscoring.ie/hyc/al-2025/inshore.html);
   [README](data/hyc/al-2025/README.md).
@@ -82,21 +97,26 @@ and how it was checked.
   last two pages of the sailing instructions, read from the PDF's text layer
   and checked against the SI's own picture of the marks. The SI gives names
   and positions only, and misplaces Portmarnock; shapes, colours and that
-  position come from the Autumn League sheet, as the README records.
+  position come from the Autumn League sheet, as the README records. The
+  start line is SI 12.1's, in SI 8.1's race area.
   [README](data/hyc/brass-monkey-2025/README.md).
 - `data/dlcc/regattas-2026/` — the Dun Laoghaire Combined Clubs regattas
   2026 (DMYC, NYC, RIYC and RStGYC, June–July), whose common sailing
   instructions carry the cruisers' "Course Card A" in Addendum A as a
   picture: 16 lettered sections of four courses round DBSC's marks, read by
   a small purpose-built OCR, with the marks from DBSC's own sheet, which
-  the addendum reproduces. [README](data/dlcc/regattas-2026/README.md).
+  the addendum reproduces, and the start line from Addendum A 3.1.
+  [README](data/dlcc/regattas-2026/README.md).
 - `data/dbsc/summer-2026/` — Dublin Bay Sailing Club's Summer Series 2026:
   the 26 marks from the club's marks, bearings and distances sheet, and the
   five keelboat course cards (Saturday committee vessel and hut, Thursday
   Blue and Red fleets, Tuesday hut; 592 courses), all read from the PDFs'
   text layers and cross-checked against the club's own machine-readable
   CSV/GPX files — which agree apart from one course, recorded in the
-  manifest. [README](data/dbsc/summer-2026/README.md).
+  manifest. The start lines come from the sailing instructions supplements:
+  B's committee vessel for cards 1, 3 and 4, and H's fixed transit at the
+  West Pier hut for cards 2 and 5.
+  [README](data/dbsc/summer-2026/README.md).
 
 ```sh
 pnpm data        # rewrite the JSON from the PDFs, then the HTML from the JSON

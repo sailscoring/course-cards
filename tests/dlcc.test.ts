@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { parseCourseCardFile, parseMarksFile } from '../src/index';
+import { printed } from './printed';
 
 function load(...rel: string[]): unknown {
   return JSON.parse(readFileSync(join(__dirname, '..', 'data', ...rel), 'utf-8'));
@@ -52,27 +53,36 @@ describe('the Combined Clubs 2026 Course Card A', () => {
     expect(card.courses.map((c) => c.id)).toEqual(PRINTED.flatMap((s) => [1, 2, 3, 4].map((n) => `${s.letter}${n}`)));
   });
 
+  it('every course starts at Addendum A 3.1’s line, north of the harbour', () => {
+    expect(card.startLine).toMatchObject({ id: 'SL', name: 'Start line' });
+    expect(card.startLine!.position).toBeUndefined();
+    expect(card.startLine!.placement).toBe('The race start line will be approximately North of Dun Laoghaire Harbour.');
+    expect(card.startLine!.source).toBe('Dun Laoghaire Combined Clubs regattas 2026 sailing instructions, Addendum A 3.1');
+    expect(marks.marks.some((m) => m.id === 'SL')).toBe(false);
+    for (const course of card.courses) expect(course.marks[0]!.mark, course.id).toBe('SL');
+  });
+
   it('every course is as printed, every mark rounded to port and one of DBSC’s', () => {
     const known = new Set(marks.marks.map((m) => m.id));
     for (const section of PRINTED) {
       section.rows.forEach((row, i) => {
-        const course = card.courses.find((c) => c.id === `${section.letter}${i + 1}`)!;
-        expect(course.marks.map((m) => m.mark).join(' '), course.id).toBe(row);
-        for (const cm of course.marks) {
-          expect(cm.side, `${course.id}: mark ${cm.mark}`).toBe('port');
-          expect(cm.passing, `${course.id}: mark ${cm.mark}`).toBeUndefined();
-          expect(known.has(cm.mark), `${course.id}: mark ${cm.mark}`).toBe(true);
+        const id = `${section.letter}${i + 1}`;
+        expect(printed(card, id).map((m) => m.mark).join(' '), id).toBe(row);
+        for (const cm of printed(card, id)) {
+          expect(cm.side, `${id}: mark ${cm.mark}`).toBe('port');
+          expect(cm.passing, `${id}: mark ${cm.mark}`).toBeUndefined();
+          expect(known.has(cm.mark), `${id}: mark ${cm.mark}`).toBe(true);
         }
       });
     }
     // The card uses eight of the marks, B–K
-    const used = new Set(card.courses.flatMap((c) => c.marks.map((m) => m.mark)));
+    const used = new Set(card.courses.flatMap((c) => printed(card, c.id).map((m) => m.mark)));
     expect([...used].sort().join('')).toBe('BCDEFGJK');
   });
 
   it('each section’s courses shorten in the card’s pattern: 8, 6, 3 and 2 marks', () => {
     for (const section of PRINTED) {
-      const lengths = [1, 2, 3, 4].map((n) => card.courses.find((c) => c.id === `${section.letter}${n}`)!.marks.length);
+      const lengths = [1, 2, 3, 4].map((n) => printed(card, `${section.letter}${n}`).length);
       expect(lengths, section.letter).toEqual([8, 6, 3, 2]);
     }
   });
@@ -97,7 +107,7 @@ describe('the Combined Clubs 2026 Course Card A', () => {
   });
 
   it('A1.3’s example agrees with the card: A3 is E C K, and A1.4’s B4 is F K', () => {
-    expect(card.courses.find((c) => c.id === 'A3')!.marks.map((m) => m.mark).join(' ')).toBe('E C K');
-    expect(card.courses.find((c) => c.id === 'B4')!.marks.map((m) => m.mark).join(' ')).toBe('F K');
+    expect(printed(card, 'A3').map((m) => m.mark).join(' ')).toBe('E C K');
+    expect(printed(card, 'B4').map((m) => m.mark).join(' ')).toBe('F K');
   });
 });

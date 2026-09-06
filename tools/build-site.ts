@@ -20,7 +20,7 @@ import { dirname, join, relative } from 'node:path';
 
 import { zipSync } from 'fflate';
 
-import { parseCourseCardFile, parseMarksFile } from '../src/index';
+import { FORMAT_VERSION, parseCourseCardFile, parseMarksFile } from '../src/index';
 
 const root = join(import.meta.dirname, '..');
 const site = join(root, 'site');
@@ -144,7 +144,7 @@ writeFileSync(join(site, versionDir, zipName), zip);
 const catalogue = {
   version,
   generated: new Date().toISOString().slice(0, 10),
-  formatVersion: 1,
+  formatVersion: FORMAT_VERSION,
   site: siteUrl,
   repository: repoUrl,
   zip: `${siteUrl}/${versionDir}/${zipName}`,

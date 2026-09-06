@@ -1,9 +1,15 @@
 {
-  "formatVersion": 1,
+  "formatVersion": 2,
   "club": "DBSC",
   "name": "Summer Series 2026 course card CC5, Tuesday, hut starts",
   "source": "https://dbsc.ie/wp-content/uploads/2026/04/CC5_Tuesday_Hut_2026_v1.pdf",
   "marks": "marks.json",
+  "startLine": {
+    "id": "SL",
+    "name": "Start line",
+    "placement": "Races will start at the DBSC West Pier Hut, located on the Northern corner of the West Pier of Dun Laoghaire Harbour. The starting line will be a transit formed by bringing in line the two triangles above the West Pier Hut. To start, a boat shall cross this line in the direction of the first mark of the course, passing between the hut and a limit mark.",
+    "source": "DBSC 2026 sailing instructions supplement H – Fixed-Mark Courses, Hut, 4.1 and 4.2"
+  },
   "notes": [
     {
       "title": "Course sections",
@@ -22,6 +28,9 @@
     {
       "id": "A1",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "C",
           "side": "starboard"
@@ -49,6 +58,9 @@
       "id": "A2",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "C",
           "side": "starboard"
         },
@@ -75,6 +87,9 @@
       "id": "A3",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "C",
           "side": "starboard"
         },
@@ -96,6 +111,9 @@
     {
       "id": "A4",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "C",
           "side": "starboard"
@@ -119,6 +137,9 @@
       "id": "A5",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "C",
           "side": "starboard"
         },
@@ -136,6 +157,9 @@
     {
       "id": "B1",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "M",
           "side": "port"
@@ -159,6 +183,9 @@
       "id": "B2",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "M",
           "side": "port"
         },
@@ -180,6 +207,9 @@
     {
       "id": "B3",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "M",
           "side": "port"
@@ -203,6 +233,9 @@
       "id": "B4",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "G",
           "side": "port"
         },
@@ -221,6 +254,9 @@
       "id": "B5",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "M",
           "side": "port"
         },
@@ -234,6 +270,9 @@
     {
       "id": "C1",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "J",
           "side": "port"
@@ -261,6 +300,9 @@
       "id": "C2",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "K",
           "side": "port"
         },
@@ -286,6 +328,9 @@
     {
       "id": "C3",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "K",
           "side": "port"
@@ -313,6 +358,9 @@
       "id": "C4",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "J",
           "side": "port"
         },
@@ -331,6 +379,9 @@
       "id": "C5",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "K",
           "side": "port"
         },
@@ -348,6 +399,9 @@
     {
       "id": "D1",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "J",
           "side": "port"
@@ -375,6 +429,9 @@
       "id": "D2",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "J",
           "side": "port"
         },
@@ -400,6 +457,9 @@
     {
       "id": "D3",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "J",
           "side": "port"
@@ -427,6 +487,9 @@
       "id": "D4",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "K",
           "side": "port"
         },
@@ -453,6 +516,9 @@
       "id": "D5",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "K",
           "side": "port"
         },
@@ -474,6 +540,9 @@
     {
       "id": "E1",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "S",
           "side": "port"
@@ -497,6 +566,9 @@
       "id": "E2",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "N",
           "side": "port"
         },
@@ -518,6 +590,9 @@
     {
       "id": "E3",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "N",
           "side": "port"
@@ -541,6 +616,9 @@
       "id": "E4",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "N",
           "side": "port"
         },
@@ -563,6 +641,9 @@
       "id": "E5",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "V",
           "side": "port"
         },
@@ -584,6 +665,9 @@
     {
       "id": "F1",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "V",
           "side": "port"
@@ -615,6 +699,9 @@
       "id": "F2",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "V",
           "side": "port"
         },
@@ -641,6 +728,9 @@
       "id": "F3",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "V",
           "side": "port"
         },
@@ -662,6 +752,9 @@
     {
       "id": "F4",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "V",
           "side": "port"
@@ -689,6 +782,9 @@
       "id": "F5",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "V",
           "side": "port"
         },
@@ -706,6 +802,9 @@
     {
       "id": "G1",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "V",
           "side": "port"
@@ -733,6 +832,9 @@
       "id": "G2",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "V",
           "side": "port"
         },
@@ -758,6 +860,9 @@
     {
       "id": "G3",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "V",
           "side": "port"
@@ -785,6 +890,9 @@
       "id": "G4",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "V",
           "side": "port"
         },
@@ -807,6 +915,9 @@
       "id": "G5",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "V",
           "side": "port"
         },
@@ -828,6 +939,9 @@
     {
       "id": "H1",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "V",
           "side": "port"
@@ -855,6 +969,9 @@
       "id": "H2",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "V",
           "side": "port"
         },
@@ -880,6 +997,9 @@
     {
       "id": "H3",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "V",
           "side": "port"
@@ -907,6 +1027,9 @@
       "id": "H4",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "V",
           "side": "port"
         },
@@ -929,6 +1052,9 @@
       "id": "H5",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "V",
           "side": "port"
         },
@@ -946,6 +1072,9 @@
     {
       "id": "J1",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "L",
           "side": "starboard"
@@ -977,6 +1106,9 @@
       "id": "J2",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "L",
           "side": "starboard"
         },
@@ -1006,6 +1138,9 @@
     {
       "id": "J3",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "L",
           "side": "starboard"
@@ -1037,6 +1172,9 @@
       "id": "J4",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "L",
           "side": "starboard"
         },
@@ -1059,6 +1197,9 @@
       "id": "J5",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "L",
           "side": "starboard"
         },
@@ -1080,6 +1221,9 @@
     {
       "id": "K1",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "K",
           "side": "port"
@@ -1115,6 +1259,9 @@
       "id": "K2",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "J",
           "side": "port"
         },
@@ -1136,6 +1283,9 @@
     {
       "id": "K3",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "K",
           "side": "port"
@@ -1159,6 +1309,9 @@
       "id": "K4",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "K",
           "side": "port"
         },
@@ -1181,6 +1334,9 @@
       "id": "K5",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "K",
           "side": "port"
         },
@@ -1202,6 +1358,9 @@
     {
       "id": "L1",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "J",
           "side": "port"
@@ -1228,6 +1387,9 @@
     {
       "id": "L2",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "J",
           "side": "port"
@@ -1259,6 +1421,9 @@
       "id": "L3",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "J",
           "side": "port"
         },
@@ -1285,6 +1450,9 @@
       "id": "L4",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "J",
           "side": "port"
         },
@@ -1307,6 +1475,9 @@
       "id": "L5",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "G",
           "side": "port"
         },
@@ -1320,6 +1491,9 @@
     {
       "id": "M1",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "A",
           "side": "starboard"
@@ -1347,6 +1521,9 @@
       "id": "M2",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "A",
           "side": "starboard"
         },
@@ -1373,6 +1550,9 @@
       "id": "M3",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "A",
           "side": "starboard"
         },
@@ -1394,6 +1574,9 @@
     {
       "id": "M4",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "A",
           "side": "starboard"
@@ -1417,6 +1600,9 @@
       "id": "M5",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "A",
           "side": "starboard"
         },
@@ -1438,6 +1624,9 @@
     {
       "id": "N1",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "A",
           "side": "starboard"
@@ -1465,6 +1654,9 @@
       "id": "N2",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "A",
           "side": "starboard"
         },
@@ -1491,6 +1683,9 @@
       "id": "N3",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "A",
           "side": "starboard"
         },
@@ -1512,6 +1707,9 @@
     {
       "id": "N4",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "A",
           "side": "starboard"
@@ -1535,6 +1733,9 @@
       "id": "N5",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "A",
           "side": "starboard"
         },
@@ -1556,6 +1757,9 @@
     {
       "id": "P1",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "A",
           "side": "starboard"
@@ -1587,6 +1791,9 @@
       "id": "P2",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "A",
           "side": "starboard"
         },
@@ -1612,6 +1819,9 @@
     {
       "id": "P3",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "A",
           "side": "starboard"
@@ -1639,6 +1849,9 @@
       "id": "P4",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "A",
           "side": "starboard"
         },
@@ -1661,6 +1874,9 @@
       "id": "P5",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "A",
           "side": "starboard"
         },
@@ -1678,6 +1894,9 @@
     {
       "id": "Q1",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "L",
           "side": "starboard"
@@ -1709,6 +1928,9 @@
       "id": "Q2",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "L",
           "side": "starboard"
         },
@@ -1734,6 +1956,9 @@
     {
       "id": "Q3",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "L",
           "side": "starboard"
@@ -1761,6 +1986,9 @@
       "id": "Q4",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "L",
           "side": "starboard"
         },
@@ -1783,6 +2011,9 @@
       "id": "Q5",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "L",
           "side": "starboard"
         },
@@ -1800,6 +2031,9 @@
     {
       "id": "R1",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "L",
           "side": "starboard"
@@ -1827,6 +2061,9 @@
       "id": "R2",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "L",
           "side": "starboard"
         },
@@ -1852,6 +2089,9 @@
     {
       "id": "R3",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "L",
           "side": "starboard"
@@ -1879,6 +2119,9 @@
       "id": "R4",
       "marks": [
         {
+          "mark": "SL"
+        },
+        {
           "mark": "L",
           "side": "starboard"
         },
@@ -1904,6 +2147,9 @@
     {
       "id": "R5",
       "marks": [
+        {
+          "mark": "SL"
+        },
         {
           "mark": "L",
           "side": "starboard"

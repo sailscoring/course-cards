@@ -3,13 +3,16 @@
 
 Each `data/<club>/<event>/manifest.json` lists its artifacts: the output
 file, the extraction tool, the source PDF (kept alongside, verbatim, with
-the URL it was fetched from), the metadata that heads the output, and for a
-card the document its notes are read from (and, for sailing instructions,
-which of its sections). Running this rewrites the outputs; `--check`
-instead fails if any committed output differs from a fresh extraction — the
-CI guard that the JSON really is what the tools read from the PDFs. A
-manifest's `checks` names a tool that then cross-checks the outputs against
-the club's other publications, in both modes.
+the URL it was fetched from), the metadata that heads the output, for a card
+the document its notes are read from (and, for sailing instructions, which
+of its sections), and the sailing instructions its start line is defined by.
+Its `documents` are the source PDFs kept for reference — the club's sailing
+instructions — each rendered as a Markdown sidecar so its text is greppable.
+Running this rewrites the outputs; `--check` instead fails if any committed
+output differs from a fresh extraction — the CI guard that the JSON really
+is what the tools read from the PDFs. A manifest's `checks` names a tool
+that then cross-checks the outputs against the club's other publications, in
+both modes.
 
     python3 tools/regenerate.py [--check] [manifest.json ...]
 """
@@ -51,6 +54,37 @@ def notes_file(base, artifact):
     return fh.name
 
 
+def start_line_file(base, artifact):
+    """The card's start line, read out of the sailing instructions the
+    manifest names — see tools/extract_start_line.py."""
+    spec = artifact['startLine']
+    with tempfile.NamedTemporaryFile('w', suffix='.json', delete=False) as meta:
+        json.dump(spec['meta'], meta)
+    cmd = [sys.executable, os.path.join(TOOLS, 'extract_start_line.py'), os.path.join(base, spec['source']),
+           '--clauses', ','.join(spec['clauses']), '--meta', meta.name]
+    if spec.get('after'):
+        cmd += ['--after', spec['after']]
+    if spec.get('columns'):
+        cmd += ['--columns', spec['columns']]
+    try:
+        start = subprocess.run(cmd, check=True, capture_output=True, text=True).stdout
+    finally:
+        os.unlink(meta.name)
+    with tempfile.NamedTemporaryFile('w', suffix='.json', delete=False) as fh:
+        fh.write(start)
+    return fh.name
+
+
+def document(base, spec):
+    """A source document rendered as Markdown — see tools/pdf_markdown.py."""
+    cmd = [sys.executable, os.path.join(TOOLS, 'pdf_markdown.py'), os.path.join(base, spec['source'])]
+    if spec.get('title'):
+        cmd += ['--title', spec['title']]
+    if spec.get('columns'):
+        cmd += ['--columns', spec['columns']]
+    return subprocess.run(cmd, check=True, capture_output=True, text=True).stdout
+
+
 def extract(base, artifact, meta_path):
     tool = artifact['tool']
     source = os.path.join(base, artifact['source'])
@@ -83,6 +117,8 @@ def extract(base, artifact, meta_path):
         sys.exit(f'{artifact["output"]}: unknown tool {tool}')
     if artifact.get('notesSource'):
         cmd += ['--notes', notes_file(base, artifact)]
+    if artifact.get('startLine'):
+        cmd += ['--start-line', start_line_file(base, artifact)]
     return subprocess.run(cmd, check=True, capture_output=True, text=True).stdout
 
 
@@ -95,6 +131,20 @@ def cross_check(base, manifest):
     return result.returncode == 0
 
 
+def write(base, output, fresh, check):
+    """Rewrite an output, or in `--check` report whether it is already what a
+    fresh run produces."""
+    path = os.path.join(base, output)
+    rel = os.path.relpath(path, ROOT)
+    if check:
+        current = open(path).read() if os.path.exists(path) else None
+        print(f'{rel}: {"ok" if current == fresh else "DIFFERS"}')
+        return current == fresh
+    open(path, 'w').write(fresh)
+    print(f'{rel}: written')
+    return True
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('manifests', nargs='*')
@@ -104,9 +154,14 @@ def main():
     for manifest in args.manifests or sorted(find_manifests()):
         base = os.path.dirname(manifest)
         spec = json.load(open(manifest))
+        for doc in spec.get('documents', []):
+            try:
+                failures += not write(base, doc['output'], document(base, doc), args.check)
+            except subprocess.CalledProcessError as e:
+                print(f'{doc["output"]}: rendering failed\n{e.stderr}', file=sys.stderr)
+                failures += 1
         for artifact in spec['artifacts']:
-            out_path = os.path.join(base, artifact['output'])
-            rel = os.path.relpath(out_path, ROOT)
+            rel = os.path.relpath(os.path.join(base, artifact['output']), ROOT)
             with tempfile.NamedTemporaryFile('w', suffix='.json', delete=False) as meta:
                 json.dump(artifact.get('meta', {}), meta)
             try:
@@ -117,14 +172,7 @@ def main():
                 continue
             finally:
                 os.unlink(meta.name)
-            if args.check:
-                current = open(out_path).read() if os.path.exists(out_path) else None
-                status = 'ok' if current == fresh else 'DIFFERS'
-                failures += status != 'ok'
-                print(f'{rel}: {status}')
-            else:
-                open(out_path, 'w').write(fresh)
-                print(f'{rel}: written')
+            failures += not write(base, artifact['output'], fresh, args.check)
         if spec.get('checks'):
             failures += not cross_check(base, spec)
     sys.exit(1 if failures else 0)

@@ -35,6 +35,7 @@ import re
 import subprocess
 import sys
 
+from extract_card import FORMAT_VERSION, course_card_file
 from extract_dbsc_marks import lines, words
 
 TOKEN_RE = re.compile(r'([A-Z])([ps])?([,.])')
@@ -269,6 +270,7 @@ def main():
     ap.add_argument('--meta', help='JSON file whose keys (club, name, source, marks…) head the output')
     ap.add_argument('--notes', help='card: JSON list of {title, text} notes to carry after the card\'s own')
     ap.add_argument('--sections', default='', help='notes: comma-separated SI section numbers to carry')
+    ap.add_argument('--start-line', help="JSON for the card's start line, from tools/extract_start_line.py")
     ap.add_argument('--details', help="marks: another marks file of the club's to take details from")
     ap.add_argument('--details-fields', default='', help='marks: comma-separated fields to take from it (shape,color)')
     ap.add_argument('--details-positions', default='', help='marks: comma-separated ids whose position to take from it')
@@ -278,12 +280,13 @@ def main():
         details = None
         if args.details:
             details = (args.details, [f for f in args.details_fields.split(',') if f], [i for i in args.details_positions.split(',') if i])
-        out = {'formatVersion': 1, **meta, 'marks': marks_file(args.pdf, details)}
+        out = {'formatVersion': FORMAT_VERSION, **meta, 'marks': marks_file(args.pdf, details)}
     elif args.what == 'card':
         courses, notes = card_file(args.pdf)
         if args.notes:
             notes += json.load(open(args.notes))
-        out = {'formatVersion': 1, **meta, 'notes': notes, 'courses': courses}
+        start = json.load(open(args.start_line)) if args.start_line else None
+        out = course_card_file(meta, start, notes, courses)
     else:
         if not args.sections:
             sys.exit('notes: --sections is required')

@@ -12,7 +12,8 @@ reproduced alongside.
 | File | Source | Made by |
 |---|---|---|
 | `marks.json` | DBSC's `DBSC_Marks_Bearings_Distances_2026_v1.pdf` and marks CSV, from `../../dbsc/summer-2026/source/` | `tools/extract_dbsc_marks.py` |
-| `course-card-a.json` | `source/2026_DL_Club_Regattas_SIs_Amendment_1_08Jun26_Copy.pdf`, page 5 (the picture) and page 4 (the notes) | `tools/extract_dlcc_card.py card`, `… notes`, with `overrides.json` |
+| `course-card-a.json` | `source/2026_DL_Club_Regattas_SIs_Amendment_1_08Jun26_Copy.pdf`, page 5 (the picture), page 4 (the notes and the start line) | `tools/extract_dlcc_card.py card`, `… notes`, `tools/extract_start_line.py`, with `overrides.json` |
+| `source/*.md` | the two copies of the SI | `tools/pdf_markdown.py` |
 | `course-card-a.html`, `map/marks.svg` | the JSON above, `map/background.png` | `tools/render-cards.ts` |
 | `map/background.png`, `.json` | OpenStreetMap + OpenSeaMap tiles | `tools/fetch_map.py` |
 
@@ -70,6 +71,15 @@ matching it reuses:
    "157.5", both matched right but by too small a margin against `0`/`5`'s
    neighbours in this font, and both confirmed by eye.
 
+**Start line.** Addendum A 3.1 — "The race start line will be approximately
+North of Dun Laoghaire Harbour" — is the whole of what the instructions say
+about where the line is, and SI 8.1 confirms that the course areas'
+approximate start line positions are in the addendums and nowhere else. It
+is carried as the card's `startLine`, with no position, and every course
+begins there. `extract_start_line.py` refuses any text that is not in the SI
+verbatim. The same words are also in the card's A3 note, since the note
+carries the addendum section whole.
+
 The sides come from Addendum A 1.6, "All marks shall be rounded to port in
 the order listed", which the tool requires to be in the SI's text; there
 are no passing marks. Course ids are letter and number as displayed,
@@ -102,7 +112,8 @@ does for every club.
   within 1° and 0.01 NM.
 
 Structural tests (`tests/dlcc.test.ts`) compare all 64 courses with a
-transcription of the printed card read by eye, and confirm the sections'
+transcription of the printed card read by eye, and confirm that every course
+begins at Addendum A 3.1's start line, the sections'
 order, every mark rounded to port and one of the eight DBSC marks the card
 uses (B–K), the 8-6-3-2 pattern of every section, the headings as printed,
 and that the addendum's own examples (A3 is `E C K`, B4 is `F K`) agree
@@ -112,8 +123,9 @@ cluster by cluster, and every cluster held one letter only.
 ## Notes on the card
 
 - The start line is "approximately North of Dun Laoghaire Harbour" (A3.1)
-  and the finish "to weather of the last mark" (A3.2): both race-day
-  facts the library takes per race. There is no finish mark on the card.
+  and the finish "to weather of the last mark" (A3.2): both race-day facts
+  the library takes per race. The start line is a mark of every course, `SL`;
+  the finish is not on the card at all.
 - Each section's wind is the direction its courses are set for, as on
   DBSC's cards, printed here with the bearing to the half degree
   (`NNE 022.5`); it is the card's heading, not a property of the course.

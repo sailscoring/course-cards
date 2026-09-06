@@ -1,6 +1,22 @@
 {
   "club": "Howth Yacht Club",
   "event": "Autumn League 2025",
+  "documents": [
+    {
+      "output": "source/2025_AL_Sailing_Instruction.Final.md",
+      "source": "source/2025_AL_Sailing_Instruction.Final.pdf",
+      "url": "https://hyc.ie/system/resources/2328/original/2025_AL_Sailing_Instruction.Final.pdf",
+      "title": "Autumn League 2025 sailing instructions",
+      "why": "6.1 and 6.2 A and B place the offshore and inshore starting areas and define their starting lines, which the cards do not; 6.1 C and 6.2 C say the windward mark Z is laid to windward of the line and is the first mark of every fixed-mark course."
+    },
+    {
+      "output": "source/AL_Change_SI_No_2.md",
+      "source": "source/AL_Change_SI_No_2.pdf",
+      "url": "https://hyc.ie/system/resources/2343/original/AL_Change_SI_No_2.pdf",
+      "title": "Autumn League 2025, change to sailing instructions no. 2",
+      "why": "The current definition of the Howth Sound finishing line for classes 4 and 5 and the Howth 17s on two-race days, replacing change no. 1's. Changes no. 1 and no. 3 are not kept: no. 1 is superseded in full by this one, and no. 3 changes only the schedule and the windward/leeward appendix, which is not on a card."
+    }
+  ],
   "artifacts": [
     {
       "output": "marks.json",
@@ -25,7 +41,20 @@
         "source": "https://hyc.ie/system/resources/2329/original/AL_Offshore_Course_Card.pdf",
         "marks": "marks.json"
       },
-      "notesSource": "source/AL_Course_Card_Technical_Sheet.pdf"
+      "notesSource": "source/AL_Course_Card_Technical_Sheet.pdf",
+      "startLine": {
+        "source": "source/2025_AL_Sailing_Instruction.Final.pdf",
+        "after": "OFFSHORE COMMITTEE BOAT STARTS",
+        "clauses": [
+          "A Starting Area",
+          "B Starting Line"
+        ],
+        "meta": {
+          "id": "SL",
+          "name": "Start line",
+          "source": "HYC Autumn League 2025 sailing instructions 6.1 A and B"
+        }
+      }
     },
     {
       "output": "inshore.json",
@@ -39,7 +68,20 @@
         "source": "https://hyc.ie/system/resources/2330/original/AL_Course_Card_Inshore_01.pdf",
         "marks": "marks.json"
       },
-      "notesSource": "source/AL_Course_Card_Technical_Sheet.pdf"
+      "notesSource": "source/AL_Course_Card_Technical_Sheet.pdf",
+      "startLine": {
+        "source": "source/2025_AL_Sailing_Instruction.Final.pdf",
+        "after": "INSHORE COMMITTEE VESSEL STARTS",
+        "clauses": [
+          "A Starting Area",
+          "B Starting Line"
+        ],
+        "meta": {
+          "id": "SL",
+          "name": "Start line",
+          "source": "HYC Autumn League 2025 sailing instructions 6.2 A and B"
+        }
+      }
     }
   ],
   "map": {

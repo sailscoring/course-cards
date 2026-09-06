@@ -25,6 +25,9 @@ import re
 import subprocess
 import sys
 
+sys.path.insert(0, __file__.rsplit("/", 1)[0])
+from extract_card import FORMAT_VERSION  # noqa: E402
+
 WORD_RE = re.compile(r'<word xMin="([\d.]+)" yMin="([\d.]+)" xMax="([\d.]+)" yMax="([\d.]+)">(.*?)</word>')
 UNESCAPE = {'&amp;': '&', '&lt;': '<', '&gt;': '>', '&#39;': "'", '&apos;': "'", '&quot;': '"'}
 
@@ -169,7 +172,7 @@ def main():
             if m['id'] in ids:
                 sys.exit(f'{m["id"]} is on the sheet; take it from there')
         marks += supplement(args.supplement, ids)
-    out = {'formatVersion': 1, **meta, 'marks': marks}
+    out = {'formatVersion': FORMAT_VERSION, **meta, 'marks': marks}
     json.dump(out, sys.stdout, indent=2, ensure_ascii=False)
     sys.stdout.write('\n')
 

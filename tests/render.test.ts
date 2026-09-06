@@ -64,13 +64,23 @@ describe('renderCardHtml', () => {
   it('tabulates each course’s legs, blank where the card cannot place them', () => {
     const table = html.slice(html.indexOf('<div class="legs" id="legs-015">'), html.indexOf('<div class="legs" id="legs-021">'));
     expect(table).toContain('<h3>Course 015</h3>');
-    expect(table).toContain('<tr class="unplaced"><th>1</th><td>Start</td><td>Z</td><td>—</td><td>—</td></tr>');
+    expect(table).toContain('<tr class="unplaced"><th>1</th><td>SL</td><td>Z</td><td>—</td><td>—</td></tr>');
     expect(table).toContain('<tr class="unplaced"><th>2</th><td>Z</td><td>P</td><td>—</td><td>—</td></tr>');
     expect(table).toContain('<tr><th>6</th><td>P</td><td>W</td><td>194</td><td>0.69</td></tr>');
     expect(table).toContain('<tr><th>7</th><td>W</td><td>P</td><td>014</td><td>0.69</td></tr>');
     expect(table).toContain('<tr class="unplaced"><th>10</th><td>S</td><td>F</td><td>—</td><td>—</td></tr>');
     expect(table).toContain('<td colspan="4">Legs between placed marks</td><td>6.64</td>');
     expect(table).toContain('has no position on the card');
+  });
+
+  it('gives the start line its own section, and keeps it off the printed card', () => {
+    expect(html).toContain('<h2>Start line</h2>');
+    expect(html).toContain(`<em>${inshore.startLine!.placement}</em>`);
+    expect(html).toContain(`<p class="meta">${inshore.startLine!.source}</p>`);
+    // the course table is the card as printed, so the start line is not in it
+    const courses = html.slice(html.indexOf('<h2>Courses</h2>'), html.indexOf('<aside class="course-view">'));
+    expect(courses).not.toContain('SL');
+    expect(courses).toContain('<span class="port">Z</span> <span class="port">P</span>');
   });
 
   it('lists every mark and maps the fixed ones', () => {
@@ -128,7 +138,7 @@ describe('renderCardHtml', () => {
     );
     // every DBSC mark is placed, so only the leg from the start line is blank
     const table = out.slice(out.indexOf('<div class="legs" id="legs-B2">'), out.indexOf('<div class="legs" id="legs-B3">'));
-    expect(table).toContain('<tr class="unplaced"><th>1</th><td>Start</td><td>F</td><td>—</td><td>—</td></tr>');
+    expect(table).toContain('<tr class="unplaced"><th>1</th><td>SL</td><td>F</td><td>—</td><td>—</td></tr>');
     expect((table.match(/<tr><th>\d<\/th>/g) ?? []).length).toBe(6);
     // a two-colour mark gets its first colour's swatch
     expect(out).toContain('<span class="swatch" style="background:#f2d02d"></span>yellow/black');

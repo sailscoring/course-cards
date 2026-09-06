@@ -1,6 +1,24 @@
 {
   "club": "Dun Laoghaire Combined Clubs",
   "event": "Regattas 2026",
+  "documents": [
+    {
+      "output": "source/2026_DL_Club_Regattas_SIs_Amendment_1_08Jun26_Copy.md",
+      "source": "source/2026_DL_Club_Regattas_SIs_Amendment_1_08Jun26_Copy.pdf",
+      "url": "https://s3.amazonaws.com/rrs.prod/dm7ag8qpwgr0m3mv15pklx7ugfad",
+      "columns": "2@2-3",
+      "title": "Dun Laoghaire Combined Clubs regattas 2026 sailing instructions, with amendment 1",
+      "why": "Addendum A carries Course Card A itself; A1.6 gives every mark to port, A2.1 the marks, A3.1 the start line the courses begin at and A3.2 the finish. SI 8.1 says the start line positions are in the addendums."
+    },
+    {
+      "output": "source/DL-Club-Regattas-2026-Sailing-Instructions.md",
+      "source": "source/DL-Club-Regattas-2026-Sailing-Instructions.pdf",
+      "url": "https://www.dmyc.ie/wp-content/uploads/2026/05/DL-Club-Regattas-2026-Sailing-Instructions.pdf",
+      "columns": "2@2-3",
+      "title": "Dun Laoghaire Combined Clubs regattas 2026 sailing instructions, final draft",
+      "why": "The DMYC’s copy of the same instructions, kept so the check that the two agree on everything the card is made from can be read as well as run."
+    }
+  ],
   "artifacts": [
     {
       "output": "marks.json",
@@ -40,7 +58,20 @@
         "A1",
         "A2",
         "A3"
-      ]
+      ],
+      "startLine": {
+        "source": "source/2026_DL_Club_Regattas_SIs_Amendment_1_08Jun26_Copy.pdf",
+        "after": "A3.",
+        "clauses": [
+          "3.1"
+        ],
+        "columns": "2@2-3",
+        "meta": {
+          "id": "SL",
+          "name": "Start line",
+          "source": "Dun Laoghaire Combined Clubs regattas 2026 sailing instructions, Addendum A 3.1"
+        }
+      }
     }
   ],
   "checks": {

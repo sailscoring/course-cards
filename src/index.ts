@@ -10,6 +10,7 @@ export type {
   Position,
   RacePositions,
   Side,
+  StartLine,
   Waypoint,
 } from './types.js';
 export { bearingDeg, destination, distanceNm } from './geo.js';

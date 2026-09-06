@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { parseCourseCardFile, parseMarksFile } from '../src/index';
+import { printed } from './printed';
 
 function load(rel: string): unknown {
   return JSON.parse(readFileSync(join(__dirname, '..', 'data', 'hyc', 'brass-monkey-2025', rel), 'utf-8'));
@@ -56,28 +57,41 @@ describe('the HYC Brass Monkey 2025 course card', () => {
     expect(card.courses.map((c) => c.id)).toEqual(Array.from({ length: 16 }, (_, i) => String(i + 1)));
   });
 
+  it('every course starts at the line SI 12.1 defines, in the race area of SI 8.1', () => {
+    expect(card.startLine).toMatchObject({ id: 'SL', name: 'Start line' });
+    expect(card.startLine!.position).toBeUndefined();
+    expect(card.startLine!.placement).toBe(
+      'The Race Area will be Northwest of Ireland’s Eye. The starting line will be between the red and white pole ' +
+        'displaying an orange flag on the Committee Vessel and either a cylindrical orange buoy or an orange buoy ' +
+        'with a flag on top. Boats shall keep clear of the starting line until their warning signal.',
+    );
+    expect(card.startLine!.source).toBe('HYC Brass Monkey Winter Series 2025 sailing instructions 8.1 and 12.1');
+    expect(marks.marks.some((m) => m.id === 'SL')).toBe(false);
+    for (const c of card.courses) expect(c.marks[0]!.mark, c.id).toBe('SL');
+  });
+
   it('every course rounds its marks to port, leaves Island to starboard last and ends at the finish, unsided', () => {
     const known = new Set(marks.marks.map((m) => m.id));
     for (const c of card.courses) {
-      const finish = c.marks[c.marks.length - 1]!;
+      const course = printed(card, c.id);
+      const finish = course[course.length - 1]!;
       expect(finish).toEqual({ mark: 'F' });
-      const island = c.marks[c.marks.length - 2]!;
+      const island = course[course.length - 2]!;
       expect(island, c.id).toEqual({ mark: 'I', side: 'starboard' });
-      for (const cm of c.marks) {
+      for (const cm of course) {
         expect(known.has(cm.mark), `${c.id}: mark ${cm.mark}`).toBe(true);
         expect(cm.passing, `${c.id}: mark ${cm.mark}`).toBeUndefined();
         if (cm !== finish && !(cm.mark === 'I' && cm.side === 'starboard')) expect(cm.side, `${c.id}: mark ${cm.mark}`).toBe('port');
       }
     }
     // Spit is listed but on no course
-    expect(card.courses.some((c) => c.marks.some((m) => m.mark === 'S'))).toBe(false);
+    expect(card.courses.some((c) => printed(card, c.id).some((m) => m.mark === 'S'))).toBe(false);
   });
 
   it('spot checks against the printed card', () => {
     const text = (id: string) =>
-      card.courses
-        .find((c) => c.id === id)!
-        .marks.map((m) => `${m.mark}${m.side === 'port' ? 'p' : m.side === 'starboard' ? 's' : ''}`)
+      printed(card, id)
+        .map((m) => `${m.mark}${m.side === 'port' ? 'p' : m.side === 'starboard' ? 's' : ''}`)
         .join(' ');
     expect(text('1')).toBe('Hp Wp Ip Hp Wp Is F');
     expect(text('4')).toBe('Hp Wp Cp Vp Cp Hp Vp Is F');

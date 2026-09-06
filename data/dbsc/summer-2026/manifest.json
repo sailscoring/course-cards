@@ -1,6 +1,43 @@
 {
   "club": "Dublin Bay Sailing Club",
   "event": "Summer Series 2026",
+  "documents": [
+    {
+      "output": "source/SI-A_Sailing_Instructions_General_2026_v2.md",
+      "source": "source/SI-A_Sailing_Instructions_General_2026_v2.pdf",
+      "url": "https://dbsc.ie/wp-content/uploads/2026/04/SI-A_Sailing_Instructions_General_2026_v2.pdf",
+      "title": "AIB DBSC Summer Series 2026 sailing instructions A, general",
+      "why": "A4.3 is what puts a course card in use: flag X ashore on a Saturday sends every keelboat class but the Green fleet to the West Pier hut, under supplement H and Course Card 2. A10.4 restricts passing between the hut and the start limit marks."
+    },
+    {
+      "output": "source/SI-B_Sailing_Instructions_Fixed_Marks_Committee_Vessel_2026_v1.md",
+      "source": "source/SI-B_Sailing_Instructions_Fixed_Marks_Committee_Vessel_2026_v1.pdf",
+      "url": "https://dbsc.ie/wp-content/uploads/2026/04/SI-B_Sailing_Instructions_Fixed_Marks_Committee_Vessel_2026_v1.pdf",
+      "title": "AIB DBSC Summer Series 2026 sailing instructions B, fixed-mark courses, committee vessel",
+      "why": "B4.2 defines the committee vessel starting line that cards 1, 3 and 4 start at; B5.5 says which of them is used on which day; B5.6 gives the red/green “p”/“s” sides the cards print; B6 the finish."
+    },
+    {
+      "output": "source/SI-H_Sailing_Instructions_Fixed_Marks_Hut_2026_v2.md",
+      "source": "source/SI-H_Sailing_Instructions_Fixed_Marks_Hut_2026_v2.pdf",
+      "url": "https://dbsc.ie/wp-content/uploads/2026/04/SI-H_Sailing_Instructions_Fixed_Marks_Hut_2026_v2.pdf",
+      "title": "AIB DBSC Summer Series 2026 sailing instructions H, fixed-mark courses, hut",
+      "why": "H4.1 and H4.2 define the West Pier hut starting line that cards 2 and 5 start at — a fixed transit, not a laid line — and H4.3 the limit mark; H5.5 says which card is used on which day; H5.6 makes Turning mark X a passing mark; H6.1 the finish, also at the hut."
+    },
+    {
+      "output": "source/Sailing_Instructions_2026_Amendment2_CV_starts.md",
+      "source": "source/Sailing_Instructions_2026_Amendment2_CV_starts.pdf",
+      "url": "https://dbsc.ie/wp-content/uploads/2026/07/Sailing_Instructions_2026_Amendment2_CV_starts.pdf",
+      "title": "AIB DBSC Summer Series 2026 sailing instructions amendment 2, all committee vessel courses",
+      "why": "Adds B4.3: if the committee vessel cannot anchor, the starting line may be between two marks, or a mark and a RIB. It is an alternative to B4.2, not a replacement, so the card’s start line quotes B4.2."
+    },
+    {
+      "output": "source/Sailing_Instructions_2026_Amendment4.md",
+      "source": "source/Sailing_Instructions_2026_Amendment4.pdf",
+      "url": "https://dbsc.ie/wp-content/uploads/2026/08/Sailing_Instructions_2026_Amendment4.pdf",
+      "title": "AIB DBSC Summer Series 2026 sailing instructions amendment 4, Saturdays 29 August and 12 September",
+      "why": "Adds B5.12: on those two Saturdays the Red Fleet and Dublin Bay 21s race Course Card 4 from Corinthian, and a course may be repeated (2A3) or two combined (A3B8). The card holds the courses as printed; combining them is the reader’s to do."
+    }
+  ],
   "artifacts": [
     {
       "output": "marks.json",
@@ -33,7 +70,19 @@
         "source": "https://dbsc.ie/wp-content/uploads/2026/04/CC1_Saturday_CV_2026_v1.pdf",
         "marks": "marks.json"
       },
-      "notesSource": "source/DBSC_Marks_Bearings_Distances_2026_v1.pdf"
+      "notesSource": "source/DBSC_Marks_Bearings_Distances_2026_v1.pdf",
+      "startLine": {
+        "source": "source/SI-B_Sailing_Instructions_Fixed_Marks_Committee_Vessel_2026_v1.pdf",
+        "after": "B4 The Start",
+        "clauses": [
+          "4.2"
+        ],
+        "meta": {
+          "id": "SL",
+          "name": "Start line",
+          "source": "DBSC 2026 sailing instructions supplement B – Fixed-Mark Courses, Committee Vessel, 4.2"
+        }
+      }
     },
     {
       "output": "cc2-saturday-hut.json",
@@ -46,7 +95,20 @@
         "source": "https://dbsc.ie/wp-content/uploads/2026/04/CC2_Saturday_Hut_2026_v1.pdf",
         "marks": "marks.json"
       },
-      "notesSource": "source/DBSC_Marks_Bearings_Distances_2026_v1.pdf"
+      "notesSource": "source/DBSC_Marks_Bearings_Distances_2026_v1.pdf",
+      "startLine": {
+        "source": "source/SI-H_Sailing_Instructions_Fixed_Marks_Hut_2026_v2.pdf",
+        "after": "H4 The Start",
+        "clauses": [
+          "4.1",
+          "4.2"
+        ],
+        "meta": {
+          "id": "SL",
+          "name": "Start line",
+          "source": "DBSC 2026 sailing instructions supplement H – Fixed-Mark Courses, Hut, 4.1 and 4.2"
+        }
+      }
     },
     {
       "output": "cc3-thursday-blue.json",
@@ -59,7 +121,19 @@
         "source": "https://dbsc.ie/wp-content/uploads/2026/04/CC3_Thursday_Blue_2026_v1.pdf",
         "marks": "marks.json"
       },
-      "notesSource": "source/DBSC_Marks_Bearings_Distances_2026_v1.pdf"
+      "notesSource": "source/DBSC_Marks_Bearings_Distances_2026_v1.pdf",
+      "startLine": {
+        "source": "source/SI-B_Sailing_Instructions_Fixed_Marks_Committee_Vessel_2026_v1.pdf",
+        "after": "B4 The Start",
+        "clauses": [
+          "4.2"
+        ],
+        "meta": {
+          "id": "SL",
+          "name": "Start line",
+          "source": "DBSC 2026 sailing instructions supplement B – Fixed-Mark Courses, Committee Vessel, 4.2"
+        }
+      }
     },
     {
       "output": "cc4-thursday-red.json",
@@ -72,7 +146,19 @@
         "source": "https://dbsc.ie/wp-content/uploads/2026/04/CC4_Thursday_Red_2026_v1.pdf",
         "marks": "marks.json"
       },
-      "notesSource": "source/DBSC_Marks_Bearings_Distances_2026_v1.pdf"
+      "notesSource": "source/DBSC_Marks_Bearings_Distances_2026_v1.pdf",
+      "startLine": {
+        "source": "source/SI-B_Sailing_Instructions_Fixed_Marks_Committee_Vessel_2026_v1.pdf",
+        "after": "B4 The Start",
+        "clauses": [
+          "4.2"
+        ],
+        "meta": {
+          "id": "SL",
+          "name": "Start line",
+          "source": "DBSC 2026 sailing instructions supplement B – Fixed-Mark Courses, Committee Vessel, 4.2"
+        }
+      }
     },
     {
       "output": "cc5-tuesday-hut.json",
@@ -85,7 +171,20 @@
         "source": "https://dbsc.ie/wp-content/uploads/2026/04/CC5_Tuesday_Hut_2026_v1.pdf",
         "marks": "marks.json"
       },
-      "notesSource": "source/DBSC_Marks_Bearings_Distances_2026_v1.pdf"
+      "notesSource": "source/DBSC_Marks_Bearings_Distances_2026_v1.pdf",
+      "startLine": {
+        "source": "source/SI-H_Sailing_Instructions_Fixed_Marks_Hut_2026_v2.pdf",
+        "after": "H4 The Start",
+        "clauses": [
+          "4.1",
+          "4.2"
+        ],
+        "meta": {
+          "id": "SL",
+          "name": "Start line",
+          "source": "DBSC 2026 sailing instructions supplement H – Fixed-Mark Courses, Hut, 4.1 and 4.2"
+        }
+      }
     }
   ],
   "checks": {

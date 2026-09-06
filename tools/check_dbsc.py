@@ -54,7 +54,12 @@ def check_card(base, card_file, csv_file, expected=()):
     """`expected`: differences already known and recorded in the manifest —
     reported, but not failures; one that has gone away is."""
     card = json.load(open(os.path.join(base, card_file)))
-    ours = {c['id']: ''.join(m['mark'] + m['side'][0] for m in c['marks']) for c in card['courses']}
+    # The club's CSV lists the marks the card prints; the start line, which
+    # comes from the sailing instructions, heads every course here and is not
+    # one of them.
+    start = (card.get('startLine') or {}).get('id')
+    misstarted = [c['id'] for c in card['courses'] if start and c['marks'][0]['mark'] != start]
+    ours = {c['id']: ''.join(m['mark'] + m['side'][0] for m in c['marks'][1 if start else 0:]) for c in card['courses']}
     theirs = {}
     with open(os.path.join(base, csv_file), newline='') as fh:
         reader = csv.reader(fh)
@@ -66,6 +71,8 @@ def check_card(base, card_file, csv_file, expected=()):
                 theirs[row[0]] = ''.join(marks)
     known = {e['course']: e for e in expected}
     problems, noted = [], []
+    if misstarted:
+        problems.append(f'{len(misstarted)} course(s) do not begin at the start line {start}: {", ".join(misstarted[:5])}')
     for id_ in sorted(set(ours) | set(theirs)):
         if id_ not in theirs:
             problems.append(f'{id_}: on the PDF ({ours[id_]}) but not in the CSV')

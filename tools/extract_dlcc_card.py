@@ -41,7 +41,7 @@ import tempfile
 from PIL import Image, ImageChops, ImageDraw, ImageOps
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from extract_card import components, distance, emit, feature, load_templates, recognise  # noqa: E402
+from extract_card import components, course_card_file, distance, emit, feature, load_templates, recognise  # noqa: E402
 
 LABELS = {'dot': '.'}
 HEADING_RE = re.compile(r'^[A-Z]+ \d{3}(\.\d)?$')
@@ -263,7 +263,8 @@ def cmd_card(args):
     notes = [{'title': 'Course sections', 'text': ', '.join(headings)}, {'title': 'Card notes', 'text': '\n'.join(card_notes)}]
     if args.notes:
         notes += json.load(open(args.notes))
-    emit({'formatVersion': 1, **meta, 'notes': notes, 'courses': courses}, sys.stdout)
+    start = json.load(open(args.start_line)) if args.start_line else None
+    emit(course_card_file(meta, start, notes, courses), sys.stdout)
 
 
 # --- notes mode: the addendum's sections ----------------------------------------
@@ -316,6 +317,7 @@ def main():
     b.add_argument('--templates', required=True)
     b.add_argument('--meta', help='JSON file whose keys (club, name, source, marks…) head the output')
     b.add_argument('--notes', help='JSON list of {title, text} notes to carry after the card\'s own')
+    b.add_argument('--start-line', help="JSON for the card's start line, from tools/extract_start_line.py")
     b.add_argument('--overrides', help='JSON {"<glyph key>": "<LABEL>"} for glyphs verified by eye')
     b.add_argument('--review', help='directory to write crops of unresolved glyphs into')
     b.set_defaults(func=cmd_card)

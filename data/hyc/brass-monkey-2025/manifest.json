@@ -1,6 +1,15 @@
 {
   "club": "Howth Yacht Club",
   "event": "Brass Monkey Winter Series 2025",
+  "documents": [
+    {
+      "output": "source/Brass_Monkey_SI_Winter_2025_.md",
+      "source": "source/Brass_Monkey_SI_Winter_2025_.pdf",
+      "url": "https://hyc.ie/system/resources/2365/original/Brass_Monkey_SI_Winter_2025_.pdf",
+      "title": "Brass Monkey Winter Series 2025 sailing instructions",
+      "why": "The whole card is in this document: the marks (10), the courses (the last two pages), the race area and starting line (8.1, 12.1) and the finish (14)."
+    }
+  ],
   "artifacts": [
     {
       "output": "marks.json",
@@ -42,7 +51,19 @@
         "9",
         "10",
         "14"
-      ]
+      ],
+      "startLine": {
+        "source": "source/Brass_Monkey_SI_Winter_2025_.pdf",
+        "clauses": [
+          "8.1",
+          "12.1"
+        ],
+        "meta": {
+          "id": "SL",
+          "name": "Start line",
+          "source": "HYC Brass Monkey Winter Series 2025 sailing instructions 8.1 and 12.1"
+        }
+      }
     }
   ],
   "checks": {

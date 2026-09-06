@@ -5,8 +5,9 @@ Howth Yacht Club's Autumn League course cards, as published at hyc.ie:
 | File | Source | Made by |
 |---|---|---|
 | `marks.json` | `source/AL_Course_Card_Technical_Sheet.pdf` | `tools/extract_marks.py` |
-| `offshore.json` | `source/AL_Offshore_Course_Card.pdf` | `tools/extract_card.py` |
-| `inshore.json` | `source/AL_Course_Card_Inshore_01.pdf` | `tools/extract_card.py` |
+| `offshore.json` | `source/AL_Offshore_Course_Card.pdf`, start line from `source/2025_AL_Sailing_Instruction.Final.pdf` | `tools/extract_card.py`, `tools/extract_start_line.py` |
+| `inshore.json` | `source/AL_Course_Card_Inshore_01.pdf`, start line from `source/2025_AL_Sailing_Instruction.Final.pdf` | `tools/extract_card.py`, `tools/extract_start_line.py` |
+| `source/*.md` | the sailing instructions below | `tools/pdf_markdown.py` |
 | `offshore.html`, `inshore.html`, `map/marks.svg` | the JSON above, `map/background.png` | `tools/render-cards.ts` |
 | `map/background.png`, `.json` | OpenStreetMap + OpenSeaMap tiles | `tools/fetch_map.py` |
 
@@ -18,8 +19,8 @@ files against a fresh run.
 The HTML pages are the cards as a web page: the course table as printed,
 the marks over a chart on which a picked course is drawn with its legs
 numbered and tabulated (true bearing and distance, computed from the
-positions; a leg from the start line or touching Z or F, which the card
-cannot place, is listed without them), true bearings and distances between
+positions; a leg touching the start line, Z or F, which the card cannot
+place, is listed without them), true bearings and distances between
 every pair of marks, and the sheet's notes.
 
 **Chart.** The map background is OpenStreetMap with the OpenSeaMap seamark
@@ -42,6 +43,16 @@ have prose where their coordinates would be — Zephyr, "Upwind of Start
 Line", and Finish, "Between Island Mark and Howth Sound" — and are emitted
 without a position and with that text as their `placement`.
 
+**Start line.** A course card names the marks; where the race starts is in
+the sailing instructions, so it is read from them. SI 6.1 A and B place the
+offshore starting area north of Ireland's Eye and define its line between an
+orange outer distance mark and the committee vessel's red/white pole; SI 6.2
+A and B do the same for the inshore fleet, north-west of Ireland's Eye. Each
+card carries its own as a `startLine` with those clauses quoted, and every
+course begins there — the two cards share one marks file but not one start
+line, which is why the start line lives on the card. `extract_start_line.py`
+refuses any text that is not in the SI verbatim.
+
 **Notes.** The sheet's two passages of explanatory text — "Navigation Marks
 and Obstructions" and "Course Selection" — are read from the page regions
 beside and below the table by `tools/extract_notes.py` and carried as
@@ -61,6 +72,27 @@ letters become `side: "port"`, green `"starboard"`; a letter inside a box
 becomes `passing: true`. Courses are numbered row + column as the card's
 own instructions say (`073` is row 07, column 3).
 
+## The sailing instructions
+
+The SIs are source material for the cards, not just background: they define
+the start lines above, and 6.1 C and 6.2 C say the windward mark Z is laid
+to windward of the line and is the first mark of every fixed-mark course,
+which is what the cards show. They are kept in `source/` with the card PDFs,
+each with a Markdown sidecar written by `tools/pdf_markdown.py`.
+
+| File | Source |
+|---|---|
+| `source/2025_AL_Sailing_Instruction.Final.pdf` | [hyc.ie](https://hyc.ie/system/resources/2328/original/2025_AL_Sailing_Instruction.Final.pdf) |
+| `source/AL_Change_SI_No_2.pdf` | [hyc.ie](https://hyc.ie/system/resources/2343/original/AL_Change_SI_No_2.pdf), 24 September 2025 |
+
+The club published three changes to the SIs; only no. 2 is kept. No. 1 moved
+the finish for classes 4 and 5 and the Howth 17s into Howth Sound on
+windward/leeward days, and no. 2 replaces its text in full (adding where the
+Finisher's Hut is), so no. 1 is superseded. No. 3 changes the schedule for
+18 October and which windward/leeward marks each fleet uses; neither is on a
+course card, so it is not kept. None of the three touches the start lines or
+the fixed-mark courses.
+
 ## How it was checked
 
 - Every glyph on both cards matched a template with a clear margin (worst
@@ -69,8 +101,8 @@ own instructions say (`073` is row 07, column 3).
 - The extracted courses were rendered back as text grids and compared
   against the card images row by row; a dozen rows on each card, all
   boxed marks, and all green letters were checked by eye. Structural tests
-  confirm every course on both cards runs `Z … F` over marks the sheet
-  lists.
+  confirm every course on both cards runs `SL Z … F` over marks the sheet
+  lists, and that each card's start line quotes its own SI clause.
 - As a one-off check, bearings computed from the extracted positions were
   compared with the sheet's "Relative Bearings Table – Magnetic (Approx)".
   They agree to within 3° for every pair of marks once one consistent
@@ -83,9 +115,17 @@ own instructions say (`073` is row 07, column 3).
 
 ## Notes on the cards
 
-- The windward mark Z (Zephyr) and the finish F are marks on the card with
-  no fixed position: every course starts `Z` and ends `F`. Where they were
-  on a given day is supplied to the library with the start position.
+- The start line SL, the windward mark Z (Zephyr) and the finish F are marks
+  of every course with no fixed position: every course reads `SL Z … F`.
+  Where each of the three was on a given day is supplied to the library per
+  race, by mark id.
+- The offshore card's start line and its finish are described in different
+  places and do not match the technical sheet: the sheet has F "Between
+  Island Mark and Howth Sound", while SI 6.1 D puts the offshore finish in
+  the vicinity of Mark Q (Rowan Rocks), and for classes 4 and 5 on two-race
+  days change no. 2 puts it in Howth Sound. `marks.json` keeps the sheet's
+  wording for F, since that is the document it is made from; the SIs are in
+  `source/` for the rest.
 - A boxed `Z` (offshore courses 051, 054, 323, 333) is a passing mark: the
   first leg goes past Zephyr to the next mark.
 - The offshore card uses 15 marks (A D E F G H I K M O P T U V Z); the

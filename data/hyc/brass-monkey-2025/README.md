@@ -2,14 +2,20 @@
 
 Howth Yacht Club's Brass Monkey winter series, 9 November – 13 December
 2025. The club publishes no separate course card: the sailing instructions
-(Draft A, 6 November 2025) carry it as their last two pages — a "MARK
-LOCATION CARD" page with a picture of the marks and a table of their
-positions, and a "COURSE CARD" page of 16 numbered courses.
+(Draft A, 6 November 2025, `source/Brass_Monkey_SI_Winter_2025_.pdf` from
+[hyc.ie](https://hyc.ie/system/resources/2365/original/Brass_Monkey_SI_Winter_2025_.pdf))
+carry it as their last two pages — a "MARK LOCATION CARD" page with a
+picture of the marks and a table of their positions, and a "COURSE CARD"
+page of 16 numbered courses. The whole data set therefore comes out of one
+document, which also gives the start line (12.1), the race area (8.1) and
+the finish (14); it is kept in `source/` with a Markdown sidecar, as every
+data set here keeps the sailing instructions its courses depend on.
 
 | File | Source | Made by |
 |---|---|---|
 | `marks.json` | `source/Brass_Monkey_SI_Winter_2025_.pdf`, page 7 (and §14 for the finish); shapes, colours and P's position from `../al-2025/marks.json` | `tools/extract_hyc_si.py marks` |
-| `course-card.json` | the same PDF, page 8; notes from SI §8, 9, 10 and 14 | `tools/extract_hyc_si.py card`, `… notes` |
+| `course-card.json` | the same PDF, page 8; start line from SI 8.1 and 12.1; notes from SI §8, 9, 10 and 14 | `tools/extract_hyc_si.py card`, `… notes`, `tools/extract_start_line.py` |
+| `source/Brass_Monkey_SI_Winter_2025_.md` | the same PDF | `tools/pdf_markdown.py` |
 | `course-card.html`, `map/marks.svg` | the JSON above, `map/background.png` | `tools/render-cards.ts` |
 | `map/background.png`, `.json` | OpenStreetMap + OpenSeaMap tiles | `tools/fetch_map.py` |
 
@@ -50,6 +56,14 @@ extractor refuses any row word that is not such a token, and any number
 that repeats. Course ids are the numbers as printed, `1` … `16`, as the
 committee vessel's numeral boards show them.
 
+**Start line.** The card's page says nothing about where a race starts; SI
+12.1 does — between the Committee Vessel's red and white pole with an orange
+flag and "either a cylindrical orange buoy or an orange buoy with a flag on
+top" — and SI 8.1 puts the race area north-west of Ireland's Eye. Both are
+quoted as the card's `startLine`, with no position, and every course begins
+there. `extract_start_line.py` refuses any text that is not in the SI
+verbatim; 8.1's sentence is also the card's "8. Race Area" note.
+
 **Notes.** The card's WIND column — the wind direction each course is set
 for — is carried as the card's first note, "Wind" (`1 N, 2 N, 3 N/E, …`),
 not as a course field: what the wind is doing on the day is the caller's
@@ -89,16 +103,16 @@ identical.
 
 Structural tests (`tests/hyc-brass-monkey.test.ts`) confirm the 16 courses
 in order, every mark on the marks file with the sheet's name, shape and
-colour, every course rounding to port, leaving Island to starboard and
-ending at the finish, and spot checks of five courses read from the printed
-card by eye. All 16 were compared against the PDF's text.
+colour, every course beginning at SI 12.1's start line, rounding to port,
+leaving Island to starboard and ending at the finish, and spot checks of
+five courses read from the printed card by eye. All 16 were compared against the PDF's text.
 
 ## Notes on the card
 
-- Every course ends `Is, F.`: Island left to starboard, then the finish,
-  which SI 14.2 puts south of Island in the vicinity of Howth Sound. The
-  start line (a committee vessel "Northwest of Ireland's Eye", SI 8.1 and
-  12.1) and the finish are race-day facts the library takes per race.
+- Every course reads `SL … Is F`: the start line, the marks, Island left to
+  starboard, then the finish, which SI 14.2 puts south of Island in the
+  vicinity of Howth Sound. Where the line and the finish actually were are
+  race-day facts the library takes per race, by mark id.
 - All marks are rounding marks; there are no passing marks on this card.
 - Spit (S) is on the location table and in SI 10.2's list, with the note
   that it "is to be passed to the north and east", but no course uses it.

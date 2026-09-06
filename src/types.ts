@@ -3,7 +3,7 @@
  * narrative specification; these types are its normative shape.
  */
 
-export const FORMAT_VERSION = 1;
+export const FORMAT_VERSION = 2;
 
 /** Decimal degrees, WGS84. West longitudes and south latitudes negative. */
 export interface Position {
@@ -52,9 +52,21 @@ export interface CourseMark {
   passing?: boolean;
 }
 
-/** One course on the card: the marks in sailing order, from the start line.
- *  Marks laid per race (a windward mark, a finish) are in the sequence like
- *  any other; only their positions are missing until race day. */
+/** The start line of every course on a card, as the club's sailing
+ *  instructions define it — the card names the marks, the instructions say
+ *  where the race starts. It is a mark like any other: a position where the
+ *  line is fixed, a `placement` in the club's own words where it is laid on
+ *  the day, and its id at the head of every course. */
+export interface StartLine extends Mark {
+  /** The document and clause the line is defined by: "DBSC Sailing
+   *  Instructions H – Fixed Marks, Hut, 4.1 and 4.2". */
+  source?: string;
+}
+
+/** One course on the card: the marks in sailing order, beginning with the
+ *  card's start line. Marks laid per race (the line itself, a windward mark,
+ *  a finish) are in the sequence like any other; only their positions are
+ *  missing until race day. */
 export interface Course {
   /** The number or name the race committee displays; any string. */
   id: string;
@@ -76,24 +88,27 @@ export interface CourseCardFile {
   source?: string;
   /** The marks file this card's mark ids refer to, by name. */
   marks?: string;
+  /** The line every course on this card starts at. Its id resolves ahead of
+   *  the marks file, so a card may start at a mark the club also lists. */
+  startLine?: StartLine;
   notes?: Note[];
   courses: Course[];
 }
 
 /**
- * What a card cannot know: where the race actually was. Every course starts
- * at the start line; marks the marks file lists without a position must be
- * given one here, and a fixed mark may be overridden if it was moved.
+ * What a card cannot know: where the race actually was. Every mark without a
+ * position — the start line, a windward mark laid to the day's wind, a
+ * finish — must be given one here, and a fixed mark may be overridden if it
+ * was moved.
  */
 export interface RacePositions {
-  start: Position;
   marks?: Record<string, Position>;
 }
 
-/** One end of a leg: the start line or a mark, and where it was. */
+/** One end of a leg: a mark of the course, the start line included, and
+ *  where it was on the day. */
 export interface Waypoint {
-  /** Mark id; absent for the start line. */
-  mark?: string;
+  mark: string;
   label: string;
   position: Position;
 }
