@@ -104,6 +104,13 @@ The card a club prints: the courses, each an ordered sequence of marks.
   three-digit numbers encode the first beat's bearing (first two digits ×
   10) and a column on the card (third digit); the format stores the number
   as printed and leaves the club's encoding convention to the club.
+- `courses[].distanceNm` — the course's length in nautical miles, where the
+  club prints one, as printed. It is the club's figure on the club's own
+  assumptions: it allows for beating (HYC's Autumn League card lengthens
+  every upwind leg by 40% offshore and 50% inshore), and for the legs to and
+  from marks the card cannot place. So it is not the sum of the legs the
+  library computes from the marks, and a reader must not treat it as one —
+  it is what the card tells a competitor to expect.
 - `courses[].marks` — every mark of the course in sailing order, beginning
   with the card's start line, so the first leg runs from the line to the
   first mark the club prints. Marks laid per race are in the sequence like

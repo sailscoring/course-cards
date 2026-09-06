@@ -138,6 +138,17 @@ describe('the parsers', () => {
     expect(() => parseCourseCardFile({ formatVersion: 2, startLine: { name: 'no id' }, courses: [] })).toThrow(FormatError);
   });
 
+  it('carry the length a club prints for a course, and refuse a bad one', () => {
+    const card = parseCourseCardFile({
+      formatVersion: 2,
+      courses: [{ id: 'A1', distanceNm: 7.4, marks: [{ mark: 'Z', side: 'port' }] }],
+    });
+    expect(card.courses[0]).toEqual({ id: 'A1', distanceNm: 7.4, marks: [{ mark: 'Z', side: 'port' }] });
+    expect(() =>
+      parseCourseCardFile({ formatVersion: 2, courses: [{ id: 'A1', distanceNm: 0, marks: [{ mark: 'Z' }] }] }),
+    ).toThrow(/distanceNm/);
+  });
+
   it('reject duplicate ids and bad sides', () => {
     const mark = { id: 'A', position: { lat: 53.4, lng: -6.1 } };
     expect(() => parseMarksFile({ formatVersion: 1, marks: [mark, mark] })).toThrow(/duplicate mark id/);

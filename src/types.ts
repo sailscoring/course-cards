@@ -70,6 +70,11 @@ export interface StartLine extends Mark {
 export interface Course {
   /** The number or name the race committee displays; any string. */
   id: string;
+  /** The course's length in nautical miles, where the club prints one on the
+   *  card. The club's own figure on the club's own assumptions — it allows
+   *  for beating, and for marks the card cannot place — so it is what the
+   *  card says, not the sum of the legs the library computes. */
+  distanceNm?: number;
   marks: CourseMark[];
 }
 

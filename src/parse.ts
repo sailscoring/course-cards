@@ -101,6 +101,9 @@ export function parseCourseCardFile(data: unknown): CourseCardFile {
     if (typeof c.id !== 'string' || !c.id) fail(`${path}.id`, 'expected an id');
     if (ids.has(c.id)) fail(`${path}.id`, `duplicate course id "${c.id}"`);
     ids.add(c.id);
+    if (c.distanceNm != null && (typeof c.distanceNm !== 'number' || !(c.distanceNm > 0))) {
+      fail(`${path}.distanceNm`, 'expected a positive number of nautical miles');
+    }
     if (!Array.isArray(c.marks) || c.marks.length === 0) fail(`${path}.marks`, 'expected marks');
     const marks = c.marks.map((rawMark, j) => {
       const markPath = `${path}.marks[${j}]`;
@@ -116,7 +119,7 @@ export function parseCourseCardFile(data: unknown): CourseCardFile {
         ...(cm.passing === true ? { passing: true } : {}),
       };
     });
-    return { id: c.id, marks };
+    return { id: c.id, ...(c.distanceNm != null ? { distanceNm: c.distanceNm as number } : {}), marks };
   });
 
   return {

@@ -49,6 +49,7 @@ const CSS = `
   th, td { border: 1px solid #999; padding: .3rem .5rem; text-align: left; vertical-align: top; }
   th { background: #eee; font-weight: 600; }
   .courses td { font-family: ui-monospace, Menlo, Consolas, monospace; font-weight: 700; letter-spacing: .15em; word-spacing: .2em; line-height: 1.7; }
+  .courses .nm { float: right; font-weight: 400; letter-spacing: 0; word-spacing: 0; color: #555; margin-left: .75em; }
   .courses { width: 100%; table-layout: fixed; }
   .courses th.row, .courses thead th:first-child { width: 2.2em; text-align: center; font-family: ui-monospace, monospace; }
   .courses tr:nth-child(even) td { background: #fdf7d8; }
@@ -113,7 +114,9 @@ function courseCell(course: Course, startLine?: StartLine): string {
       return `<span class="${classes}">${esc(m.mark)}</span>`;
     })
     .join(' ');
-  return `<label><input type="radio" name="course" id="pick-${courseKey(course)}"><span>${seq}</span></label>`;
+  // The length the club prints beside the course, where it prints one.
+  const nm = course.distanceNm != null ? `<span class="nm">${course.distanceNm.toFixed(1)}</span>` : '';
+  return `<label><input type="radio" name="course" id="pick-${courseKey(course)}"><span>${nm}${seq}</span></label>`;
 }
 
 /** Cards numbered like HYC's — two digits of row, one of column — lay out as
@@ -161,6 +164,10 @@ function courseTable(card: CourseCardFile): string {
   html +=
     '<p class="legend">All marks are rounding marks except those in a <span class="passing">box</span>, which are passing marks. ' +
     '<span class="port">Red</span> marks are rounded or passed to port, <span class="stbd">green</span> to starboard. ' +
+    (card.courses.some((c) => c.distanceNm != null)
+      ? 'The number to the right of a course is the length in nautical miles the club prints for it, which allows for beating ' +
+        'and for the legs to and from marks the card cannot place — not the sum of the legs below. '
+      : '') +
     'Select a course to draw it on the chart: its legs are numbered in sailing order, a leg sailed again is drawn beside ' +
     'the first, and a ring shows the side each mark is left on.</p>';
   return html;
@@ -361,7 +368,9 @@ function legTable(course: Course, byId: Map<string, Mark>): string {
   return (
     `<div class="legs" id="legs-${courseKey(course)}"><h3>Course ${esc(course.id)}</h3>` +
     `<table class="numbers"><thead><tr><th>Leg</th><th>From</th><th>To</th><th>° true</th><th>NM</th></tr></thead>` +
-    `<tbody>${rows}</tbody><tfoot><tr><td colspan="4">Legs between placed marks</td><td>${total.toFixed(2)}</td></tr></tfoot></table>` +
+    `<tbody>${rows}</tbody><tfoot><tr><td colspan="4">Legs between placed marks</td><td>${total.toFixed(2)}</td></tr>` +
+    (course.distanceNm != null ? `<tr><td colspan="4">Length printed on the card</td><td>${course.distanceNm.toFixed(2)}</td></tr>` : '') +
+    '</tfoot></table>' +
     (unplaced ? '<p>A leg to or from a mark laid per race — the start line among them — has no position on the card.</p>' : '') +
     '</div>'
   );
