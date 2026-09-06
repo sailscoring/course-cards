@@ -139,36 +139,42 @@ Vercel on every push to `main`.
 
 1. Bump `version` in `package.json` and commit.
 2. `git tag -a vX.Y.Z -m "…"`, then push `main` and the tag.
-3. The release workflow tests, attaches the assets to a GitHub Release, and
-   publishes to npm — if the token below is alive.
+3. The release workflow tests, checks the tag matches `package.json`, attaches
+   the assets to a GitHub Release, and publishes to npm.
 
-### Rotating `NPM_TOKEN`
+A re-run of a failed release uses the workflow file as it stood *at the tag*,
+so a fix to the workflow only takes effect on a new tag.
 
-> ⚠️ **The npm publish token expires every 90 days** — npm's maximum for a
-> token with write access. When it lapses, tagging a release still produces
-> the GitHub Release but **nothing reaches npm**, and the only symptom is a
-> failed "Publish to npm" step. The `npm-token-expiry` workflow opens an
-> issue two weeks before the date recorded in the `NPM_TOKEN_EXPIRES`
-> repository variable — so **record the date every time you rotate**.
+### Publishing to npm
 
-1. npmjs.com → avatar → **Access Tokens** → **Generate New Token** →
-   **Granular Access Token**.
-2. Expiration **90 days**. **Bypass two-factor authentication: on** (CI
-   cannot answer a 2FA prompt). Packages and scopes: **Read and write**,
-   restricted to the `@sailscoring` scope. Organizations: **no access**.
-   IP allowlist: empty.
-3. Store the token and record its expiry, without pasting it anywhere else:
+Publishing uses npm's **trusted publishing**: the workflow proves its identity
+to the registry over GitHub's OIDC, so there is no token in the repository,
+nothing to rotate, no expiry to track, and provenance is attached
+automatically. It replaced a granular access token in September 2026, when npm
+began restricting tokens that bypass two-factor authentication — such a token
+can no longer publish directly, and CI cannot answer an OTP prompt, so no
+token-based publish from Actions can succeed.
 
-   ```sh
-   gh secret set NPM_TOKEN                          # prompts for the value
-   gh variable set NPM_TOKEN_EXPIRES --body YYYY-MM-DD
-   ```
+The trust is configured on the registry side, at npmjs.com →
+`@sailscoring/course-cards` → **Settings** → **Trusted Publisher** → GitHub
+Actions:
 
-4. Delete the previous token on npm.
+| Field | Value |
+|---|---|
+| Organization | `sailscoring` |
+| Repository | `course-cards` |
+| Workflow filename | `release.yml` |
+| Environment | *(empty)* |
 
-The alternative that needs no token is npm's *trusted publishing*
-(GitHub OIDC), configured on the package's npm settings page; if adopted,
-drop the token gate from `.github/workflows/release.yml`.
+Every field is case-sensitive and matched exactly, so **renaming
+`release.yml`, the repository, or the org breaks publishing** until the
+registry side is updated to match. The symptom is an authentication error or
+an OTP prompt on the publish step, not a helpful message about mismatched
+configuration.
+
+The job needs `id-token: write` (it has it) and npm 11.5.1 or newer, which is
+why it upgrades npm before publishing rather than trusting whatever the Node
+release bundles.
 
 ## Status
 
