@@ -37,6 +37,11 @@ jobs:
           cp "site/${GITHUB_REF_NAME}/course-cards-${GITHUB_REF_NAME}.zip" .
           cp site/index.json catalogue.json
 
+      # pnpm pack has just built dist/, so this checks what is about to be
+      # published, not a stale build.
+      - name: Check the built package resolves from CommonJS
+        run: pnpm check:cjs
+
       # Publishes when the repository has an NPM_TOKEN secret: a granular
       # access token with publish rights on @sailscoring and 2FA bypass, which
       # npm limits to 90 days — see README.md, "Rotating NPM_TOKEN", and the

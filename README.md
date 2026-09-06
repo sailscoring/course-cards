@@ -51,6 +51,13 @@ the wind was doing on each leg is the caller's knowledge, not the
 library's. The geometry primitives (`distanceNm`, `bearingDeg`,
 `destination`) are exported for the arithmetic around a race.
 
+The package is ESM, and also loadable from CommonJS: the `exports` map
+carries a `require` condition, and Node has been able to `require()` an ESM
+module since 22.12 (the minimum in `engines`). So `const { courseLegs } =
+require('@sailscoring/course-cards')` works, which matters for consumers
+that cannot set `"type": "module"` at their root. `pnpm check:cjs` guards it
+after a build, in CI and again on the packed artifact before it is published.
+
 ## Data
 
 Each club's PDFs are kept alongside its JSON, and the JSON is **generated
