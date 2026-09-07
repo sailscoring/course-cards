@@ -10,7 +10,7 @@
  * library, which it consumes like any other client.
  */
 
-import { bearingDeg, distanceNm } from '../src/index';
+import { bearingDeg, distanceNm, formatPosition } from '../src/index';
 import type { Course, CourseCardFile, CourseMark, Mark, MarksFile, Note, Position, StartLine } from '../src/index';
 
 export interface RenderOptions {
@@ -22,21 +22,6 @@ export interface RenderOptions {
 
 function esc(text: string): string {
   return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-}
-
-/** 53.446 → "53° 26.76′ N" — the way a club prints a position. */
-export function formatPosition(p: Position): string {
-  const dm = (value: number, width: number): string => {
-    const abs = Math.abs(value);
-    let deg = Math.floor(abs);
-    let min = (abs - deg) * 60;
-    if (min >= 59.995) {
-      deg += 1;
-      min = 0;
-    }
-    return `${String(deg).padStart(width, '0')}° ${min.toFixed(2).padStart(5, '0')}′`;
-  };
-  return `${dm(p.lat, 2)} ${p.lat >= 0 ? 'N' : 'S'} ${dm(p.lng, 3)} ${p.lng >= 0 ? 'E' : 'W'}`;
 }
 
 const CSS = `

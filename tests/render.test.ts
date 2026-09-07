@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { parseCourseCardFile, parseMarksFile } from '../src/index';
-import { formatPosition, renderCardHtml, renderMarksMapSvg, type MapBackground } from '../tools/card-html';
+import { renderCardHtml, renderMarksMapSvg, type MapBackground } from '../tools/card-html';
 
 function load(rel: string): unknown {
   return JSON.parse(readFileSync(join(__dirname, '..', 'data', 'hyc', 'al-2025', rel), 'utf-8'));
@@ -159,13 +159,5 @@ describe('renderMarksMapSvg', () => {
     expect(svg).toMatch(/<svg width="640" height="\d+" xmlns=/);
     expect((svg.match(/<circle /g) ?? []).length).toBe(21);
     expect(svg).not.toContain('class="course"');
-  });
-});
-
-describe('formatPosition', () => {
-  it('prints degrees and decimal minutes with hemisphere', () => {
-    expect(formatPosition({ lat: 53.446, lng: -6.054333 })).toBe('53° 26.76′ N 006° 03.26′ W');
-    expect(formatPosition({ lat: -33.85, lng: 151.2 })).toBe('33° 51.00′ S 151° 12.00′ E');
-    expect(formatPosition({ lat: 53.99999, lng: 0 })).toBe('54° 00.00′ N 000° 00.00′ E');
   });
 });
