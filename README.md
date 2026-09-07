@@ -49,10 +49,29 @@ const legs = courseLegs(card, marks, '041', {
 `courseLegs` walks the course's marks — the first of which is the card's
 start line — and returns every leg's great-circle distance and initial true
 bearing; a mark it cannot place is an error naming the mark and quoting
-where the club says it is laid. What
-the wind was doing on each leg is the caller's knowledge, not the
-library's. The geometry primitives (`distanceNm`, `bearingDeg`,
-`destination`) are exported for the arithmetic around a race.
+where the club says it is laid. What the wind was doing on each leg is the
+caller's knowledge, not the library's — though where a card lays its
+courses out for a wind, as HYC's do, each course carries it as
+`windDirectionDeg`, so a caller can propose it.
+
+Around that:
+
+- `courseMarks(card, marks, courseId)` — the course's marks resolved, each
+  saying whether the card places it; the ones it does not are what to ask
+  the race officer for.
+- `legsFromWaypoints(waypoints)` — the leg arithmetic on its own, for a
+  course built by hand from placed marks with no card behind it.
+- `parsePosition` / `formatPosition` — positions the way sailors write
+  them: degrees and decimal minutes with or without the symbols, degrees
+  minutes and seconds, decimal degrees; the hemisphere as a letter before or
+  after, or a sign.
+- `distanceNm`, `bearingDeg`, `destination`, `METRES_PER_NM`,
+  `METRES_PER_CABLE` — the geometry for the arithmetic around a race.
+- `renderCourseSvg(marks, course)` — the course as a picture: marks at
+  their real relative positions, legs numbered with bearing and distance,
+  north arrow, scale bar; one inert SVG element with no script, style, id or
+  external resource, so it can go inline anywhere.
+- `parseCatalogue` — a release's `index.json`, typed.
 
 The package is ESM, and also loadable from CommonJS: the `exports` map
 carries a `require` condition, and Node has been able to `require()` an ESM
@@ -234,8 +253,9 @@ release bundles.
 
 ## Status
 
-Format-first: the versioned format and leg library are the deliverable; a
-rendering component and a club-facing card designer grow here later. Part
+Format-first: the versioned format and leg library are the deliverable,
+with a course renderer beside them; a club-facing card designer grows here
+later. Part
 of the [Sail Scoring](https://github.com/sailscoring/sailscoring) project,
 whose app consumes this format to fill in a race's legs by course number.
 

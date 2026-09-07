@@ -15,23 +15,43 @@ const assert = require('node:assert');
 const lib = require('@sailscoring/course-cards');
 
 const expected = [
+  'CatalogueError',
   'CourseError',
   'FORMAT_VERSION',
   'FormatError',
+  'METRES_PER_CABLE',
+  'METRES_PER_NM',
   'bearingDeg',
   'courseLegs',
+  'courseMarks',
   'destination',
   'distanceNm',
+  'formatPosition',
+  'legsFromWaypoints',
+  'parseCatalogue',
   'parseCourseCardFile',
   'parseMarksFile',
+  'parsePosition',
+  'renderCourseSvg',
   'totalDistanceNm',
 ];
 assert.deepStrictEqual(Object.keys(lib).sort(), expected.sort());
 
 // Not just names: the geometry has to survive the round trip.
 const start = { lat: 53.3925, lng: -6.0672 };
-const mark = lib.destination(start, 190, 1000);
-assert.ok(Math.abs(lib.distanceNm(start, mark) * 1852 - 1000) < 0.01);
+const mark = lib.destination(start, 190, lib.METRES_PER_NM * 0.54);
+assert.ok(Math.abs(lib.distanceNm(start, mark) - 0.54) < 0.00001);
 assert.ok(Math.abs(lib.bearingDeg(start, mark) - 190) < 0.01);
+assert.ok(Math.abs(lib.parsePosition(lib.formatPosition(mark, { minuteDecimals: 4 })).lat - mark.lat) < 0.00001);
+const legs = lib.legsFromWaypoints([
+  { mark: 'line', label: 'Start', position: start },
+  { mark: 'Z', label: 'Z', position: mark },
+]);
+assert.strictEqual(legs.length, 1);
+const svg = lib.renderCourseSvg(
+  [{ id: 'line', label: 'Start', position: start }, { id: 'Z', label: 'Z', position: mark }],
+  [{ mark: 'line' }, { mark: 'Z', side: 'port' }],
+);
+assert.ok(svg.startsWith('<svg ') && svg.includes('190° 0.54 NM'));
 
 console.log('require() from CommonJS: ok');
