@@ -20,7 +20,7 @@ import { dirname, join, relative } from 'node:path';
 
 import { zipSync } from 'fflate';
 
-import { FORMAT_VERSION, parseCourseCardFile, parseMarksFile } from '../src/index';
+import { FORMAT_VERSION, parseCatalogue, parseCourseCardFile, parseMarksFile, type Catalogue } from '../src/index';
 
 const root = join(import.meta.dirname, '..');
 const site = join(root, 'site');
@@ -140,8 +140,9 @@ const zip = zipSync(zipEntries, { level: 6 });
 writeFileSync(join(site, 'course-cards.zip'), zip);
 writeFileSync(join(site, versionDir, zipName), zip);
 
-// Catalogue.
-const catalogue = {
+// Catalogue: typed as the library reads it, so a consumer's parseCatalogue
+// and this writer cannot drift apart.
+const catalogue: Catalogue = {
   version,
   generated: new Date().toISOString().slice(0, 10),
   formatVersion: FORMAT_VERSION,
@@ -154,6 +155,7 @@ const catalogue = {
     cards: s.cards.map((c) => ({ ...c, url: `${siteUrl}/${versionDir}/${c.json}`, page: `${siteUrl}/${versionDir}/${c.html}` })),
   })),
 };
+parseCatalogue(JSON.parse(JSON.stringify(catalogue)));
 writeFileSync(join(site, 'index.json'), JSON.stringify(catalogue, null, 2) + '\n');
 writeFileSync(join(site, versionDir, 'index.json'), JSON.stringify(catalogue, null, 2) + '\n');
 
