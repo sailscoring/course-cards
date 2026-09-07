@@ -19,3 +19,5 @@ export type { FormatPositionOptions } from './position.js';
 export { CourseError, courseLegs, courseMarks, legsFromWaypoints, totalDistanceNm } from './legs.js';
 export type { ResolvedCourseMark } from './legs.js';
 export { FormatError, parseCourseCardFile, parseMarksFile } from './parse.js';
+export { renderCourseSvg } from './render.js';
+export type { DrawnCourseMark, DrawnMark, RenderCourseOptions } from './render.js';
