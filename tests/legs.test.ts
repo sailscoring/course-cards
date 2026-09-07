@@ -6,6 +6,8 @@ import { describe, expect, it } from 'vitest';
 import {
   CourseError,
   courseLegs,
+  courseMarks,
+  legsFromWaypoints,
   destination,
   parseCourseCardFile,
   parseMarksFile,
@@ -94,5 +96,45 @@ describe('courseLegs', () => {
     expect(inshore.startLine!.placement).toMatch(/Northwest of Ireland/);
     expect(offshore.startLine!.placement).toMatch(/North of Ireland/);
     expect(inshore.startLine!.source).toBe('HYC Autumn League 2025 sailing instructions 6.2 A and B');
+  });
+});
+
+describe('courseMarks', () => {
+  it('resolves inshore course 001 and says which marks the card cannot place', () => {
+    const resolved = courseMarks(inshore, marks, '001');
+    expect(resolved.map((r) => r.mark.id)).toEqual(['SL', 'Z', 'P', 'W', 'S', 'F']);
+    expect(resolved.map((r) => r.placed)).toEqual([false, false, true, true, true, false]);
+    // the start line resolves from the card, with the instruction's words
+    expect(resolved[0]!.mark).toBe(inshore.startLine);
+    expect(resolved[0]!.entry).toEqual({ mark: 'SL' });
+    expect(resolved[1]!.mark.placement).toBe('Upwind of Start Line');
+    expect(resolved[4]!.entry).toEqual({ mark: 'S', side: 'starboard' });
+    expect(courseMarks(inshore, marks, '041')[5]!.entry).toEqual({ mark: 'S', side: 'starboard', passing: true });
+  });
+
+  it('fails the same way courseLegs does for an unknown course or mark', () => {
+    expect(() => courseMarks(inshore, marks, '999')).toThrow('no course "999"');
+    const card = { formatVersion: 2, courses: [{ id: 'x', marks: [{ mark: 'Y' }] }] };
+    expect(() => courseMarks(card, marks, 'x')).toThrow('unknown mark "Y"');
+  });
+});
+
+describe('legsFromWaypoints', () => {
+  it('is what courseLegs computes once the marks are placed', () => {
+    const viaCard = courseLegs(inshore, marks, '001', race);
+    const waypoints = viaCard.map((l) => l.from).concat(viaCard[viaCard.length - 1]!.to);
+    expect(legsFromWaypoints(waypoints)).toEqual(viaCard);
+  });
+
+  it('gives a by-hand sequence legs without any card', () => {
+    const line = { mark: 'line', label: 'Start line', position: start };
+    const windward = { mark: 'Z', label: 'Windward', position: destination(start, 190, 1000) };
+    const legs = legsFromWaypoints([line, windward, line]);
+    expect(legs).toHaveLength(2);
+    expect(legs[0]!.distanceNm * 1852).toBeCloseTo(1000, 3);
+    expect(legs[0]!.bearingDeg).toBeCloseTo(190, 2);
+    expect(legs[1]!.bearingDeg).toBeCloseTo(10, 2);
+    expect(legsFromWaypoints([line])).toEqual([]);
+    expect(legsFromWaypoints([])).toEqual([]);
   });
 });

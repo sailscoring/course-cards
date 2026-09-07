@@ -4,9 +4,56 @@
  */
 
 import { bearingDeg, distanceNm } from './geo.js';
-import type { CourseCardFile, CourseLeg, MarksFile, RacePositions, Waypoint } from './types.js';
+import type { CourseCardFile, CourseLeg, CourseMark, Mark, MarksFile, RacePositions, Waypoint } from './types.js';
 
 export class CourseError extends Error {}
+
+/** One entry of a course's sequence with its mark resolved: the entry as
+ *  the card prints it, the mark it names, and whether the card itself places
+ *  it. An unplaced mark — the start line laid on the day, a windward mark, a
+ *  finish — is what a caller must ask the race officer for, and `placement`
+ *  on the mark says where the club says it goes. */
+export interface ResolvedCourseMark {
+  entry: CourseMark;
+  mark: Mark;
+  placed: boolean;
+}
+
+/** The marks a card's course names, in sailing order, each resolved: the
+ *  start line ahead of the marks file, then the marks file. A mark the card
+ *  names but neither lists is an error. This is the question "what does this
+ *  course need that the card cannot supply?" — the ones with `placed` false. */
+export function courseMarks(card: CourseCardFile, marks: MarksFile, courseId: string): ResolvedCourseMark[] {
+  const course = card.courses.find((c) => c.id === courseId);
+  if (!course) throw new CourseError(`no course "${courseId}" on the card`);
+  const byId = new Map(marks.marks.map((m) => [m.id, m]));
+  if (card.startLine) byId.set(card.startLine.id, card.startLine);
+  return course.marks.map((entry) => {
+    const mark = byId.get(entry.mark);
+    if (!mark) throw new CourseError(`course ${course.id}: unknown mark "${entry.mark}"`);
+    return { entry, mark, placed: mark.position != null };
+  });
+}
+
+/** The legs between consecutive waypoints: each one's great-circle
+ *  distance and initial true bearing. A sequence of one waypoint has no
+ *  legs. This is the arithmetic `courseLegs` does once a card's course is
+ *  resolved to positions, exposed so a course built by hand from placed
+ *  marks — no card, no number — gets the same legs. */
+export function legsFromWaypoints(waypoints: Waypoint[]): CourseLeg[] {
+  const legs: CourseLeg[] = [];
+  for (let i = 0; i < waypoints.length - 1; i++) {
+    const from = waypoints[i]!;
+    const to = waypoints[i + 1]!;
+    legs.push({
+      from,
+      to,
+      distanceNm: distanceNm(from.position, to.position),
+      bearingDeg: bearingDeg(from.position, to.position),
+    });
+  }
+  return legs;
+}
 
 /**
  * The legs of a course: each of the course's marks in order, the first of
@@ -23,35 +70,15 @@ export function courseLegs(
   courseId: string,
   race: RacePositions,
 ): CourseLeg[] {
-  const course = card.courses.find((c) => c.id === courseId);
-  if (!course) throw new CourseError(`no course "${courseId}" on the card`);
-  const byId = new Map(marks.marks.map((m) => [m.id, m]));
-  if (card.startLine) byId.set(card.startLine.id, card.startLine);
-
-  const waypoints: Waypoint[] = [];
-  for (const { mark: id } of course.marks) {
-    const mark = byId.get(id);
-    if (!mark) throw new CourseError(`course ${course.id}: unknown mark "${id}"`);
-    const position = race.marks?.[id] ?? mark.position;
+  const waypoints: Waypoint[] = courseMarks(card, marks, courseId).map(({ mark }) => {
+    const position = race.marks?.[mark.id] ?? mark.position;
     if (!position) {
       const where = mark.placement ? ` (${mark.placement})` : '';
-      throw new CourseError(`course ${course.id}: no position for mark "${id}"${where}`);
+      throw new CourseError(`course ${courseId}: no position for mark "${mark.id}"${where}`);
     }
-    waypoints.push({ mark: id, label: mark.name ? `${mark.name} (${id})` : id, position });
-  }
-
-  const legs: CourseLeg[] = [];
-  for (let i = 0; i < waypoints.length - 1; i++) {
-    const from = waypoints[i]!;
-    const to = waypoints[i + 1]!;
-    legs.push({
-      from,
-      to,
-      distanceNm: distanceNm(from.position, to.position),
-      bearingDeg: bearingDeg(from.position, to.position),
-    });
-  }
-  return legs;
+    return { mark: mark.id, label: mark.name ? `${mark.name} (${mark.id})` : mark.id, position };
+  });
+  return legsFromWaypoints(waypoints);
 }
 
 export function totalDistanceNm(legs: CourseLeg[]): number {
