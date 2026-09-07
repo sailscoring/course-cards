@@ -9,6 +9,12 @@ import type { Position } from './types.js';
 const EARTH_RADIUS_NM = 3440.065;
 const EARTH_RADIUS_M = 6371000;
 
+/** The international nautical mile. */
+export const METRES_PER_NM = 1852;
+/** A cable, a tenth of a nautical mile — how a race officer calls a short
+ *  distance: "the line is two cables off the pier". */
+export const METRES_PER_CABLE = METRES_PER_NM / 10;
+
 function toRad(deg: number): number {
   return (deg * Math.PI) / 180;
 }

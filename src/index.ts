@@ -13,7 +13,7 @@ export type {
   StartLine,
   Waypoint,
 } from './types.js';
-export { bearingDeg, destination, distanceNm } from './geo.js';
+export { METRES_PER_CABLE, METRES_PER_NM, bearingDeg, destination, distanceNm } from './geo.js';
 export { formatPosition, parsePosition } from './position.js';
 export type { FormatPositionOptions } from './position.js';
 export { CourseError, courseLegs, courseMarks, legsFromWaypoints, totalDistanceNm } from './legs.js';

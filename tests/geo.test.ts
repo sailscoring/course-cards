@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { bearingDeg, destination, distanceNm } from '../src/geo';
+import { METRES_PER_CABLE, METRES_PER_NM, bearingDeg, destination, distanceNm } from '../src/geo';
 
 const howth = { lat: 53.39, lng: -6.07 };
 
@@ -23,5 +23,13 @@ describe('geo primitives', () => {
     const mark = destination(howth, 250, 1000);
     expect(distanceNm(howth, mark) * 1852).toBeCloseTo(1000, 3);
     expect(bearingDeg(howth, mark)).toBeCloseTo(250, 2);
+  });
+
+  it('a laid mark logged in miles or cables lands where the log says', () => {
+    expect(METRES_PER_NM).toBe(1852);
+    expect(METRES_PER_CABLE).toBe(185.2);
+    const mark = destination(howth, 190, 0.6 * METRES_PER_NM);
+    expect(distanceNm(howth, mark)).toBeCloseTo(0.6, 6);
+    expect(distanceNm(howth, destination(howth, 190, 2 * METRES_PER_CABLE))).toBeCloseTo(0.2, 6);
   });
 });
