@@ -351,7 +351,9 @@ function legTable(course: Course, byId: Map<string, Mark>): string {
     }
   }
   return (
-    `<div class="legs" id="legs-${courseKey(course)}"><h3>Course ${esc(course.id)}</h3>` +
+    `<div class="legs" id="legs-${courseKey(course)}"><h3>Course ${esc(course.id)}${
+      course.windDirectionDeg != null ? ` <span class="nm">wind ${String(course.windDirectionDeg).padStart(3, '0')}°</span>` : ''
+    }</h3>` +
     `<table class="numbers"><thead><tr><th>Leg</th><th>From</th><th>To</th><th>° true</th><th>NM</th></tr></thead>` +
     `<tbody>${rows}</tbody><tfoot><tr><td colspan="4">Legs between placed marks</td><td>${total.toFixed(2)}</td></tr>` +
     (course.distanceNm != null ? `<tr><td colspan="4">Length printed on the card</td><td>${course.distanceNm.toFixed(2)}</td></tr>` : '') +

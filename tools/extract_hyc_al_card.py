@@ -25,10 +25,9 @@ is neither red nor green stops the build rather than being guessed at.
     python3 tools/extract_hyc_al_card.py <card.docx|card.xlsx> --meta meta.json > card.json
 
 Course ids are the card's own letter and column number — A1 … T4. The wind
-direction each row is set for is carried as a note, since the format keeps
-the wind out of the course description: what the card describes is a sequence
-of marks, and which wind it suits is the club's heading over it, not a
-property of the course.
+direction each row is set for goes on each of the row's courses as
+`windDirectionDeg`, and the whole wind column is kept as a note besides, as
+the card prints it.
 """
 
 import argparse
@@ -218,7 +217,7 @@ def build(path):
         winds.append((letter, wind))
         for column, (chars, distance) in enumerate(cells, 1):
             where = f'{path}: course {letter}{column}'
-            course = {'id': f'{letter}{column}'}
+            course = {'id': f'{letter}{column}', 'windDirectionDeg': int(wind)}
             if distance:
                 try:
                     course['distanceNm'] = round(float(distance), 2)

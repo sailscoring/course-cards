@@ -63,7 +63,7 @@ describe('renderCardHtml', () => {
 
   it('tabulates each course’s legs, blank where the card cannot place them', () => {
     const table = html.slice(html.indexOf('<div class="legs" id="legs-015">'), html.indexOf('<div class="legs" id="legs-021">'));
-    expect(table).toContain('<h3>Course 015</h3>');
+    expect(table).toContain('<h3>Course 015 <span class="nm">wind 010°</span></h3>');
     expect(table).toContain('<tr class="unplaced"><th>1</th><td>SL</td><td>Z</td><td>—</td><td>—</td></tr>');
     expect(table).toContain('<tr class="unplaced"><th>2</th><td>Z</td><td>P</td><td>—</td><td>—</td></tr>');
     expect(table).toContain('<tr><th>6</th><td>P</td><td>W</td><td>194</td><td>0.69</td></tr>');

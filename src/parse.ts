@@ -104,6 +104,12 @@ export function parseCourseCardFile(data: unknown): CourseCardFile {
     if (c.distanceNm != null && (typeof c.distanceNm !== 'number' || !(c.distanceNm > 0))) {
       fail(`${path}.distanceNm`, 'expected a positive number of nautical miles');
     }
+    if (
+      c.windDirectionDeg != null &&
+      (typeof c.windDirectionDeg !== 'number' || !(c.windDirectionDeg >= 0 && c.windDirectionDeg < 360))
+    ) {
+      fail(`${path}.windDirectionDeg`, 'expected a direction in degrees, 0 up to 360');
+    }
     if (!Array.isArray(c.marks) || c.marks.length === 0) fail(`${path}.marks`, 'expected marks');
     const marks = c.marks.map((rawMark, j) => {
       const markPath = `${path}.marks[${j}]`;
@@ -119,7 +125,12 @@ export function parseCourseCardFile(data: unknown): CourseCardFile {
         ...(cm.passing === true ? { passing: true } : {}),
       };
     });
-    return { id: c.id, ...(c.distanceNm != null ? { distanceNm: c.distanceNm as number } : {}), marks };
+    return {
+      id: c.id,
+      ...(c.windDirectionDeg != null ? { windDirectionDeg: c.windDirectionDeg as number } : {}),
+      ...(c.distanceNm != null ? { distanceNm: c.distanceNm as number } : {}),
+      marks,
+    };
   });
 
   return {

@@ -59,6 +59,12 @@ describe.each(Object.entries(cards))('the HYC Autumn League 2025 %s card', (name
     expect(ids).toEqual(expected);
   });
 
+  it('each row is laid out for the wind its number starts with', () => {
+    for (const course of card.courses) {
+      expect(course.windDirectionDeg, course.id).toBe(Number(course.id.slice(0, 2)) * 10);
+    }
+  });
+
   it('carries the technical sheet’s notes', () => {
     expect(card.notes?.map((n) => n.title)).toEqual(['Navigation Marks and Obstructions', 'Course Selection']);
     expect(card.notes![1]!.text).toContain('Course 073 is the third course in from the left on line 07');
@@ -147,6 +153,23 @@ describe('the parsers', () => {
     expect(() =>
       parseCourseCardFile({ formatVersion: 2, courses: [{ id: 'A1', distanceNm: 0, marks: [{ mark: 'Z' }] }] }),
     ).toThrow(/distanceNm/);
+  });
+
+  it('carry the wind a course is laid out for, and refuse a bad one', () => {
+    const card = parseCourseCardFile({
+      formatVersion: 2,
+      courses: [{ id: 'K3', windDirectionDeg: 180, marks: [{ mark: 'Z', side: 'port' }] }],
+    });
+    expect(card.courses[0]).toEqual({ id: 'K3', windDirectionDeg: 180, marks: [{ mark: 'Z', side: 'port' }] });
+    expect(parseCourseCardFile({ formatVersion: 2, courses: [{ id: '1', marks: [{ mark: 'Z' }] }] }).courses[0]).toEqual({
+      id: '1',
+      marks: [{ mark: 'Z' }],
+    });
+    for (const bad of [360, -10, '180']) {
+      expect(() =>
+        parseCourseCardFile({ formatVersion: 2, courses: [{ id: '1', windDirectionDeg: bad, marks: [{ mark: 'Z' }] }] }),
+      ).toThrow(/windDirectionDeg/);
+    }
   });
 
   it('reject duplicate ids and bad sides', () => {

@@ -61,6 +61,13 @@ describe.each(Object.entries(cards))('the HYC Autumn League 2026 %s draft card',
     }
   });
 
+  it('carries the wind each row is laid out for: A 000° to T 340° in 20° steps', () => {
+    const letters = 'ABCDEFGHJKLMNPQRST';
+    for (const course of card.courses) {
+      expect(course.windDirectionDeg, course.id).toBe(letters.indexOf(course.id[0]!) * 20);
+    }
+  });
+
   it('carries the length the card prints for every course', () => {
     for (const course of card.courses) {
       expect(course.distanceNm, course.id).toBeGreaterThan(3);

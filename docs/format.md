@@ -66,6 +66,7 @@ The card a club prints: the courses, each an ordered sequence of marks.
   "courses": [
     {
       "id": "041",
+      "windDirectionDeg": 40,
       "marks": [
         { "mark": "SL" },
         { "mark": "Z", "side": "port" },
@@ -101,9 +102,17 @@ The card a club prints: the courses, each an ordered sequence of marks.
   by newlines: HYC's "Navigation Marks and Obstructions" and "Course
   Selection". Cards sharing a technical sheet each carry a copy.
 - `courses[].id` — what the race committee displays; any string. HYC's
-  three-digit numbers encode the first beat's bearing (first two digits ×
-  10) and a column on the card (third digit); the format stores the number
-  as printed and leaves the club's encoding convention to the club.
+  Autumn League 2025 cards number their courses so that the first two
+  digits × 10 are the wind the row is laid out for and the third digit is
+  the column; the 2026 drafts letter the rows A–T and print the wind beside
+  each. The format stores the id as printed — the encoding is the club's —
+  and carries the wind itself in `windDirectionDeg`.
+- `courses[].windDirectionDeg` — the true wind direction, in degrees, the
+  club laid the course out for, where the card says so. HYC's cards are a
+  row per wind: the first leg from the line to Z is a beat, and the race
+  committee picks the row for the day's wind. It is what a scorer expects
+  the wind to be, not a record of what it was — a card that gives no wind
+  (DBSC's, DLCC's) omits it.
 - `courses[].distanceNm` — the course's length in nautical miles, where the
   club prints one, as printed. It is the club's figure on the club's own
   assumptions: it allows for beating (HYC's Autumn League card lengthens

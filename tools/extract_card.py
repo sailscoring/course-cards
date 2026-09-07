@@ -5,7 +5,8 @@ The cards are pictures — the offshore card's letters are vector outlines, the
 inshore card is a scan — so this is a small purpose-built OCR:
 
 1. Render the page (pdftoppm, 600 dpi) and find the table grid from its
-   black rules: the last 36 row bands are courses 00–35, the last 5 column
+   black rules: the last 36 row bands are courses 00–35 — each row the
+   wind it is laid out for, 000° to 350° in 10° steps — the last 5 column
    bands are columns 1–5.
 2. In each cell, segment the coloured (red / green) letter glyphs, read
    them line by line, left to right, and note which are enclosed by a black
@@ -313,7 +314,7 @@ def cmd_build(args):
             marks.append(entry)
         if not marks:
             problems.append(f'{course_id}: no glyphs found')
-        courses.append({'id': course_id, 'marks': marks})
+        courses.append({'id': course_id, 'windDirectionDeg': row * 10, 'marks': marks})
     if problems:
         print('unresolved glyphs (add to --overrides after checking the image):', file=sys.stderr)
         for p in problems:

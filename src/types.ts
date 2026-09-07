@@ -75,6 +75,12 @@ export interface Course {
    *  for beating, and for marks the card cannot place — so it is what the
    *  card says, not the sum of the legs the library computes. */
   distanceNm?: number;
+  /** The true wind direction the club laid the course out for, in degrees,
+   *  where the card says so — HYC's cards are a row per wind, so the first
+   *  leg from the line is a beat. What the race committee picks a course
+   *  by, and the wind a scorer expects on the day; not a fact about any
+   *  race. Absent where the card gives none. */
+  windDirectionDeg?: number;
   marks: CourseMark[];
 }
 
