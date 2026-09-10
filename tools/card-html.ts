@@ -1,6 +1,7 @@
 /**
  * A course card as a self-contained HTML page: the course table as the club
- * prints it, each course drawn on a chart of the marks when it is picked,
+ * prints it, each course drawn on a chart of the marks — of all of them, or,
+ * where the data set asks for it, of the card's own — when it is picked,
  * with its legs' bearings and distances, mark-to-mark bearings and
  * distances, and the club's explanatory notes. No scripts — the picker is a
  * radio button per course and a CSS `:has()` rule — inline CSS and an
@@ -18,6 +19,29 @@ export interface RenderOptions {
   title?: string;
   /** Chart imagery under the marks; without it the map is a plain grid. */
   background?: MapBackground;
+  /** Crop the chart to this card rather than draw the whole marks file. */
+  area?: ChartArea;
+}
+
+/** What a card's chart must cover, where the data set asks for one cropped
+ *  to the card: the marks its own courses sail to, and — because a card is
+ *  not only its courses — whatever else its instructions place it near. A
+ *  club's marks file lists the marks of every card it publishes, so a card
+ *  that uses a dozen of them is otherwise drawn on a chart mostly of water
+ *  it never sails. Declared per card in the data set's manifest, so nothing
+ *  is cropped away that the club's own words keep in.
+ */
+export interface ChartArea {
+  /** Marks to draw besides the ones the card's courses name — a mark the
+   *  card's notes or the sailing instructions place the finish by. */
+  keep?: string[];
+  /** Ground to keep in frame that is not a mark at all, and is not drawn:
+   *  the shore the finish line is on. */
+  points?: Position[];
+  /** Water to leave around it all, in minutes of latitude. */
+  paddingMinutes?: number;
+  /** What the crop leaves out, for the caption. */
+  note?: string;
 }
 
 function esc(text: string): string {
@@ -217,6 +241,8 @@ const my = (lat: number): number => {
   const φ = (lat * Math.PI) / 180;
   return (1 - Math.log(Math.tan(φ) + 1 / Math.cos(φ)) / Math.PI) / 2;
 };
+const unmx = (x: number): number => x * 360 - 180;
+const unmy = (y: number): number => (Math.atan(Math.sinh(Math.PI * (1 - 2 * y))) * 180) / Math.PI;
 
 /** The projection of a chart: Web Mercator, north up, over `bounds`, in
  *  pixels of `width` × `height`; `u` scales stroke widths and type with the
@@ -230,17 +256,32 @@ interface Chart {
   y(lat: number): number;
 }
 
-function chart(fixed: Array<Mark & { position: Position }>, background?: MapBackground): Chart {
+/** The ground a chart is framed on: the positions it must cover and the
+ *  water to leave around them. Without one the chart is the background
+ *  whole, or — with no background — the marks it draws. */
+interface Frame {
+  points: Position[];
+  paddingMinutes: number;
+}
+
+/** Whole numbers without a trailing `.0`, so an uncropped chart writes the
+ *  same bytes it always did. */
+function num(v: number): string {
+  return Number(v.toFixed(1)).toString();
+}
+
+function chart(fixed: Array<Mark & { position: Position }>, background?: MapBackground, frame?: Frame): Chart {
   let bounds: MapBackground['bounds'];
   let width: number;
   let height: number;
-  if (background) {
+  if (background && !frame) {
     ({ bounds, width, height } = background);
   } else {
-    const lats = fixed.map((m) => m.position.lat);
-    const lngs = fixed.map((m) => m.position.lng);
+    const points = frame ? frame.points : fixed.map((m) => m.position);
+    const lats = points.map((p) => p.lat);
+    const lngs = points.map((p) => p.lng);
     const midLat = (Math.min(...lats) + Math.max(...lats)) / 2;
-    const pad = 0.6 / 60; // 0.6′ around the marks
+    const pad = (frame ? frame.paddingMinutes : 0.6) / 60;
     const k = Math.cos((midLat * Math.PI) / 180);
     bounds = {
       south: Math.min(...lats) - pad,
@@ -248,8 +289,31 @@ function chart(fixed: Array<Mark & { position: Position }>, background?: MapBack
       west: Math.min(...lngs) - pad / k,
       east: Math.max(...lngs) + pad / k,
     };
-    width = 640;
-    height = Math.round((width * (my(bounds.south) - my(bounds.north))) / (mx(bounds.east) - mx(bounds.west)));
+    if (background) {
+      // Cropped out of the background: whole pixels of it, never past what it
+      // covers, at its own resolution — the same picture, just fewer of its
+      // pixels. Snapping the crop to the pixel grid and taking the bounds
+      // back off it keeps the projection exactly the image's own, so the
+      // image can be placed whole, at its own size, and still line up.
+      const b = background.bounds;
+      const w = mx(b.east) - mx(b.west);
+      const h = my(b.south) - my(b.north);
+      const x0 = Math.min(Math.max(Math.floor(((mx(bounds.west) - mx(b.west)) / w) * background.width), 0), background.width);
+      const x1 = Math.max(Math.min(Math.ceil(((mx(bounds.east) - mx(b.west)) / w) * background.width), background.width), x0 + 1);
+      const y0 = Math.min(Math.max(Math.floor(((my(bounds.north) - my(b.north)) / h) * background.height), 0), background.height);
+      const y1 = Math.max(Math.min(Math.ceil(((my(bounds.south) - my(b.north)) / h) * background.height), background.height), y0 + 1);
+      width = x1 - x0;
+      height = y1 - y0;
+      bounds = {
+        west: unmx(mx(b.west) + (w * x0) / background.width),
+        east: unmx(mx(b.west) + (w * x1) / background.width),
+        north: unmy(my(b.north) + (h * y0) / background.height),
+        south: unmy(my(b.north) + (h * y1) / background.height),
+      };
+    } else {
+      width = 640;
+      height = Math.round((width * (my(bounds.south) - my(bounds.north))) / (mx(bounds.east) - mx(bounds.west)));
+    }
   }
   return {
     bounds,
@@ -373,11 +437,12 @@ function pickRules(courses: Course[]): string {
 /** An inline SVG of the fixed marks over the background (or a plain grid
  *  when there is none): Web Mercator, north up, minute grid, one-mile scale
  *  bar. Marks laid per race are not on it. With `courses`, each course's
- *  overlay is included, hidden until picked. */
-function map(marks: Mark[], background?: MapBackground, courses: Course[] = []): string {
+ *  overlay is included, hidden until picked. With a `frame`, the chart is
+ *  cropped to that ground instead of showing the background whole. */
+function map(marks: Mark[], background?: MapBackground, courses: Course[] = [], frame?: Frame): string {
   const fixed = marks.filter((m): m is Mark & { position: Position } => !!m.position);
   if (fixed.length < 2) return '';
-  const c = chart(fixed, background);
+  const c = chart(fixed, background, frame);
   const { bounds, width, height, u, x, y } = c;
   const font = (px: number): string => `font-size="${(px * u).toFixed(1)}"`;
 
@@ -385,7 +450,10 @@ function map(marks: Mark[], background?: MapBackground, courses: Course[] = []):
   if (courses.length) svg += '<defs><path id="ah" class="ah" d="M7 0L-5 5L-5 -5z"/></defs>';
   if (background) {
     const b64 = Buffer.from(background.png).toString('base64');
-    svg += `<image href="data:image/png;base64,${b64}" x="0" y="0" width="${width}" height="${height}"/>`;
+    const b = background.bounds;
+    const ix = x(b.west);
+    const iy = y(b.north);
+    svg += `<image href="data:image/png;base64,${b64}" x="${num(ix)}" y="${num(iy)}" width="${num(x(b.east) - ix)}" height="${num(y(b.south) - iy)}"/>`;
   }
   svg += `<g stroke="${background ? '#5b6b7c' : '#b9cbe0'}" stroke-opacity="${background ? 0.35 : 1}" stroke-width="${u}" ${font(11)} fill="#3b4b5c">`;
   for (let lat = Math.ceil(bounds.south * 60) / 60; lat < bounds.north; lat += 1 / 60) {
@@ -464,9 +532,21 @@ export function renderCardHtml(card: CourseCardFile, marks: MarksFile, options: 
   const allNotes = card.notes ?? [];
   const withStart = card.startLine ? [...marks.marks.filter((m) => m.id !== card.startLine!.id), card.startLine] : marks.marks;
   const byId = new Map(withStart.map((m) => [m.id, m]));
-  const chartSvg = map(withStart, options.background, card.courses);
+  const area = options.area;
+  const onChart = area
+    ? withStart.filter((m) => area.keep?.includes(m.id) || card.courses.some((c) => c.marks.some((cm) => cm.mark === m.id)))
+    : withStart;
+  const frame = area
+    ? {
+        points: [...onChart.flatMap((m) => (m.position ? [m.position] : [])), ...(area.points ?? [])],
+        paddingMinutes: area.paddingMinutes ?? 0.3,
+      }
+    : undefined;
+  const chartSvg = map(onChart, options.background, card.courses, frame);
   const caption =
-    (options.background ? `Chart: ${esc(options.background.attribution)}. ` : '') + 'Marks laid per race are not shown.';
+    (options.background ? `Chart: ${esc(options.background.attribution)}. ` : '') +
+    (area ? `${esc(area.note ?? 'Only the marks this card uses are shown.')} ` : '') +
+    'Marks laid per race are not shown.';
   return (
     `<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">` +
     `<title>${esc(title)}</title><style>${CSS}${pickRules(card.courses)}\n</style></head><body>\n` +

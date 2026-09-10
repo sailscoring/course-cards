@@ -97,7 +97,9 @@ truth and the sidecar is regenerated and verified like every other artifact. The
 as a self-contained HTML page: the course table as printed, the marks over
 an OpenStreetMap + OpenSeaMap chart — pick a course and it is drawn there,
 leg by leg, with each leg's true bearing and distance — bearings and
-distances between marks, and the notes. No scripts: the picker is a radio
+distances between marks, and the notes. A club's marks file covers every
+card it publishes, so a manifest may crop a card's chart to that card: the
+marks its own courses sail to, and whatever its own instructions keep in. No scripts: the picker is a radio
 button per course and a CSS rule. Every data set has a README saying how,
 and how it was checked.
 

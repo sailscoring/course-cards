@@ -53,6 +53,23 @@
           "name": "Start line",
           "source": "HYC Autumn League 2026 sailing instructions 6.1 A and B"
         }
+      },
+      "chart": {
+        "note": "The card's own marks, and the water down to the East Pier it finishes at.",
+        "keep": [
+          {
+            "mark": "Q",
+            "why": "SI 6.1 D sends boats to the finish passing Rowan Rocks to starboard; no course on the card rounds it."
+          },
+          {
+            "name": "Howth East Pier lighthouse",
+            "position": {
+              "lat": 53.39334,
+              "lng": -6.0668
+            },
+            "why": "SI 6.1 D finishes Round the Cans races between the Finisher's Hut and a black cherry buoy, and puts the hut on the East Pier about 100 m east of the old lighthouse. The old lighthouse is what this position is — OpenStreetMap way 377915968, man_made=lighthouse, © OpenStreetMap contributors — and it holds the chart open over the finishing area; the hut itself is not drawn."
+          }
+        ]
       }
     },
     {
@@ -78,6 +95,19 @@
           "name": "Start line",
           "source": "HYC Autumn League 2026 sailing instructions 6.2 A and B"
         }
+      },
+      "chart": {
+        "note": "The card's own marks, and the Spit and South Rowan it finishes between.",
+        "keep": [
+          {
+            "mark": "S",
+            "why": "SI 6.2 D, as amended, and the card's own note 2 put the finish in the vicinity of Spit and pass it to starboard on the way in; no course on the card rounds it."
+          },
+          {
+            "mark": "R",
+            "why": "SI 6.2 D, as amended, and the card's own note 2 put the finish in the vicinity of the South Rowan buoy; no course on the card rounds it."
+          }
+        ]
       }
     }
   ],

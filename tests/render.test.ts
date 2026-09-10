@@ -107,6 +107,36 @@ describe('renderCardHtml', () => {
     expect(island.lng).toBeLessThan(east);
   });
 
+  it('crops the chart to the card, and to the ground the data set keeps in', () => {
+    const png = join(__dirname, '..', 'data', 'hyc', 'al-2025', 'map', 'background.png');
+    const sidecar = JSON.parse(readFileSync(png.replace(/\.png$/, '.json'), 'utf-8')) as Omit<MapBackground, 'png'>;
+    const background: MapBackground = { ...sidecar, png: readFileSync(png) };
+    // Malahide, the northernmost mark, is on no course of this card.
+    const out = renderCardHtml(inshore, marks, {
+      background,
+      area: { keep: ['R'], note: 'The card’s own marks, and South Rowan.' },
+    });
+    const pins = (html: string): string[] => [...html.matchAll(/<circle [^>]*><title>(\S+)/g)].map((m) => m[1]!);
+    expect(pins(out).sort()).toEqual(['C', 'D', 'H', 'I', 'K', 'O', 'P', 'R', 'S', 'U', 'V', 'W']);
+    // The same picture, fewer of its pixels: the background is placed whole,
+    // at its own size, with the crop's corner inside it.
+    const box = out.match(/<image [^>]*?x="(\S+)" y="(\S+)" width="(\S+)" height="(\S+)"/)!;
+    expect(Number(box[3])).toBeCloseTo(sidecar.width, 0);
+    expect(Number(box[4])).toBeCloseTo(sidecar.height, 0);
+    expect(Number(box[1])).toBeLessThan(0);
+    expect(Number(box[2])).toBeLessThan(0);
+    const viewBox = out.match(/viewBox="0 0 (\d+) (\d+)"/)!;
+    expect(Number(viewBox[1])).toBeLessThan(sidecar.width);
+    expect(Number(viewBox[2])).toBeLessThan(sidecar.height);
+    expect(out).toContain('The card’s own marks, and South Rowan. Marks laid per race are not shown.');
+    // A point that is not a mark holds the frame open without being drawn.
+    const wider = renderCardHtml(inshore, marks, { background, area: { points: [{ lat: 53.38, lng: -6.06 }] } });
+    expect(pins(wider)).not.toContain('R');
+    expect(Number(wider.match(/viewBox="0 0 (\d+) (\d+)"/)![2])).toBeGreaterThan(Number(viewBox[2]));
+    // The marks table and the matrices are the club's, not the card's.
+    for (const m of marks.marks) expect(out).toContain(`<th>${m.id}</th><td>${m.name}</td>`);
+  });
+
   it('tabulates true bearings and distances between the fixed marks', () => {
     expect(html).toContain('Bearings between marks (° true)');
     expect(html).toContain('Distances between marks (NM)');

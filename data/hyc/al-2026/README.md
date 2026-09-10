@@ -133,6 +133,47 @@ the PDF prints it as text where Word supplied it as a list style. The
 offshore card numbers its third note "3" without the full stop the other two
 have; that is the card's, and it is left alone.
 
+## The charts
+
+Each card's chart is cropped to that card. The 2025 sheet lists the marks of
+both fleets and nine that neither card uses, and drawn whole it is a picture
+mostly of water the fleet never sails: Malahide and Talbot pull it three
+miles north, the Howth Sound marks two miles south. The manifest gives each
+card a `chart` block, and the page is framed on the marks its own courses
+name — plus, because a card is not only its courses, what its finishing
+instruction places it near:
+
+| | Framed on | Kept in besides |
+|---|---|---|
+| Inshore | C D H I K O P U V W | **S** and **R** |
+| Offshore | A D E G H I K O P U V | **Q**, and the East Pier |
+
+The inshore card's note 2 and SI 6.2 D, as amendment 01 replaces it, put the
+finish "in the vicinity of the Spit Mark (S) and the South Rowan Buoy (R)",
+so both stay on the chart though no course rounds either. Offshore, SI 6.1 D
+sends boats in "passing the Rowan Rocks Buoy and the Howth Mark (both IALA
+marks) to starboard" to a line "between a vertical line on the front of the
+Finisher's Hut and a Black cherry bouy", the hut being "on the East Pier
+approximately 100m east of the old lighthouse". Rowan Rocks is Q and stays
+on the chart; the Howth Mark is not one of the club's lettered marks and is
+not on the 2025 sheet, so it is not drawn.
+
+The hut is not a mark either, and nothing is drawn for it — but the chart is
+held open far enough south to show the East Pier it stands on, by one point
+in the manifest: the old lighthouse the SI measures it from, at 53° 23.60′ N
+006° 04.01′ W, which is OpenStreetMap way 377915968 (`man_made=lighthouse`,
+© OpenStreetMap contributors) — the same source as the chart imagery. The
+hundred metres between it and the hut are well inside the water left around
+the frame. Each entry in the manifest's `chart` block carries its own `why`,
+so nothing is cropped away without the club's own words being the reason it
+could be.
+
+The crop is per data set, not automatic: a card with no `chart` block is
+still drawn on its whole marks file, and only these two cards have one. The
+marks table and the bearing and distance matrices further down each page are
+untouched — they are reference tables for the club's marks, not this card's.
+`map/marks.svg`, the standalone map, is still every mark on the sheet.
+
 ## Notes on the cards
 
 - **The courses stop before the finish.** Every offshore course ends at G or
@@ -151,7 +192,10 @@ have; that is the card's, and it is left alone.
   card 11 (C D H I K O P U V W Z). B, F, J, M, Q, R, S, T and X are on the
   2025 sheet and named by neither — including Q and S, which are on the run
   in to the offshore and inshore finishes but not printed in any course, and
-  R, which SI 6.2 D names as one end of the inshore finishing area.
+  R, which SI 6.2 D names as one end of the inshore finishing area. The two
+  subsets are not disjoint: ten marks are common to both, and only C and W
+  are the inshore card's alone, A, E and G the offshore card's. See "The
+  charts" below.
 - Almost every mark on the inshore card is rounded to port: 8 of its 468
   mark roundings are to starboard, all in the 080°, 200° and 240° rows. The
   offshore card mixes the two throughout — 126 of 415 to starboard.
