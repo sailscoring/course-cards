@@ -7,10 +7,14 @@
  *   /course-cards.zip                  all of them, zipped
  *   /v<version>/<club>/<event>/…       the same again under the release version
  *   /v<version>/course-cards-v<version>.zip
+ *   /v<earlier>/…                     the same, for the releases before it
  *
- * The version is package.json's. A deploy carries one version; earlier ones
- * stay downloadable from the GitHub Releases the release workflow attaches
- * the same zip to.
+ * The version is package.json's, and a deploy also carries the versioned
+ * trees of the RETAINED_RELEASES - 1 releases before it, rebuilt from the
+ * assets those releases attached. That is what makes a /v<version>/ URL
+ * usable: a consumer pinned to one keeps working while it upgrades, rather
+ * than losing it the moment the next release deploys. Anything older stays
+ * downloadable from its GitHub Release.
  *
  *     pnpm site
  */
@@ -18,7 +22,7 @@
 import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative } from 'node:path';
 
-import { zipSync } from 'fflate';
+import { unzipSync, zipSync } from 'fflate';
 
 import { FORMAT_VERSION, parseCatalogue, parseCourseCardFile, parseMarksFile, type Catalogue } from '../src/index';
 
@@ -159,7 +163,100 @@ parseCatalogue(JSON.parse(JSON.stringify(catalogue)));
 writeFileSync(join(site, 'index.json'), JSON.stringify(catalogue, null, 2) + '\n');
 writeFileSync(join(site, versionDir, 'index.json'), JSON.stringify(catalogue, null, 2) + '\n');
 
-// Landing page.
+// --- the releases before this one --------------------------------------------
+
+/**
+ * How many releases a deploy carries under /v<version>/, this one included —
+ * the window a consumer pinned to a versioned URL has to upgrade in. Raising
+ * it costs about the size of the zip per release.
+ */
+const RETAINED_RELEASES = 3;
+
+// Downloads live outside site/, which is wiped on every build, and under the
+// directory build caches keep, so a deploy re-fetches only what is new.
+const cacheDir = join(root, 'node_modules', '.cache', 'course-cards-releases');
+
+// The zip carries these beside the artifacts; the site tree is the artifacts.
+const zipExtras = new Set(['README.md', 'LICENSE', 'docs/format.md']);
+
+const rank = (v: string): number => v.split('.').reduce((n, part) => n * 100_000 + Number(part), 0);
+
+// fetch's own message for a network failure is just "fetch failed"; the cause
+// is where the reason is.
+const why = (error: unknown): string => {
+  const e = error as Error & { cause?: Error };
+  return e.cause?.message ? `${e.message}: ${e.cause.message}` : e.message;
+};
+
+async function releaseAsset(tag: string, name: string): Promise<Uint8Array> {
+  const cached = join(cacheDir, tag, name);
+  if (existsSync(cached)) return readFileSync(cached);
+  const response = await fetch(`${repoUrl}/releases/download/${tag}/${name}`);
+  if (!response.ok) throw new Error(`${name}: ${response.status} ${response.statusText}`);
+  const bytes = new Uint8Array(await response.arrayBuffer());
+  mkdirSync(dirname(cached), { recursive: true });
+  writeFileSync(cached, bytes);
+  return bytes;
+}
+
+/** The versions of every published release, newest first. */
+async function published(): Promise<string[]> {
+  const headers: Record<string, string> = { accept: 'application/vnd.github+json' };
+  // Not required — the repository is public — but it lifts the rate limit
+  // where there is a token to hand, which on a busy build host matters.
+  if (process.env.GITHUB_TOKEN) headers.authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
+  const response = await fetch(`https://api.github.com/repos/${repository.replace(/^github:/, '')}/releases?per_page=100`, { headers });
+  if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+  const releases = (await response.json()) as Array<{ tag_name: string; draft: boolean; prerelease: boolean }>;
+  return releases
+    .filter((r) => !r.draft && !r.prerelease && /^v\d+\.\d+\.\d+$/.test(r.tag_name))
+    .map((r) => r.tag_name.slice(1))
+    .sort((a, b) => rank(b) - rank(a));
+}
+
+/**
+ * A release's tree under /v<version>/, unpacked from the zip and the
+ * catalogue it attached — the files that release published, verbatim, not a
+ * rebuild of them from today's data or today's tools.
+ */
+async function retain(release: string): Promise<number> {
+  const tag = `v${release}`;
+  const [archive, index] = await Promise.all([releaseAsset(tag, `course-cards-${tag}.zip`), releaseAsset(tag, 'catalogue.json')]);
+  const dir = join(site, tag);
+  const zipPrefix = `course-cards-${tag}/`;
+  let written = 0;
+  for (const [entry, bytes] of Object.entries(unzipSync(archive))) {
+    if (!entry.startsWith(zipPrefix) || entry.endsWith('/')) continue;
+    const path = entry.slice(zipPrefix.length);
+    if (zipExtras.has(path)) continue;
+    mkdirSync(dirname(join(dir, path)), { recursive: true });
+    writeFileSync(join(dir, path), bytes);
+    written++;
+  }
+  writeFileSync(join(dir, `course-cards-${tag}.zip`), archive);
+  writeFileSync(join(dir, 'index.json'), index);
+  return written;
+}
+
+// A release that cannot be fetched is a warning, not a failed deploy: the
+// current site is still correct without it, and its paths 404 as they would
+// have anyway. Watch for this in the build log — it is the one way the
+// upgrade window silently narrows.
+let retained: string[] = [];
+try {
+  retained = (await published()).filter((v) => rank(v) < rank(version)).slice(0, RETAINED_RELEASES - 1);
+} catch (error) {
+  console.warn(`site/: could not list earlier releases (${why(error)}); no /v<earlier>/ paths in this deploy`);
+}
+for (const release of retained) {
+  try {
+    console.log(`site/v${release}/: ${await retain(release)} files, from the assets of its release`);
+  } catch (error) {
+    console.warn(`site/v${release}/: not retained (${why(error)}); its paths will 404`);
+  }
+}
+
+// --- landing page ------------------------------------------------------------
 const setHtml = sets
   .map((s) => {
     const cards = s.cards
@@ -232,7 +329,13 @@ const index = `<!doctype html>
       <a href="${esc(repoUrl)}">source &amp; format spec on GitHub</a> ·
       <a href="${esc(repoUrl)}/releases">all releases</a>
     </div>
-    <p class="sub" style="margin:.5rem 0 0">Every file is available at its unversioned path (current release) and under <code>/${esc(versionDir)}/</code>. Earlier releases are attached to their GitHub Release.</p>
+    <p class="sub" style="margin:.5rem 0 0">Every file is available at its unversioned path (current release) and under <code>/${esc(versionDir)}/</code>${
+      retained.length
+        ? `, and the ${retained.length === 1 ? 'release before it is' : `${retained.length} releases before it are`} still served under ${retained
+            .map((v) => `<code>/v${esc(v)}/</code>`)
+            .join(' and ')}`
+        : ''
+    }. Every release, however old, is attached to its GitHub Release.</p>
   </div>
   ${setHtml}
   <footer>Marks and courses are the clubs' publications, reproduced for racing use; the format, tools and library are MIT-licensed. Charts © OpenStreetMap contributors, © OpenSeaMap contributors.</footer>

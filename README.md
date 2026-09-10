@@ -182,9 +182,22 @@ https://courses.sailscoring.ie/v0.1.0/course-cards-v0.1.0.zip
 https://courses.sailscoring.ie/index.json
 ```
 
-A deploy carries one release; earlier releases stay downloadable from
-GitHub. The site is built by `pnpm site` into `site/` and deployed by
-Vercel on every push to `main`.
+A deploy carries the three most recent releases under their `/vX.Y.Z/`
+paths — the current one built from `data/`, the two before it unpacked from
+the assets of their own GitHub Releases, so what they serve is what those
+releases published rather than a rebuild of it. That is the upgrade window:
+a consumer pinned to a versioned URL keeps working across two further
+releases, and is not cut off the moment the next one deploys. Older releases
+stay downloadable from GitHub, and every release is there however old. The
+number kept is `RETAINED_RELEASES` in `tools/build-site.ts`.
+
+If a retained release's assets cannot be fetched, the build warns and carries
+on rather than failing the deploy, so that path 404s until the next build —
+worth watching for in the build log, because it is the one way the window
+quietly narrows.
+
+The site is built by `pnpm site` into `site/` and deployed by Vercel on
+every push to `main`.
 
 ### Cutting a release
 
