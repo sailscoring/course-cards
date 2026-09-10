@@ -1,137 +1,157 @@
-# HYC Autumn League 2026 — draft cards
+# HYC Autumn League 2026
 
-**These are drafts, not the club's published cards.** They are the offshore
-and inshore course cards as they stood on 6 September 2026, marked "Rev 0
-(xx/yy/2026)" and, on the offshore card, "SEPT 6TH DRAFT", circulated for
-comment before the league starts on 12 September. They are here to be read
-by the tools and checked; when the club publishes the official cards this
-data set gets a second pass against them, and the differences will show up
-as a diff of this JSON.
+The offshore and inshore course cards for Howth Yacht Club's Autumn League
+2026, 12 September to 17 October, as the club published them on 9 September —
+"HYC COURSE CARD - 2026 Rev 0 (08/09/2026)" — with the marks they letter and
+the start line the sailing instructions define.
+
+The club's filenames still say "Final Draft 4.1", but these are the cards
+linked from the club's own event page as "Offshore Course Card" and "Inshore
+Course Card", and SI 6.1 C and 6.2 C make the course card part of the sailing
+instructions. This data set previously held the 6 September drafts, in Word
+and Excel, that these replace; what changed is in "Against the drafts" below.
 
 | File | Source | Made by |
 |---|---|---|
 | `marks.json` | `../al-2025/source/AL_Course_Card_Technical_Sheet.pdf` | `tools/extract_marks.py` |
-| `offshore.json` | `source/AL_Offshore_Course_Card_2026_draft.docx` | `tools/extract_hyc_al_card.py` |
-| `inshore.json` | `source/AL_Inshore_Course_Card_2026_draft.xlsx` | `tools/extract_hyc_al_card.py` |
+| `offshore.json` | `source/Offshore_Autumn_League_Course_Card_-_2026_Final_Draft_4.1_Comp.pdf`, `source/2026_AL_Sis.pdf` | `tools/extract_hyc_al_card.py`, `tools/extract_start_line.py` |
+| `inshore.json` | `source/Inshore_Autumn_League_Course_Card_-_2026_Final_Draft_4.1_Comp.pdf`, `source/2026_AL_Sis.pdf` | `tools/extract_hyc_al_card.py`, `tools/extract_start_line.py` |
+| `source/*.md` | the sailing instructions beside them | `tools/pdf_markdown.py` |
 | `offshore.html`, `inshore.html`, `map/marks.svg` | the JSON above, `map/background.png` | `tools/render-cards.ts` |
 | `map/background.png`, `.json` | OpenStreetMap + OpenSeaMap tiles | `tools/fetch_map.py` |
 
-`manifest.json` records each artifact's source and the metadata that heads
-the output; `pnpm data` rebuilds them all and `pnpm data:check` verifies the
-committed files against a fresh run, then runs the cross-check below.
+`manifest.json` records each artifact's source and the metadata that heads the
+output; `pnpm data` rebuilds them all and `pnpm data:check` verifies the
+committed files against a fresh run.
 
 ## How the JSON is produced
 
-**The cards.** The club drafts these in Office rather than as PDFs: the
-offshore card is a table in a Word document, the inshore card a sheet in an
-Excel workbook. Both are XML in a zip, so `extract_hyc_al_card.py` reads them
-directly rather than through a converter. Each is a row per wind direction,
-000°–340° in 20° steps, lettered A–T (no I, no O), and four numbered columns
-of courses, each a sequence of mark letters with a distance in nautical miles
-beside it.
+**The cards.** Each is a single page: a row per wind direction, 000°–340° in
+20° steps, lettered A–T (no I, no O), and four numbered columns of courses,
+each a sequence of mark letters. Course ids are the card's own letter and
+column, `A1` … `T4`, 72 per card. The wind direction each row is headed with
+is carried as a note and on each course as `windDirectionDeg`; it is not
+folded into the id. The 2025 cards encoded the beat in the course number
+instead (`073` = 070°, column 3), and these do not say how a course is to be
+signalled beyond SI 6.1 C's "letters and numerals displayed on boards".
 
 The side comes from the colour of each letter, as the card's own legend says:
-"Marks coloured RED shall be rounded / passed to PORT. Those in GREEN and
-underlined shall be rounded / passed to STARBOARD." Only the colour is read. The
-underline the legend also mentions is not usable: on the offshore card the
-whole 040° row is underlined by accident, wind column and distances included.
-A letter in a course that is neither the card's red nor its green stops the
-build rather than being guessed at; none is.
+"Marks coloured RED shall be rounded / passed to PORT. Those coloured GREEN
+and underlined shall be rounded / passed to STARBOARD." These are real-text
+PDFs, so `extract_hyc_al_card.py` reads the colour the PDF sets for the
+glyphs — the document's own instruction, not a rendering of it — by way of
+`pdftohtml -xml`, which breaks a line wherever the fill colour changes. The
+underline the legend also mentions is not read: the 2026 drafts underlined a
+whole row of the offshore card by accident. A letter in a course that is
+neither the card's red nor its green stops the build rather than being
+guessed at; none is.
 
-Course ids are the card's own letter and column, `A1` … `T4`, 72 per card.
-The wind direction each row is headed with is carried as a note, not folded
-into the id: the format describes a sequence of marks, and which wind it
-suits is the club's heading over it. The 2025 cards encoded the beat in the
-course number instead (`073` = 070°, column 3); these do not, and the drafts
-do not say how a course is to be signalled.
+The table's rules are drawn rather than typed, so the grid comes from the
+card's own headings: a run belongs to the row whose wind direction is printed
+nearest it down the left, and to the column whose number is printed over it.
+That is geometry, so every build checks it against a second reading that uses
+none of it: `pdftotext -layout` sets each row of the table on a line of its
+own, and the letters of that line are the row's four courses run together. A
+letter dropped, doubled or read out of order stops the build. The two
+readings agree on all 144 courses of both cards. What the colour reading adds
+on top is the side, and the two cards between them give 126 of 415 offshore
+roundings to starboard and 8 of 468 inshore.
 
-Each course carries the length the card prints for it as `distanceNm`. That
-is the club's figure on the club's own assumptions — see the cross-check —
-not the sum of the legs computed from the marks, and the rendered pages show
-both, side by side.
+**The start line.** SI 6.1 B and 6.2 B define the offshore and inshore
+starting lines, and 6.1 A and 6.2 A the areas they are laid in; both are
+quoted verbatim into each card's `startLine` by `extract_start_line.py`, so
+every course begins at `SL` and the first leg is the beat from the line to Z.
+SI 6.1 C and 6.2 C say as much: Z is "laid approximately to windward of the
+starting line" and "is the first mark on all fixed mark courses" — which the
+cards bear out, every one of the 144 beginning at Z.
 
-**Marks.** The club has not published a 2026 technical sheet, so the marks
-are the 2025 sheet's, read from it in place by `extract_marks.py`; the
-manifest points at the file in `../al-2025/source/`. That the positions are
-still current is not assumed — it is checked, below.
+**Marks.** SI 6.1 C and 6.2 C name a Technical Sheet, but the club has not
+published a 2026 one, so the marks are the 2025 sheet's, read from it in
+place by `extract_marks.py`; the manifest points at the file in
+`../al-2025/source/`. Every letter the two cards use is on it, and that its
+positions are still the ones the cards are laid out on was established while
+the drafts were the source — see below.
 
-**No start line.** Every other card here begins each course at the start
-line its club's sailing instructions define, quoted from them. The 2026
-sailing instructions are not published yet, so there is nothing to quote and
-the cards carry no `startLine`: each course begins at Z, the first mark the
-card prints, exactly as printed. When the SIs appear, the start line goes in
-as it does elsewhere and every course begins there.
+## No distances, and what that costs
 
-## How it was checked
+**The published cards print no distances.** The drafts gave every course a
+length in nautical miles beside it, and the column is gone; `distanceNm` is
+therefore absent from all 144 courses, and the rendered pages show only the
+lengths the library computes from the marks.
 
-`tools/check_hyc_al.py`, run by `pnpm data` and `pnpm data:check` from the
-manifest's `checks`, recomputes the length of all 144 courses from the marks
-and compares it with the length the card prints. The card's distances are
-computed rather than measured, so they can be recomputed, and a course whose
-marks and whose distance disagree has one or the other typed wrong.
+That column was this data set's cross-check. The card's distances were
+computed rather than measured, so they could be recomputed from the marks and
+the club's own conventions, and 132 of the 144 agreed to a fifth of a mile.
+Three things rested on that agreement, and all three were established while
+the drafts were the source:
 
-The conventions the cards are laid out on, which the manifest carries per
-card as `model`:
-
-- the first leg is the beat to the windward mark Z, laid straight-line to
-  windward of the start line — 0.67 NM offshore, 0.5 NM inshore — and sailed
-  at the beating factor;
-- the second leg, Z to the first fixed mark, is taken at an average, 0.4 NM
-  offshore and 0.3 NM inshore, since where Z is laid on the day decides it;
-- every leg between fixed marks is its great-circle length, lengthened by
-  40% offshore and 50% inshore when it is upwind — its bearing within 45° of
-  the wind direction the row is headed with. The offshore boats are closer
-  winded, hence the smaller factor;
-- offshore, the run in to the finish leaves the last mark on the card for Q
-  (Rowan Rocks) and then the Howth buoy, both to starboard, finishing at the
-  East Pier; inshore it goes to S (Spit), left to starboard, and finishes
-  0.2 NM up the Sound.
-
-The Howth buoy and the East Pier line have no published position, so what is
-beyond Q is taken as a constant: 0.36 NM, the figure the card's own distances
-imply. Everything else in the model is the club's.
-
-With that, **the model reproduces 68 of the 72 offshore courses to within
-0.19 NM and 64 of the 72 inshore ones to within 0.14 NM** — good enough to
-say three things:
-
-- the mark sequences read off the cards are the ones the distances were
-  computed from, so the extraction is right;
-- the 2025 sheet's positions are the ones the cards were laid out on, so
+- the mark sequences read off the cards were the ones the distances were
+  computed from, so the extraction was right;
+- the 2025 sheet's positions were the ones the cards were laid out on, so
   using them for 2026 is sound;
-- the conventions above are the ones actually applied.
+- the conventions were the ones actually applied — a first beat of 0.67 NM
+  offshore and 0.5 NM inshore, an average 0.4 / 0.3 NM from Z to the first
+  fixed mark, upwind legs lengthened 40% offshore and 50% inshore, and a run
+  in to the finish by way of Q offshore and S inshore.
 
-The twelve courses that do not reconcile are recorded in the manifest as
-known differences, with what is wrong with each; they are the substance of
-the feedback on the drafts. Two more things the check does not catch, being
-about the cards rather than their arithmetic: offshore K3 and K4 are the same
-course (`Z O A K A G`, 12.6 NM) printed twice, and the inshore 280° and 300°
-rows are identical to each other, course for course and distance for
-distance.
+With nothing printed to check against, `tools/check_hyc_al.py` has been
+removed rather than left to pass vacuously; it and the twelve differences it
+recorded are in the repository's history, with this data set's drafts. The
+extraction no longer needs that corroboration — it is PDF text read twice
+over, not OCR — but the second point does rest on the drafts, and the
+sequences the drafts' arithmetic vouched for are, bar one course, exactly the
+sequences on these cards.
 
-One systematic wrinkle: the offshore 220°, 240° and 260° rows all run about
-0.15 NM long against the model, which is what treating the run in to the
-finish as upwind would add. The model does not do that, and 0.15 NM is inside
-the tolerance, so it is noted rather than modelled.
+## Against the drafts
+
+**143 of the 144 courses are unchanged.** The one that is not is offshore
+**N2**, which the drafts printed as `Z E O I G` against 9.1 NM — a mile and
+four fifths short of what its own marks came to, the largest difference of
+the twelve and the one recorded as "the sequence looks short rather than the
+distance wrong". The published card reads `Z E I O I G`, which comes to
+9.34 NM: the sequence was short, and an I has been added.
+
+The other eleven differences cannot be resolved either way now that the
+distances are gone. Two more things about the cards, unchanged from the
+drafts and neither of them arithmetic:
+
+- offshore K3 and K4 are the same course, `Z O A K A G`, printed twice;
+- the inshore 280° and 300° rows are identical to each other, course for
+  course.
+
+Two things that did change besides N2:
+
+- **The offshore finishing line is filled in.** The drafts read "between the
+  ??????????????????"; the card now reads "between a vertical line on the
+  front of the East Pier Finisher Hut & a black cherry buoy", which is SI
+  6.1 D's line.
+- **The wind column is headed "+/- 10°"**, the tolerance the drafts left to
+  the reader. It is kept in the "Wind direction" note.
+
+The notes also now carry the card's own numbering ("1.", "2.", "3") because
+the PDF prints it as text where Word supplied it as a list style. The
+offshore card numbers its third note "3" without the full stop the other two
+have; that is the card's, and it is left alone.
 
 ## Notes on the cards
 
-- **The courses stop before the finish.** Every offshore course ends at a
-  fixed mark, G or K, and every inshore one at a fixed mark too; the run to
-  the finishing line is in the card's note, not in the sequence, though the
-  printed distance includes it. The 2025 cards ended each course at F, a mark
-  of the marks file with a `placement` and no position, which is what the
-  format is for. Until the finish is a mark, a consumer of this card gets the
+- **The courses stop before the finish.** Every offshore course ends at G or
+  K — which is what SI 6.1 D says the run in begins from, "the last mark on
+  the displayed course (either K or G)" — and every inshore one at a fixed
+  mark too. The run to the finishing line is in the card's note and in the
+  SI, not in the sequence. The 2025 cards ended each course at F, a mark of
+  the marks file with a `placement` and no position, which is what the format
+  is for; until the finish is a mark here, a consumer of this card gets the
   course as far as the last rounding mark and no further.
-- **The offshore finishing line is blank.** The card reads "The finishing
-  line for Offshore courses shall be between the ??????????????????, unless
-  a race is shortened at a mark of the course." The inshore card says only
-  "located in the Sound".
+- SI amendment 01 replaces 6.2 D, adding to the inshore finishing line the
+  instruction to pass Spit to starboard on the way to it — which the inshore
+  card already printed in its own note 2. It leaves 6.2 A and B, which the
+  start line is read from, as they were.
 - The offshore card uses 12 marks (A D E G H I K O P U V Z) and the inshore
   card 11 (C D H I K O P U V W Z). B, F, J, M, Q, R, S, T and X are on the
-  2025 sheet and named by neither — including F, the 2025 finish mark, and
-  Q and S, which are on the run in to the offshore and inshore finishes but
-  not printed in any course.
+  2025 sheet and named by neither — including Q and S, which are on the run
+  in to the offshore and inshore finishes but not printed in any course, and
+  R, which SI 6.2 D names as one end of the inshore finishing area.
 - Almost every mark on the inshore card is rounded to port: 8 of its 468
   mark roundings are to starboard, all in the 080°, 200° and 240° rows. The
-  offshore card mixes the two throughout — 126 of 414 to starboard.
+  offshore card mixes the two throughout — 126 of 415 to starboard.

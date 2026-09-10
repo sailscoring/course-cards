@@ -104,7 +104,7 @@ The card a club prints: the courses, each an ordered sequence of marks.
 - `courses[].id` — what the race committee displays; any string. HYC's
   Autumn League 2025 cards number their courses so that the first two
   digits × 10 are the wind the row is laid out for and the third digit is
-  the column; the 2026 drafts letter the rows A–T and print the wind beside
+  the column; the 2026 cards letter the rows A–T and print the wind beside
   each. The format stores the id as printed — the encoding is the club's —
   and carries the wind itself in `windDirectionDeg`.
 - `courses[].windDirectionDeg` — the true wind direction, in degrees, the
@@ -115,11 +115,13 @@ The card a club prints: the courses, each an ordered sequence of marks.
   (DBSC's, DLCC's) omits it.
 - `courses[].distanceNm` — the course's length in nautical miles, where the
   club prints one, as printed. It is the club's figure on the club's own
-  assumptions: it allows for beating (HYC's Autumn League card lengthens
-  every upwind leg by 40% offshore and 50% inshore), and for the legs to and
-  from marks the card cannot place. So it is not the sum of the legs the
-  library computes from the marks, and a reader must not treat it as one —
-  it is what the card tells a competitor to expect.
+  assumptions: it allows for beating (the 2026 drafts of HYC's Autumn League
+  card lengthened every upwind leg by 40% offshore and 50% inshore), and for
+  the legs to and from marks the card cannot place. So it is not the sum of
+  the legs the library computes from the marks, and a reader must not treat
+  it as one — it is what the card tells a competitor to expect. No card in
+  `data/` prints one at present: HYC's 2026 drafts did and the cards the
+  club went on to publish do not.
 - `courses[].marks` — every mark of the course in sailing order, beginning
   with the card's start line, so the first leg runs from the line to the
   first mark the club prints. Marks laid per race are in the sequence like

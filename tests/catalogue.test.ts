@@ -14,12 +14,12 @@ const index = {
     {
       path: 'hyc/al-2026',
       club: 'Howth Yacht Club',
-      event: 'Autumn League 2026 (draft cards)',
+      event: 'Autumn League 2026',
       marks: { file: 'hyc/al-2026/marks.json', count: 23, url: `${site}/v0.3.0/hyc/al-2026/marks.json` },
       cards: [
         {
           id: 'offshore',
-          name: 'Autumn League 2026 course card, offshore — 6 September 2026 draft',
+          name: 'Autumn League 2026 course card, offshore committee vessel starts',
           courses: 72,
           json: 'hyc/al-2026/offshore.json',
           html: 'hyc/al-2026/offshore.html',

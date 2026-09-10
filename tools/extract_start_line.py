@@ -30,7 +30,7 @@ import re
 import sys
 
 sys.path.insert(0, __file__.rsplit('/', 1)[0])
-from pdf_markdown import LABEL, pages, parts  # noqa: E402
+from pdf_markdown import pages, parts  # noqa: E402
 
 
 def verbatim(pdf, columns, text):
@@ -43,12 +43,15 @@ def verbatim(pdf, columns, text):
 
 
 def after(items, heading):
-    """The document from the named heading on, so a key that occurs under
-    each of an SI's several start lines resolves to the right one."""
+    """The document from the named heading or clause on, so a key that occurs
+    under each of an SI's several start lines resolves to the right one. Which
+    of the two it is depends on the SI: HYC headed its 2025 start lines
+    "OFFSHORE COMMITTEE BOAT STARTS" and numbered its 2026 ones "6.1 Offshore
+    Committee Vessel Starts:" within a "Schedule of Races" section."""
     for i, part in enumerate(items):
-        if part.startswith('## ') and part[3:].startswith(heading):
+        if not part.startswith('```') and (part[3:] if part.startswith('## ') else part).startswith(heading):
             return items[i + 1:]
-    sys.exit(f'no heading "{heading}" in the document')
+    sys.exit(f'nothing headed or numbered "{heading}" in the document')
 
 
 def clause(items, key):
@@ -65,8 +68,10 @@ def clause(items, key):
             if body:
                 return ' '.join(body)
         if not part.startswith(('## ', '```')) and (part == key or part.startswith(key + ' ')):
-            label = LABEL.match(part)
-            return part[label.end():].strip() if label and label.group(1) == key else part
+            # The key itself is the clause's label — a number, or the letter
+            # and name of a lettered section the SI sets as a run-on rather
+            # than as a heading — and what it introduces is the instruction.
+            return part[len(key):].strip() or part
     sys.exit(f'no clause "{key}" in the document')
 
 

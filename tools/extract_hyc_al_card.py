@@ -1,28 +1,29 @@
 #!/usr/bin/env python3
-"""Generate a course card file from an HYC Autumn League card written as an
-Office document.
+"""Generate a course card file from an HYC Autumn League card.
 
-The club drafts these cards in Office rather than as PDFs — the offshore card
-is a table in a Word document, the inshore card a sheet in an Excel workbook —
-and both are the same card:
+The club drafts these cards in Office and publishes them as PDFs, and all
+three are the same card:
 
   * a row per wind direction, 000° to 340° in 20° steps, lettered A–T (no I,
     no O) in a "Course" column;
-  * four numbered columns of courses, each a sequence of mark letters with
-    the course's length in nautical miles printed beside it;
+  * four numbered columns of courses, each a sequence of mark letters, with
+    the course's length in nautical miles printed beside it on the drafts
+    and on no card the club has published;
   * over the table the card's heading and revision, under it the card's own
     notes, the first of which is the legend this reads the sides from.
 
-Both formats are XML in a zip, so this reads them directly rather than
-through a converter: the run (Word) or rich-text run (Excel) a character
-belongs to carries its colour, and the colour is the side — "Marks coloured
-RED shall be rounded / passed to PORT. Those in GREEN and underlined shall be
-rounded / passed to STARBOARD." The underline the legend also mentions is not
-usable: in these drafts a whole row of the offshore card is underlined by
-accident, so only the colour is read, and a character in a course cell that
-is neither red nor green stops the build rather than being guessed at.
+Whichever it is, the side comes from the colour a character is drawn in —
+"Marks coloured RED shall be rounded / passed to PORT. Those in GREEN and
+underlined shall be rounded / passed to STARBOARD" — and that colour is read
+from the document itself, never from a rendering of it: from the run (Word)
+or rich-text run (Excel) a character belongs to, or from the fill colour the
+PDF sets for it. The underline the legend also mentions is not usable: in
+the 2026 drafts a whole row of the offshore card is underlined by accident,
+so only the colour is read, and a character in a course cell that is neither
+red nor green stops the build rather than being guessed at.
 
-    python3 tools/extract_hyc_al_card.py <card.docx|card.xlsx> --meta meta.json > card.json
+    python3 tools/extract_hyc_al_card.py <card.pdf|card.docx|card.xlsx> \
+        --meta meta.json > card.json
 
 Course ids are the card's own letter and column number — A1 … T4. The wind
 direction each row is set for goes on each of the row's courses as
@@ -33,6 +34,7 @@ the card prints it.
 import argparse
 import json
 import re
+import subprocess
 import sys
 import xml.etree.ElementTree as ET
 import zipfile
@@ -195,15 +197,149 @@ def xlsx_card(path):
     return headings, wind_heading, rows, notes
 
 
+# --- PDF (the published cards) ---------------------------------------------
+
+def pdf_runs(path):
+    """(top, left, text, colour) for every run of same-coloured text on the
+    card's single page.
+
+    `pdftohtml -xml` breaks a line wherever the fill colour changes and names
+    each run's colour in a fontspec, so the side is read from the colour the
+    PDF sets for the glyphs — the document's own instruction — and not from a
+    rendering of the page.
+    """
+    xml = subprocess.run(['pdftohtml', '-xml', '-i', '-stdout', path],
+                         check=True, capture_output=True, text=True).stdout
+    pages = ET.fromstring(xml).findall('page')
+    if len(pages) != 1:
+        sys.exit(f'{path}: expected a card of one page, found {len(pages)}')
+    colours = {f.get('id'): (f.get('color') or '').lstrip('#') for f in pages[0].findall('fontspec')}
+    return [(float(t.get('top')), float(t.get('left')), ''.join(t.itertext()), colours[t.get('font')])
+            for t in pages[0].findall('text')]
+
+
+def lines_of(runs):
+    """Runs gathered into lines of the page: those whose tops are within a few
+    points of each other, each line left to right, the lines down the page."""
+    lines = []
+    for run in sorted(runs):
+        if lines and run[0] - lines[-1][0][0] <= 6:
+            lines[-1].append(run)
+        else:
+            lines.append([run])
+    return [sorted(line, key=lambda r: r[1]) for line in lines]
+
+
+def verbatim(path, rows):
+    """That the marks read out of the coloured runs really are the card's, and
+    in its order.
+
+    The grid `pdf_card` builds is geometry — which run falls in which cell —
+    so it is checked against a reading that uses none of it: `-layout` sets
+    each row of the table on a line of its own, and the letters of that line,
+    its wind and course letter apart, are the row's four courses run
+    together. A letter dropped, doubled or read out of order fails here.
+    """
+    lines = subprocess.run(['pdftotext', '-layout', path, '-'],
+                           check=True, capture_output=True, text=True).stdout.splitlines()
+    for wind, letter, columns in rows:
+        head = re.compile(rf'\s*{re.escape(wind)}\s+{re.escape(letter)}\s+')
+        printed = [re.sub(r'\s', '', line[m.end():])
+                   for line in lines for m in [head.match(line)] if m]
+        if len(printed) != 1:
+            sys.exit(f'{path}: the {wind}° row is set on {len(printed)} lines of the text layer, not one')
+        read = ''.join(ch for chars, _ in columns for ch, _ in chars if ch.strip())
+        if printed[0] != read:
+            sys.exit(f'{path}: the {wind}° row reads {read!r} by colour but {printed[0]!r} in the text layer')
+
+
+def pdf_card(path):
+    """The same, from a card the club has published as a PDF.
+
+    The table's rules are drawn, not in the text layer, so the grid comes
+    from the card's own headings: a run belongs to the row whose wind
+    direction is printed nearest it down the left of the table, and to the
+    column whose number is printed over it. Above the table is the card's
+    heading, below it the card's notes, and left of the "Course" column the
+    heading of the wind column — "Wind Direction +/- 10°", the tolerance
+    included.
+    """
+    runs = pdf_runs(path)
+    course = [i for i, r in enumerate(runs) if flat(r[2]) == 'Course']
+    if len(course) != 1:
+        sys.exit(f'{path}: expected one "Course" heading, found {len(course)}')
+    header_top = runs[course[0]][0]
+    numbers = [i for i, r in enumerate(runs)
+               if flat(r[2]) in ('1', '2', '3', '4') and abs(r[0] - header_top) <= 6]
+    columns = sorted(runs[i][1] for i in numbers)
+    if len(columns) != 4:
+        sys.exit(f'{path}: {len(columns)} of the four course columns are numbered over the "Course" heading')
+    gutter = (columns[1] - columns[0]) / 2  # half a column: left of the first is the wind column
+
+    winds = sorted((r[0], flat(r[2])) for r in runs
+                   if r[1] < columns[0] - gutter and WIND_RE.fullmatch(flat(r[2])))
+    if len(winds) < 2:
+        sys.exit(f'{path}: {len(winds)} wind directions down the left of the table, expected the card\'s rows')
+    pitch = min(b[0] - a[0] for a, b in zip(winds, winds[1:]))
+
+    header = set(course) | set(numbers)
+    above, below = [], []
+    letters, cells = {}, {}
+    for i, run in enumerate(runs):
+        top, left, text, _ = run
+        if i in header or not text.strip():
+            continue
+        row = min(winds, key=lambda w: abs(w[0] - top))
+        if abs(row[0] - top) > pitch / 2:
+            (below if top > winds[-1][0] else above).append(run)
+        elif left >= columns[0] - gutter:
+            cells.setdefault((row[1], max(c for c in range(4) if left >= columns[c] - gutter)), []).append(run)
+        elif not WIND_RE.fullmatch(flat(text)):
+            letters.setdefault(row[1], []).append(run)
+
+    for _, wind in winds:
+        if len(letters.get(wind, [])) != 1:
+            sys.exit(f'{path}: the {wind}° row is labelled by {len(letters.get(wind, []))} runs, not one course letter')
+        for column in range(4):
+            if (wind, column) not in cells:
+                sys.exit(f'{path}: the {wind}° row has no course in column {column + 1}')
+
+    rows = [(wind, flat(letters[wind][0][2]),
+             [([(ch, colour) for _, _, text, colour in sorted(cells[(wind, column)], key=lambda r: r[1])
+                for ch in text], '')
+              for column in range(4)])
+            for _, wind in winds]
+    verbatim(path, rows)
+
+    # The card sets the degree sign of "+/- 10o" as a superscript letter o,
+    # which comes out of the text layer as its own run.
+    wind_column = ' '.join(flat(r[2]) for line in lines_of(r for r in above if r[1] < columns[0] - gutter)
+                           for r in line)
+    wind_heading = re.sub(r'(\d) o\b', r'\1°', wind_column)
+
+    headings = [' '.join(flat(r[2]) for r in line)
+                for line in lines_of(r for r in above if r[1] >= columns[0] - gutter)]
+    notes = []
+    for line in lines_of(below):
+        text = flat(''.join(r[2] for r in line))
+        # A note runs on over as many lines as it needs; a new one starts
+        # where the card numbers it.
+        if notes and not re.match(r'\d+[. ]', text):
+            notes[-1] += ' ' + text
+        else:
+            notes.append(text)
+    return headings, wind_heading, rows, notes
+
+
 # --- the card ---------------------------------------------------------------
 
-READERS = {'.docx': docx_card, '.xlsx': xlsx_card}
+READERS = {'.pdf': pdf_card, '.docx': docx_card, '.xlsx': xlsx_card}
 
 
 def build(path):
     reader = READERS.get(path[path.rfind('.'):].lower())
     if not reader:
-        sys.exit(f'{path}: not a Word or Excel course card')
+        sys.exit(f'{path}: not a PDF, Word or Excel course card')
     headings, wind_heading, rows, notes = reader(path)
     if wind_heading is None:
         sys.exit(f'{path}: no header row')

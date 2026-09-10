@@ -111,17 +111,17 @@ and how it was checked.
   [offshore](https://courses.sailscoring.ie/hyc/al-2025/offshore.html),
   [inshore](https://courses.sailscoring.ie/hyc/al-2025/inshore.html);
   [README](data/hyc/al-2025/README.md).
-- `data/hyc/al-2026/` — Howth Yacht Club's Autumn League 2026, as **drafts**:
-  the offshore and inshore cards as they stood on 6 September 2026, sent
-  round for comment before the league. The club writes them in Office rather
-  than as PDFs — one a Word table, one an Excel sheet — so they are read
-  straight out of the OOXML, the colour of each letter giving the side. The
-  marks are the 2025 technical sheet's, there being no 2026 one yet, and
-  there is no start line to quote until the 2026 sailing instructions appear.
-  Each course carries the length the card prints for it, and
-  `tools/check_hyc_al.py` recomputes all 144 of them from the marks and the
-  card's own conventions: 132 agree to a fifth of a mile, and the twelve
-  that do not are recorded, course by course, in the manifest.
+- `data/hyc/al-2026/` — Howth Yacht Club's Autumn League 2026: the offshore
+  and inshore cards the club published on 9 September, 72 courses each,
+  lettered A–T by the wind the row is laid out for. These are real-text
+  PDFs, so the side of every mark is read from the colour the PDF sets for
+  the letter — no OCR — and the letters themselves are read a second time,
+  independently, out of the plain text layer. The marks are the 2025
+  technical sheet's, the club having published no 2026 one; the two start
+  lines, north and north-west of Ireland's Eye, come from SI 6.1 and 6.2.
+  Unlike the drafts these replace, the published cards print no distances,
+  so there is nothing left to cross-check them against — what that cost, and
+  the single course that changed, are in the README.
   [README](data/hyc/al-2026/README.md).
 - `data/hyc/brass-monkey-2025/` — Howth Yacht Club's Brass Monkey Winter
   Series 2025: the eight marks and 16 courses from the course card in the

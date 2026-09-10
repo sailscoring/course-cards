@@ -1,13 +1,29 @@
 {
   "club": "Howth Yacht Club",
-  "event": "Autumn League 2026 (draft cards)",
+  "event": "Autumn League 2026",
+  "documents": [
+    {
+      "output": "source/2026_AL_Sis.md",
+      "source": "source/2026_AL_Sis.pdf",
+      "url": "https://hyc.ie/system/resources/2557/original/2026_AL_Sis.pdf",
+      "title": "Autumn League 2026 sailing instructions",
+      "why": "6.1 and 6.2 A and B place the offshore and inshore starting areas and define their starting lines, which the cards do not; 6.1 C and 6.2 C say the windward mark Z is laid to windward of the line and is the first mark of every fixed-mark course, and that the course card forms part of these instructions."
+    },
+    {
+      "output": "source/Autumn_League_SI_Amendment_01.md",
+      "source": "source/Autumn_League_SI_Amendment_01.pdf",
+      "url": "https://hyc.ie/system/resources/2560/original/Autumn_League_SI_Amendment_01.pdf",
+      "title": "Autumn League 2026, sailing instructions amendment 01",
+      "why": "Replaces 6.2 D, the inshore finishing line, adding the instruction to pass Spit to starboard on the way to it that the inshore card already printed. It leaves 6.2 A and B, which the start line is read from, as they were."
+    }
+  ],
   "artifacts": [
     {
       "output": "marks.json",
       "tool": "extract_marks",
       "source": "../al-2025/source/AL_Course_Card_Technical_Sheet.pdf",
       "url": "https://hyc.ie/system/resources/2331/original/AL_Course_Card_Technical_Sheet.pdf",
-      "why": "The club has not published a 2026 technical sheet; the 2025 one is the current list of the marks these cards name. That its positions are still the ones the cards were laid out on is not assumed — check_hyc_al.py recomputes every printed distance from them.",
+      "why": "The club has not published a 2026 technical sheet, though SI 6.1 C and 6.2 C name one; the 2025 sheet is the current list of the marks these cards letter, and the drafts these cards were published from were laid out on its positions — see the README.",
       "meta": {
         "club": "HYC",
         "name": "Autumn League racing marks, from the 2025 course card technical sheet",
@@ -17,111 +33,54 @@
     {
       "output": "offshore.json",
       "tool": "extract_hyc_al_card",
-      "source": "source/AL_Offshore_Course_Card_2026_draft.docx",
+      "source": "source/Offshore_Autumn_League_Course_Card_-_2026_Final_Draft_4.1_Comp.pdf",
+      "url": "https://hyc.ie/system/resources/2558/original/Offshore_Autumn_League_Course_Card_-_2026_Final_Draft_4.1_Comp.pdf",
       "meta": {
         "club": "HYC",
-        "name": "Autumn League 2026 course card, offshore — 6 September 2026 draft",
-        "source": "source/AL_Offshore_Course_Card_2026_draft.docx",
+        "name": "Autumn League 2026 course card, offshore committee vessel starts",
+        "source": "https://hyc.ie/system/resources/2558/original/Offshore_Autumn_League_Course_Card_-_2026_Final_Draft_4.1_Comp.pdf",
         "marks": "marks.json"
+      },
+      "startLine": {
+        "source": "source/2026_AL_Sis.pdf",
+        "after": "6.1 Offshore Committee Vessel Starts:",
+        "clauses": [
+          "A Starting Area",
+          "B Starting Line"
+        ],
+        "meta": {
+          "id": "SL",
+          "name": "Start line",
+          "source": "HYC Autumn League 2026 sailing instructions 6.1 A and B"
+        }
       }
     },
     {
       "output": "inshore.json",
       "tool": "extract_hyc_al_card",
-      "source": "source/AL_Inshore_Course_Card_2026_draft.xlsx",
+      "source": "source/Inshore_Autumn_League_Course_Card_-_2026_Final_Draft_4.1_Comp.pdf",
+      "url": "https://hyc.ie/system/resources/2559/original/Inshore_Autumn_League_Course_Card_-_2026_Final_Draft_4.1_Comp.pdf",
       "meta": {
         "club": "HYC",
-        "name": "Autumn League 2026 course card, inshore — 6 September 2026 draft",
-        "source": "source/AL_Inshore_Course_Card_2026_draft.xlsx",
+        "name": "Autumn League 2026 course card, inshore committee vessel starts",
+        "source": "https://hyc.ie/system/resources/2559/original/Inshore_Autumn_League_Course_Card_-_2026_Final_Draft_4.1_Comp.pdf",
         "marks": "marks.json"
+      },
+      "startLine": {
+        "source": "source/2026_AL_Sis.pdf",
+        "after": "6.2 Inshore Committee Vessel Starts:",
+        "clauses": [
+          "A Starting Area",
+          "B Starting Line"
+        ],
+        "meta": {
+          "id": "SL",
+          "name": "Start line",
+          "source": "HYC Autumn League 2026 sailing instructions 6.2 A and B"
+        }
       }
     }
   ],
-  "checks": {
-    "tool": "check_hyc_al",
-    "items": [
-      {
-        "check": "distances",
-        "card": "offshore.json",
-        "marks": "marks.json",
-        "toleranceNm": 0.2,
-        "model": {
-          "firstBeatNm": 0.67,
-          "secondLegNm": 0.4,
-          "upwindFactor": 1.4,
-          "upwindWindowDeg": 45,
-          "finishVia": "Q",
-          "finishRunNm": 0.36
-        },
-        "expected": [
-          {
-            "course": "D4",
-            "note": "The cell reads Z P A I <space> E G, with a stray non-breaking space where the deleted text of an edit would be; 0.58 NM of course is missing against the printed 11.9."
-          },
-          {
-            "course": "G2",
-            "note": "Printed 7.1 for Z O U O H G, 1.33 NM short, and only 0.2 more than G1's Z O U G. Z O H O H G would give 7.07."
-          },
-          {
-            "course": "H4",
-            "note": "Printed 11.5 for Z A E U K H G, 0.63 NM short. Ending at K rather than G would give 11.49."
-          },
-          {
-            "course": "N2",
-            "note": "Printed 9.1 for Z E O I G, 1.81 NM long; no single change of mark accounts for it. The figure fits the row's progression, so the sequence looks short rather than the distance wrong."
-          }
-        ]
-      },
-      {
-        "check": "distances",
-        "card": "inshore.json",
-        "marks": "marks.json",
-        "toleranceNm": 0.15,
-        "model": {
-          "firstBeatNm": 0.5,
-          "secondLegNm": 0.3,
-          "upwindFactor": 1.5,
-          "upwindWindowDeg": 45,
-          "finishVia": "S",
-          "finishRunNm": 0.2
-        },
-        "expected": [
-          {
-            "course": "B2",
-            "note": "Printed 5.7 for Z W C U C, 0.78 NM short."
-          },
-          {
-            "course": "E1",
-            "note": "The whole 080° row is 0.33 NM short, which is exactly the 50% not added to its last leg, C to I: 082° in a 080° wind is as upwind as a leg gets."
-          },
-          {
-            "course": "E2",
-            "note": "As E1: the 080° row's C–I leg is not lengthened for beating."
-          },
-          {
-            "course": "E3",
-            "note": "As E1: the 080° row's C–I leg is not lengthened for beating."
-          },
-          {
-            "course": "E4",
-            "note": "As E1: the 080° row's C–I leg is not lengthened for beating."
-          },
-          {
-            "course": "G3",
-            "note": "Printed 9.5 for Z V W D W D V C; F3 prints 9.68 for the same course, and nothing in the 100° and 120° rows makes a leg of it upwind in one and not the other."
-          },
-          {
-            "course": "K3",
-            "note": "Printed 9.2 for Z V P W P W V U, 0.34 NM short."
-          },
-          {
-            "course": "P4",
-            "note": "Printed 9.6 for Z I D W C I W C I W C, 0.6 NM short, and only 0.5 more than P3 for two more marks."
-          }
-        ]
-      }
-    ]
-  },
   "map": {
     "background": "map/background.png",
     "marks": "marks.json",
