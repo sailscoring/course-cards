@@ -4,7 +4,18 @@
  * and consumers get plain typed objects.
  */
 
-import { FORMAT_VERSION, type CourseCardFile, type Mark, type MarksFile, type Note, type Position, type Side, type StartLine } from './types.js';
+import {
+  FORMAT_VERSION,
+  type CourseCardFile,
+  type CourseMark,
+  type Finish,
+  type Mark,
+  type MarksFile,
+  type Note,
+  type Position,
+  type Side,
+  type StartLine,
+} from './types.js';
 
 export class FormatError extends Error {}
 
@@ -80,6 +91,26 @@ export function parseMarksFile(data: unknown): MarksFile {
   };
 }
 
+/** A sequence of course marks: a course's own, or the run in the card's
+ *  finish names. */
+function checkCourseMarks(value: unknown, path: string): CourseMark[] {
+  if (!Array.isArray(value)) fail(path, 'expected an array');
+  return value.map((raw, j) => {
+    const markPath = `${path}[${j}]`;
+    if (typeof raw !== 'object' || raw === null) fail(markPath, 'expected an object');
+    const cm = raw as Record<string, unknown>;
+    if (typeof cm.mark !== 'string' || !cm.mark) fail(`${markPath}.mark`, 'expected a mark id');
+    if (cm.side != null && cm.side !== 'port' && cm.side !== 'starboard') {
+      fail(`${markPath}.side`, 'expected "port" or "starboard"');
+    }
+    return {
+      mark: cm.mark,
+      ...(cm.side != null ? { side: cm.side as Side } : {}),
+      ...(cm.passing === true ? { passing: true } : {}),
+    };
+  });
+}
+
 export function parseCourseCardFile(data: unknown): CourseCardFile {
   if (typeof data !== 'object' || data === null) fail('card', 'expected an object');
   const obj = data as Record<string, unknown>;
@@ -91,6 +122,15 @@ export function parseCourseCardFile(data: unknown): CourseCardFile {
   if (obj.startLine != null) {
     const raw = obj.startLine as Record<string, unknown>;
     startLine = { startLine: { ...checkMark(raw, 'card.startLine'), ...optionalString(raw, 'source') } };
+  }
+
+  // The finish is the same thing at the other end, plus the marks the run in
+  // to it passes.
+  let finish: { finish?: Finish } = {};
+  if (obj.finish != null) {
+    const raw = obj.finish as Record<string, unknown>;
+    const via = raw.via == null ? {} : { via: checkCourseMarks(raw.via, 'card.finish.via') };
+    finish = { finish: { ...checkMark(raw, 'card.finish'), ...optionalString(raw, 'source'), ...via } };
   }
 
   const ids = new Set<string>();
@@ -111,20 +151,7 @@ export function parseCourseCardFile(data: unknown): CourseCardFile {
       fail(`${path}.windDirectionDeg`, 'expected a direction in degrees, 0 up to 360');
     }
     if (!Array.isArray(c.marks) || c.marks.length === 0) fail(`${path}.marks`, 'expected marks');
-    const marks = c.marks.map((rawMark, j) => {
-      const markPath = `${path}.marks[${j}]`;
-      if (typeof rawMark !== 'object' || rawMark === null) fail(markPath, 'expected an object');
-      const cm = rawMark as Record<string, unknown>;
-      if (typeof cm.mark !== 'string' || !cm.mark) fail(`${markPath}.mark`, 'expected a mark id');
-      if (cm.side != null && cm.side !== 'port' && cm.side !== 'starboard') {
-        fail(`${markPath}.side`, 'expected "port" or "starboard"');
-      }
-      return {
-        mark: cm.mark,
-        ...(cm.side != null ? { side: cm.side as Side } : {}),
-        ...(cm.passing === true ? { passing: true } : {}),
-      };
-    });
+    const marks = checkCourseMarks(c.marks, `${path}.marks`);
     return {
       id: c.id,
       ...(c.windDirectionDeg != null ? { windDirectionDeg: c.windDirectionDeg as number } : {}),
@@ -140,6 +167,7 @@ export function parseCourseCardFile(data: unknown): CourseCardFile {
     ...optionalString(obj, 'source'),
     ...optionalString(obj, 'marks'),
     ...startLine,
+    ...finish,
     ...optionalNotes(obj, 'card'),
     courses,
   };

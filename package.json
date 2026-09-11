@@ -1,6 +1,6 @@
 {
   "name": "@sailscoring/course-cards",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "Sailing marks, course cards, and leg geometry: a versioned data format and a dependency-free library",
   "license": "MIT",
   "homepage": "https://courses.sailscoring.ie",

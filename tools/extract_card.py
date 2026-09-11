@@ -326,17 +326,27 @@ def cmd_build(args):
 
 FORMAT_VERSION = 2
 
-def course_card_file(meta, start, notes, courses):
+def course_card_file(meta, start, notes, courses, finish=None):
     """A card as the format has it. Its `startLine` — read from the club's
     sailing instructions by tools/extract_start_line.py — heads the file, and
     every course begins there, so the first leg runs from the start line to
-    the first mark the card names."""
+    the first mark the card names.
+
+    A card whose courses stop at the last rounding mark, the run home being
+    in the sailing instructions rather than printed, carries that ending as
+    its `finish` (tools/extract_finish.py): the marks its `via` passes and
+    then the line itself close every course, so the last leg runs to the
+    finishing line and not to whichever mark the club stopped printing at."""
     if start:
         courses = [{**c, 'marks': [{'mark': start['id']}] + c['marks']} for c in courses]
+    if finish:
+        tail = [dict(v) for v in finish.get('via', [])] + [{'mark': finish['id']}]
+        courses = [{**c, 'marks': c['marks'] + [dict(m) for m in tail]} for c in courses]
     return {
         'formatVersion': FORMAT_VERSION,
         **meta,
         **({'startLine': start} if start else {}),
+        **({'finish': finish} if finish else {}),
         **({'notes': notes} if notes else {}),
         'courses': courses,
     }

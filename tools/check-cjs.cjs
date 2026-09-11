@@ -32,6 +32,7 @@ const expected = [
   'parseCourseCardFile',
   'parseMarksFile',
   'parsePosition',
+  'printedMarks',
   'renderCourseSvg',
   'totalDistanceNm',
 ];

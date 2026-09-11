@@ -21,8 +21,22 @@ describe('the HYC Autumn League 2026 marks file', () => {
     const al2025 = parseMarksFile(
       JSON.parse(readFileSync(join(__dirname, '..', 'data', 'hyc', 'al-2025', 'marks.json'), 'utf-8')),
     );
-    expect(marks.marks).toEqual(al2025.marks);
+    // Every mark of the sheet, unchanged and in the sheet's order.
+    expect(marks.marks.slice(0, al2025.marks.length)).toEqual(al2025.marks);
     expect(marks.source).toBe(al2025.source);
+  });
+
+  it('adds the one mark SI 6.1 D names that the sheet does not letter', () => {
+    // The run in to the offshore finish passes Rowan Rocks — Q on the sheet —
+    // and the Howth Mark, which is on no sheet of the club's.
+    expect(marks.marks.at(-1)).toEqual({
+      id: 'HM',
+      name: 'Howth',
+      shape: 'iala',
+      color: 'green',
+      position: { lat: 53.395451, lng: -6.059883 },
+    });
+    expect(marks.marks.filter((m) => m.id === 'HM')).toHaveLength(1);
   });
 });
 
@@ -121,10 +135,53 @@ describe.each(Object.entries(cards))('the HYC Autumn League 2026 %s card', (name
   });
 });
 
-describe('the HYC Autumn League 2026 offshore card', () => {
-  it('ends every course at K or G, as SI 6.1 D says the run in to the finish begins', () => {
-    for (const course of cards.offshore.courses) {
-      expect(['K', 'G'], course.id).toContain(course.marks.at(-1)!.mark);
+describe.each(Object.entries(cards))('the ending of the HYC Autumn League 2026 %s card', (name, card) => {
+  const offshore = name === 'offshore';
+
+  it('carries the finishing line the sailing instructions define, which the card does not print', () => {
+    expect(card.finish!.id).toBe(offshore ? 'FH' : 'F');
+    expect(card.finish!.name).toBe('Finish line');
+    expect(card.finish!.source).toBe(
+      offshore
+        ? 'HYC Autumn League 2026 sailing instructions 6.1 D'
+        : 'HYC Autumn League 2026 sailing instructions 6.2 D, as amendment 01 replaces it',
+    );
+    // The offshore line has a fixed end ashore — a transit on the front of
+    // the Finisher's Hut, which SI 6.1 D puts 100 m east of the old
+    // lighthouse. The inshore line is a buoy and a committee vessel laid on
+    // the day, so it has a placement and no position, like SL and Z.
+    if (offshore) {
+      expect(card.finish!.position).toEqual({ lat: 53.39334, lng: -6.06529 });
+      expect(card.finish!.placement).toContain('approximately 100m east of the old lighthouse');
+    } else {
+      expect(card.finish!.position).toBeUndefined();
+      expect(card.finish!.placement).toContain('in the vicinity of the Spit Mark (S) and the South Rowan Buoy (R)');
+    }
+  });
+
+  it('runs every course in to that line, passing the marks the instructions name to starboard', () => {
+    // SI 6.1 D: "passing the Rowan Rocks Buoy and the Howth Mark (both IALA
+    // marks) to starboard". SI 6.2 D, as amended: "passing the Spit mark to
+    // starboard", which the inshore card's own note 2 prints too.
+    const via = offshore
+      ? [
+          { mark: 'Q', side: 'starboard', passing: true },
+          { mark: 'HM', side: 'starboard', passing: true },
+        ]
+      : [{ mark: 'S', side: 'starboard', passing: true }];
+    expect(card.finish!.via).toEqual(via);
+    for (const course of card.courses) {
+      // The last mark the club prints is where SI 6.1 D says the run in
+      // begins: "either K or G" offshore.
+      const lastPrinted = printed(card, course.id).at(-1)!;
+      if (offshore) expect(['K', 'G'], course.id).toContain(lastPrinted.mark);
+      expect(course.marks.slice(-via.length - 1), course.id).toEqual([...via, { mark: card.finish!.id }]);
+    }
+  });
+
+  it('is not something the card prints: the printed course stops where it always did', () => {
+    for (const course of card.courses) {
+      expect(printed(card, course.id).length, course.id).toBe(course.marks.length - (offshore ? 4 : 3));
     }
   });
 });

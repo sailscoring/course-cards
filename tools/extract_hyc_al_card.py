@@ -380,13 +380,15 @@ def main():
     ap.add_argument('--meta', help='JSON file whose keys (club, name, source, marks…) head the output')
     ap.add_argument('--notes', help='JSON list of {title, text} notes to carry after the card\'s own')
     ap.add_argument('--start-line', help="JSON for the card's start line, from tools/extract_start_line.py")
+    ap.add_argument('--finish', help="JSON for the card's finish, from tools/extract_finish.py")
     args = ap.parse_args()
     meta = json.load(open(args.meta)) if args.meta else {}
     courses, notes = build(args.card)
     if args.notes:
         notes += json.load(open(args.notes))
     start = json.load(open(args.start_line)) if args.start_line else None
-    emit(course_card_file(meta, start, notes, courses), sys.stdout)
+    finish = json.load(open(args.finish)) if args.finish else None
+    emit(course_card_file(meta, start, notes, courses, finish), sys.stdout)
 
 
 if __name__ == '__main__':

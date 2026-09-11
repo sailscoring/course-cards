@@ -11,8 +11,8 @@
  * library, which it consumes like any other client.
  */
 
-import { bearingDeg, distanceNm, formatPosition } from '../src/index';
-import type { Course, CourseCardFile, CourseMark, Mark, MarksFile, Note, Position, StartLine } from '../src/index';
+import { bearingDeg, distanceNm, formatPosition, printedMarks } from '../src/index';
+import type { Course, CourseCardFile, CourseMark, Finish, Mark, MarksFile, Note, Position, StartLine } from '../src/index';
 
 export interface RenderOptions {
   /** Page title; defaults to the card's name. */
@@ -112,10 +112,12 @@ function courseKey(course: Course): string {
 }
 
 /** The course's marks as printed, wrapped in a label around the radio button
- *  that picks the course for the chart. */
-function courseCell(course: Course, startLine?: StartLine): string {
-  const seq = course.marks
-    .filter((m) => m.mark !== startLine?.id)
+ *  that picks the course for the chart. The start line at the head, and an
+ *  ending the sailing instructions add rather than the card, are left out:
+ *  this is the cell as the club sets it, and the ending is given once under
+ *  the table. */
+function courseCell(card: CourseCardFile, course: Course): string {
+  const seq = printedMarks(card, course.id)
     .map((m) => {
       const classes = [m.side === 'starboard' ? 'stbd' : m.side === 'port' ? 'port' : '', m.passing ? 'passing' : '']
         .filter(Boolean)
@@ -143,7 +145,7 @@ function courseTable(card: CourseCardFile): string {
     for (const letter of letters) {
       html += `<table class="courses section"><thead><tr><th class="row">${letter}</th><th></th></tr></thead><tbody>`;
       for (const course of card.courses.filter((c) => c.id[0] === letter)) {
-        html += `<tr><th class="row">${esc(course.id.slice(1))}</th><td title="Course ${esc(course.id)}">${courseCell(course, card.startLine)}</td></tr>`;
+        html += `<tr><th class="row">${esc(course.id.slice(1))}</th><td title="Course ${esc(course.id)}">${courseCell(card, course)}</td></tr>`;
       }
       html += '</tbody></table>';
     }
@@ -158,7 +160,7 @@ function courseTable(card: CourseCardFile): string {
       html += `<tr><th class="row">${row}</th>`;
       for (const col of cols) {
         const course = byId.get(row + col);
-        html += `<td title="Course ${row}${col}">${course ? courseCell(course, card.startLine) : ''}</td>`;
+        html += `<td title="Course ${row}${col}">${course ? courseCell(card, course) : ''}</td>`;
       }
       html += '</tr>';
     }
@@ -166,7 +168,7 @@ function courseTable(card: CourseCardFile): string {
   } else {
     html += '<table class="courses"><thead><tr><th>Course</th><th>Marks</th></tr></thead><tbody>';
     for (const course of card.courses) {
-      html += `<tr><th class="row">${esc(course.id)}</th><td>${courseCell(course, card.startLine)}</td></tr>`;
+      html += `<tr><th class="row">${esc(course.id)}</th><td>${courseCell(card, course)}</td></tr>`;
     }
     html += '</tbody></table>';
   }
@@ -178,7 +180,11 @@ function courseTable(card: CourseCardFile): string {
         'and for the legs to and from marks the card cannot place — not the sum of the legs below. '
       : '') +
     'Select a course to draw it on the chart: its legs are numbered in sailing order, a leg sailed again is drawn beside ' +
-    'the first, and a ring shows the side each mark is left on.</p>';
+    'the first, and a ring shows the side each mark is left on.' +
+    (card.finish
+      ? ` Every course then runs on to the finish — ${endingText(card.finish)} — which the club's sailing instructions add and the card does not print.`
+      : '') +
+    '</p>';
   return html;
 }
 
@@ -210,6 +216,27 @@ function marksTable(marks: MarksFile): string {
       `<td>${m.position ? formatPosition(m.position) : `<em>${esc(m.placement ?? '')}</em>`}</td></tr>`;
   }
   return html + '</tbody></table>';
+}
+
+/** The ending as a sequence: the marks the run in passes, then the line. */
+function endingText(finish: Finish): string {
+  return [...(finish.via ?? []).map((m) => m.mark), finish.id].join(' → ');
+}
+
+/** The card's finish as the club's sailing instructions define it, for a
+ *  card that stops at the last mark it prints and leaves the run home to
+ *  them. It closes every course — the marks of `via`, then the line — so the
+ *  leg table's last row ends at it; like the start line it is not one of the
+ *  club's marks and is not in their table. */
+function finishSection(finish: Finish): string {
+  const where = finish.position ? formatPosition(finish.position) : `<em>${esc(finish.placement ?? '')}</em>`;
+  return (
+    `<h2>Finish</h2><table><tbody><tr><th>${esc(finish.id)}</th><td>${esc(finish.name ?? '')}</td><td>${where}</td></tr></tbody></table>` +
+    `<p class="meta">Every course on this card continues past its last printed mark: ${esc(endingText(finish))}. The card prints none of it.` +
+    (finish.source ? ` ${esc(finish.source)}.` : '') +
+    '</p>' +
+    (finish.position && finish.placement ? `<p class="meta">${esc(finish.placement)}</p>` : '')
+  );
 }
 
 /** The card's start line as the club's sailing instructions define it: the
@@ -530,12 +557,15 @@ export function renderCardHtml(card: CourseCardFile, marks: MarksFile, options: 
   const sources = [card.source, marks.source].filter((s): s is string => !!s);
   const meta = [card.club, ...sources.map((s) => `<a href="${esc(s)}">${esc(s)}</a>`)].filter(Boolean).join(' · ');
   const allNotes = card.notes ?? [];
-  const withStart = card.startLine ? [...marks.marks.filter((m) => m.id !== card.startLine!.id), card.startLine] : marks.marks;
-  const byId = new Map(withStart.map((m) => [m.id, m]));
+  const ends = [card.startLine, card.finish].filter((m): m is StartLine => !!m);
+  const withEnds = ends.length
+    ? [...marks.marks.filter((m) => !ends.some((e) => e.id === m.id)), ...ends]
+    : marks.marks;
+  const byId = new Map(withEnds.map((m) => [m.id, m]));
   const area = options.area;
   const onChart = area
-    ? withStart.filter((m) => area.keep?.includes(m.id) || card.courses.some((c) => c.marks.some((cm) => cm.mark === m.id)))
-    : withStart;
+    ? withEnds.filter((m) => area.keep?.includes(m.id) || card.courses.some((c) => c.marks.some((cm) => cm.mark === m.id)))
+    : withEnds;
   const frame = area
     ? {
         points: [...onChart.flatMap((m) => (m.position ? [m.position] : [])), ...(area.points ?? [])],
@@ -558,6 +588,7 @@ export function renderCardHtml(card: CourseCardFile, marks: MarksFile, options: 
       : '') +
     `</div>\n` +
     (card.startLine ? startLineSection(card.startLine) + '\n' : '') +
+    (card.finish ? finishSection(card.finish) + '\n' : '') +
     `<h2>Marks</h2>${marksTable(marks)}\n` +
     `<h2>Bearings between marks (° true)</h2>${pairTable(marks.marks, (a, b) => String(Math.round(bearingDeg(a, b)) % 360).padStart(3, '0'))}\n` +
     `<h2>Distances between marks (NM)</h2>${pairTable(marks.marks, (a, b) => distanceNm(a, b).toFixed(2))}\n` +

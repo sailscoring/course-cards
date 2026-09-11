@@ -82,6 +82,41 @@ The card a club prints: the courses, each an ordered sequence of marks.
 ```
 
 - `marks` — the marks file the card's mark ids refer to, by name.
+- `finish` — where the race ends, for a card that does not print it. Some
+  clubs stop a course at its last rounding mark and put the run home in the
+  **sailing instructions**: HYC's 2026 Autumn League cards end every course
+  at K or G offshore, and SI 6.1 D sends them on "passing the Rowan Rocks
+  Buoy and the Howth Mark (both IALA marks) to starboard" to the line at the
+  East Pier. That ending is the same for every course on the card, so it is
+  read from the instructions and carried here:
+
+  ```json
+  "finish": {
+    "id": "FH",
+    "name": "Finish line",
+    "position": { "lat": 53.39334, "lng": -6.06529 },
+    "placement": "For all Round the Cans Races (unless the course is shortened) the finish will be on the HYC finish line in Howth Sound…",
+    "source": "HYC Autumn League 2026 sailing instructions 6.1 D",
+    "via": [
+      { "mark": "Q", "side": "starboard", "passing": true },
+      { "mark": "HM", "side": "starboard", "passing": true }
+    ]
+  }
+  ```
+
+  It is a mark in every respect, like `startLine`, and its id resolves ahead
+  of the marks file the same way; `via` is the marks the run in passes on the
+  way to it. **Every course's `marks` already ends with `via` and then the
+  line**, so a reader that walks the sequence needs to know nothing about
+  this field: it is here to say which of those entries the card does not
+  print, and which instruction is the authority for them. A card that prints
+  its own ending — HYC's 2025 cards, whose courses end at F — carries it in
+  the sequences and no `finish`.
+
+  A finishing line laid on the day has a `placement` and no `position`, and a
+  consumer is asked for it as it is asked for the start line; one with a
+  fixed end, like the transit on the front of HYC's Finisher's Hut, can carry
+  a position.
 - `startLine` — where the race starts. A card names the marks of a course
   but not the line it begins at: that is in the club's **sailing
   instructions**, so it is read from them and carried here. It is a mark in
@@ -123,9 +158,14 @@ The card a club prints: the courses, each an ordered sequence of marks.
   `data/` prints one at present: HYC's 2026 drafts did and the cards the
   club went on to publish do not.
 - `courses[].marks` — every mark of the course in sailing order, beginning
-  with the card's start line, so the first leg runs from the line to the
-  first mark the club prints. Marks laid per race are in the sequence like
-  any other: HYC's courses all read `SL Z … F`. `side` is the side the mark
+  with the card's start line and ending at the line it finishes at, so the
+  first leg runs from the start line to the first mark the club prints and
+  the last runs to the finish. Marks laid per race are in the sequence like
+  any other: HYC's courses all read `SL Z … F`. Where the club prints neither
+  end, both come from the sailing instructions — the head from `startLine`,
+  the tail from `finish` — and are in the sequence all the same, because a
+  course that stops at the last mark printed is short by the run home, and
+  nothing in a bare sequence says so. `side` is the side the mark
   is left on — `"port"` or `"starboard"` — and absent when the card doesn't
   say, as it doesn't for a start line. `passing: true` marks a passing (not
   rounding) mark, boxed on HYC's cards.
@@ -162,7 +202,9 @@ race officer for.
 ## Versioning
 
 `formatVersion` bumps when a change would make an older reader mis-read a
-file — new optional fields ride along without a bump.
+file — new optional fields ride along without a bump. `finish` is such a
+field: the ending it describes is in every course's `marks` too, so a reader
+that has never heard of it still sails the whole course.
 
 - **Version 1** — the initial format. Courses began at the first mark the
   card printed, and the start line was supplied per race, outside the files.

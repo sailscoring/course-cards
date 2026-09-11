@@ -4,6 +4,7 @@ export type {
   CourseCardFile,
   CourseLeg,
   CourseMark,
+  Finish,
   Mark,
   MarksFile,
   Note,
@@ -16,7 +17,7 @@ export type {
 export { METRES_PER_CABLE, METRES_PER_NM, bearingDeg, destination, distanceNm } from './geo.js';
 export { formatPosition, parsePosition } from './position.js';
 export type { FormatPositionOptions } from './position.js';
-export { CourseError, courseLegs, courseMarks, legsFromWaypoints, totalDistanceNm } from './legs.js';
+export { CourseError, courseLegs, courseMarks, legsFromWaypoints, printedMarks, totalDistanceNm } from './legs.js';
 export type { ResolvedCourseMark } from './legs.js';
 export { FormatError, parseCourseCardFile, parseMarksFile } from './parse.js';
 export { renderCourseSvg } from './render.js';

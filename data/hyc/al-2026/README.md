@@ -3,7 +3,7 @@
 The offshore and inshore course cards for Howth Yacht Club's Autumn League
 2026, 12 September to 17 October, as the club published them on 9 September —
 "HYC COURSE CARD - 2026 Rev 0 (08/09/2026)" — with the marks they letter and
-the start line the sailing instructions define.
+the start line and finish the sailing instructions define.
 
 The club's filenames still say "Final Draft 4.1", but these are the cards
 linked from the club's own event page as "Offshore Course Card" and "Inshore
@@ -13,9 +13,9 @@ and Excel, that these replace; what changed is in "Against the drafts" below.
 
 | File | Source | Made by |
 |---|---|---|
-| `marks.json` | `../al-2025/source/AL_Course_Card_Technical_Sheet.pdf` | `tools/extract_marks.py` |
-| `offshore.json` | `source/Offshore_Autumn_League_Course_Card_-_2026_Final_Draft_4.1_Comp.pdf`, `source/2026_AL_Sis.pdf` | `tools/extract_hyc_al_card.py`, `tools/extract_start_line.py` |
-| `inshore.json` | `source/Inshore_Autumn_League_Course_Card_-_2026_Final_Draft_4.1_Comp.pdf`, `source/2026_AL_Sis.pdf` | `tools/extract_hyc_al_card.py`, `tools/extract_start_line.py` |
+| `marks.json` | `../al-2025/source/AL_Course_Card_Technical_Sheet.pdf`, `source/2026_AL_Sis.pdf` | `tools/extract_marks.py` |
+| `offshore.json` | `source/Offshore_Autumn_League_Course_Card_-_2026_Final_Draft_4.1_Comp.pdf`, `source/2026_AL_Sis.pdf` | `tools/extract_hyc_al_card.py`, `tools/extract_start_line.py`, `tools/extract_finish.py` |
+| `inshore.json` | `source/Inshore_Autumn_League_Course_Card_-_2026_Final_Draft_4.1_Comp.pdf`, `source/2026_AL_Sis.pdf`, `source/Autumn_League_SI_Amendment_01.pdf` | `tools/extract_hyc_al_card.py`, `tools/extract_start_line.py`, `tools/extract_finish.py` |
 | `source/*.md` | the sailing instructions beside them | `tools/pdf_markdown.py` |
 | `offshore.html`, `inshore.html`, `map/marks.svg` | the JSON above, `map/background.png` | `tools/render-cards.ts` |
 | `map/background.png`, `.json` | OpenStreetMap + OpenSeaMap tiles | `tools/fetch_map.py` |
@@ -65,12 +65,94 @@ SI 6.1 C and 6.2 C say as much: Z is "laid approximately to windward of the
 starting line" and "is the first mark on all fixed mark courses" — which the
 cards bear out, every one of the 144 beginning at Z.
 
+**The finish.** The cards print no course past its last rounding mark, and
+the run home is the same for all 144, so it is in the sailing instructions
+instead: SI 6.1 D offshore, and 6.2 D inshore as amendment 01 replaces it.
+Each card carries it as its `finish` — the line as a mark, the instruction
+quoted verbatim into its `placement` by `extract_finish.py`, and the marks
+the run in passes in `via` — and every course ends with those marks and then
+the line. See "The run home" below.
+
 **Marks.** SI 6.1 C and 6.2 C name a Technical Sheet, but the club has not
 published a 2026 one, so the marks are the 2025 sheet's, read from it in
 place by `extract_marks.py`; the manifest points at the file in
 `../al-2025/source/`. Every letter the two cards use is on it, and that its
 positions are still the ones the cards are laid out on was established while
 the drafts were the source — see below.
+
+One mark is not the sheet's. SI 6.1 D sends the offshore fleet home "passing
+the Rowan Rocks Buoy and the Howth Mark (both IALA marks) to starboard":
+Rowan Rocks is the sheet's Q, and the Howth Mark it does not letter. It is
+here as **HM**, declared in the manifest with the instruction that names it,
+at the position OpenStreetMap holds for the Commissioners of Irish Lights
+buoy of that name — node 1592333181, `seamark:reference` CIL00910,
+© OpenStreetMap contributors, the same source as the chart imagery. Nothing
+else is added: `extract_marks.py` refuses a declared mark whose id is on the
+sheet, so the sheet stays the source for its own.
+
+## The run home
+
+The two cards print courses that stop at a rounding mark, and the sailing
+instructions carry every one of them on from there to the finishing line.
+Offshore, SI 6.1 D: "After passing the last mark on the displayed course
+(either K or G), boats shall sail to the finish line passing the Rowan Rocks
+Buoy and the Howth Mark (both IALA marks) to starboard. The finish line is
+between a vertical line on the front of the Finisher's Hut and a Black cherry
+bouy." Inshore, SI 6.2 D as amendment 01 replaces it: "From the last mark on
+the displayed course, boats shall sail to the finish line passing the Spit
+mark to starboard", the line being "between a spherical orange Mark F and the
+main mast (or red/white pole) on the adjacent Committee Finishing Vessel".
+
+So every course here ends:
+
+| | Run in | Finishing line |
+|---|---|---|
+| Offshore | **Q** then **HM**, both passed to starboard | **FH**, 53° 23.60′ N 006° 03.92′ W |
+| Inshore | **S**, passed to starboard | **F**, laid on the day |
+
+Each card carries that as its `finish`, with the instruction quoted into the
+`placement` and the run in as `via`, and `extract_hyc_al_card.py` appends the
+marks to all 144 courses. The card's own table is unchanged — `printedMarks`
+is the sequence as the club sets it, and the rendered page uses it, so the
+grid still reads `Z U I H G` and the ending is given once beneath it.
+
+**Three ids are new to this data set.** HM is the Howth Mark, above. FH is
+the offshore finishing line, named for the Finisher's Hut because the club
+letters no mark there; F is the inshore one, which is what amendment 01 calls
+it — "a spherical orange Mark F" — and which the 2025 sheet already lists as
+"Finish". A card's `finish` resolves ahead of the marks file, so F here is
+the 2026 instruction's line and not the sheet's 2025 entry, and the two cards
+can finish in different places while sharing one marks file.
+
+**Only the offshore line has a position.** Its shore end is a transit — "a
+vertical line on the front of the Finisher's Hut" — and the SI puts the hut
+"on the East Pier approximately 100m east of the old lighthouse". A hundred
+metres due east of that lighthouse (OpenStreetMap way 377915968, as before)
+is 53° 23.60′ N 006° 03.92′ W — which, by OpenStreetMap's outline of the
+pier, is some twenty-five metres off its edge, so the instruction taken
+literally does land on the pier and no guess is needed at where along it the
+hut stands. The inshore line is a buoy and a
+committee vessel laid per race: it has a `placement` and no position, and a
+consumer is asked for it exactly as it is asked for the start line and for Z.
+
+**What it is worth.** The run home is 1.22 NM from K and 1.74 NM from G — on
+a seven-to-twelve-mile course, a tenth to a fifth of it. A consumer that
+stopped at the last printed mark got a course short by that much with nothing
+saying so, which matters most to a performance-curve score, where elapsed
+time is divided by the course's length.
+
+It is longer than the drafts' arithmetic assumed. The distance column the
+drafts printed was reproduced by taking the last mark to Q and then a flat
+0.36 NM to the line; Q to HM to FH is 0.50 NM. The drafts are superseded and
+nothing here is checked against them, but the difference is the club's
+allowance against the marks' own geometry, and it is the club's allowance
+that was approximate.
+
+Two things the ending is not. It is the **Round the Cans** finish: the same
+instructions give Windward/Leeward races a line "approximately upwind of the
+leeward mark", which is not these cards' courses. And it is the finish
+"unless a race is shortened" — a shortened course is a race-day fact, like
+where the line was laid, and nothing a card can carry.
 
 ## No distances, and what that costs
 
@@ -140,33 +222,27 @@ both fleets and nine that neither card uses, and drawn whole it is a picture
 mostly of water the fleet never sails: Malahide and Talbot pull it three
 miles north, the Howth Sound marks two miles south. The manifest gives each
 card a `chart` block, and the page is framed on the marks its own courses
-name — plus, because a card is not only its courses, what its finishing
-instruction places it near:
+name — which, now that every course runs to the finishing line, includes the
+run home:
 
 | | Framed on | Kept in besides |
 |---|---|---|
-| Inshore | C D H I K O P U V W | **S** and **R** |
-| Offshore | A D E G H I K O P U V | **Q**, and the East Pier |
+| Inshore | C D H I K O P U V W, and **S** on the run in | **R** |
+| Offshore | A D E G H I K O P U V, and **Q HM FH** on the run in | — |
 
-The inshore card's note 2 and SI 6.2 D, as amendment 01 replaces it, put the
-finish "in the vicinity of the Spit Mark (S) and the South Rowan Buoy (R)",
-so both stay on the chart though no course rounds either. Offshore, SI 6.1 D
-sends boats in "passing the Rowan Rocks Buoy and the Howth Mark (both IALA
-marks) to starboard" to a line "between a vertical line on the front of the
-Finisher's Hut and a Black cherry bouy", the hut being "on the East Pier
-approximately 100m east of the old lighthouse". Rowan Rocks is Q and stays
-on the chart; the Howth Mark is not one of the club's lettered marks and is
-not on the 2025 sheet, so it is not drawn.
+Both charts used to be held open over water no course reached, because the
+run in was prose: Q and S were kept in by hand, and the offshore chart by a
+point for the old lighthouse the SI measures the Finisher's Hut from. They
+are marks of every course now, so the frame reaches them of its own accord
+and only one entry is left. The inshore card's note 2 and SI 6.2 D, as
+amendment 01 replaces it, put the finish "in the vicinity of the Spit Mark
+(S) and the South Rowan Buoy (R)": Spit is on the run in, and South Rowan is
+kept in by hand, no course sailing to it.
 
-The hut is not a mark either, and nothing is drawn for it — but the chart is
-held open far enough south to show the East Pier it stands on, by one point
-in the manifest: the old lighthouse the SI measures it from, at 53° 23.60′ N
-006° 04.01′ W, which is OpenStreetMap way 377915968 (`man_made=lighthouse`,
-© OpenStreetMap contributors) — the same source as the chart imagery. The
-hundred metres between it and the hut are well inside the water left around
-the frame. Each entry in the manifest's `chart` block carries its own `why`,
-so nothing is cropped away without the club's own words being the reason it
-could be.
+The inshore finishing line is laid on the day and so is not drawn at all —
+like SL and Z, the chart shows what the card can place. Each entry in the
+manifest's `chart` block carries its own `why`, so nothing is cropped away
+without the club's own words being the reason it could be.
 
 The crop is per data set, not automatic: a card with no `chart` block is
 still drawn on its whole marks file, and only these two cards have one. The
@@ -176,23 +252,24 @@ untouched — they are reference tables for the club's marks, not this card's.
 
 ## Notes on the cards
 
-- **The courses stop before the finish.** Every offshore course ends at G or
-  K — which is what SI 6.1 D says the run in begins from, "the last mark on
-  the displayed course (either K or G)" — and every inshore one at a fixed
-  mark too. The run to the finishing line is in the card's note and in the
-  SI, not in the sequence. The 2025 cards ended each course at F, a mark of
-  the marks file with a `placement` and no position, which is what the format
-  is for; until the finish is a mark here, a consumer of this card gets the
-  course as far as the last rounding mark and no further.
+- **The cards stop before the finish; the courses here do not.** Every
+  offshore course the club prints ends at G or K — which is what SI 6.1 D
+  says the run in begins from, "the last mark on the displayed course (either
+  K or G)" — and every inshore one at a fixed mark too. That ending is the
+  same for all 144 courses, so the club states it once as prose rather than
+  printing it 144 times, and a course read off the card alone is short by the
+  run home with nothing to say so. It is in the sequences here instead; see
+  "The run home".
 - SI amendment 01 replaces 6.2 D, adding to the inshore finishing line the
   instruction to pass Spit to starboard on the way to it — which the inshore
   card already printed in its own note 2. It leaves 6.2 A and B, which the
   start line is read from, as they were.
-- The offshore card uses 12 marks (A D E G H I K O P U V Z) and the inshore
+- The offshore card prints 12 marks (A D E G H I K O P U V Z) and the inshore
   card 11 (C D H I K O P U V W Z). B, F, J, M, Q, R, S, T and X are on the
-  2025 sheet and named by neither — including Q and S, which are on the run
-  in to the offshore and inshore finishes but not printed in any course, and
-  R, which SI 6.2 D names as one end of the inshore finishing area. The two
+  2025 sheet and printed by neither — though Q and S are on the run in the
+  sailing instructions add, and so are marks of every offshore and inshore
+  course; R, which SI 6.2 D names as one end of the inshore finishing area,
+  is on neither. The two
   subsets are not disjoint: ten marks are common to both, and only C and W
   are the inshore card's alone, A, E and G the offshore card's. See "The
   charts" below.

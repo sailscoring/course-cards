@@ -59,6 +59,10 @@ Around that:
 - `courseMarks(card, marks, courseId)` — the course's marks resolved, each
   saying whether the card places it; the ones it does not are what to ask
   the race officer for.
+- `printedMarks(card, courseId)` — the course as the club sets it on the
+  card: the sequence without the start line at its head, and without an
+  ending the sailing instructions add at its tail. What to show a competitor
+  reading the card; `courseMarks` is what to sail.
 - `legsFromWaypoints(waypoints)` — the leg arithmetic on its own, for a
   course built by hand from placed marks with no card behind it.
 - `parsePosition` / `formatPosition` — positions the way sailors write
@@ -85,8 +89,9 @@ after a build, in CI and again on the packed artifact before it is published.
 Each club's PDFs are kept alongside its JSON, and the JSON is **generated
 from them** by the tools in `tools/`. A card's PDF is not the whole story:
 the club's **sailing instructions** are what define the start line every
-course begins at, say which card is used when, and give the conventions the
-card's letters are printed under. Each data set therefore keeps the sailing
+course begins at — and, where a card stops at the last mark it prints, the
+run home from there to the finishing line — say which card is used when, and
+give the conventions the card's letters are printed under. Each data set therefore keeps the sailing
 instructions that bear on its courses in `source/` too — only those; a
 club's amendments are kept when they change something a card depends on and
 left out when they do not, and the manifest records which and why. Every one

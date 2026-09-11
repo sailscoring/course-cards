@@ -63,6 +63,26 @@ export interface StartLine extends Mark {
   source?: string;
 }
 
+/** The ending every course on a card runs to, where the club's sailing
+ *  instructions add one the card itself does not print — HYC's 2026 Autumn
+ *  League cards stop at the last rounding mark and leave the run home to
+ *  SI 6.1 D and 6.2 D. It is the finishing line as a mark, exactly like
+ *  `startLine`: the same fields, a `placement` in the club's words where the
+ *  line is laid on the day, and a `source` saying which instruction defines
+ *  it. `via` is the marks the run in passes on the way to it.
+ *
+ *  Every course's `marks` already ends with `via` and then this line, so a
+ *  reader that walks the sequence needs to know nothing about this field;
+ *  it is here to say which of those entries the card does not print, and
+ *  what the club's authority for them is. A card that prints its own ending
+ *  (HYC's 2025 cards, which end each course at F) carries it in the
+ *  sequences and no `finish`. */
+export interface Finish extends StartLine {
+  /** The marks the run in to the line passes, in sailing order, appended to
+   *  every course ahead of the line itself. */
+  via?: CourseMark[];
+}
+
 /** One course on the card: the marks in sailing order, beginning with the
  *  card's start line. Marks laid per race (the line itself, a windward mark,
  *  a finish) are in the sequence like any other; only their positions are
@@ -102,6 +122,10 @@ export interface CourseCardFile {
   /** The line every course on this card starts at. Its id resolves ahead of
    *  the marks file, so a card may start at a mark the club also lists. */
   startLine?: StartLine;
+  /** The ending the club's sailing instructions add to every course on this
+   *  card, where the card does not print one. Its id resolves ahead of the
+   *  marks file, like the start line's. */
+  finish?: Finish;
   notes?: Note[];
   courses: Course[];
 }

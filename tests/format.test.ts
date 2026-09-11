@@ -144,6 +144,38 @@ describe('the parsers', () => {
     expect(() => parseCourseCardFile({ formatVersion: 2, startLine: { name: 'no id' }, courses: [] })).toThrow(FormatError);
   });
 
+  it('read a card’s finish, and the run in the instructions send it through', () => {
+    const card = parseCourseCardFile({
+      formatVersion: 2,
+      finish: {
+        id: 'FH',
+        name: 'Finish line',
+        position: { lat: 53.39334, lng: -6.06529 },
+        placement: 'On the front of the hut',
+        source: 'SI 6.1 D',
+        via: [{ mark: 'Q', side: 'starboard', passing: true, extra: 1 }],
+        extra: 1,
+      },
+      courses: [{ id: '1', marks: [{ mark: 'A', side: 'port' }, { mark: 'Q', side: 'starboard', passing: true }, { mark: 'FH' }] }],
+    });
+    expect(card.finish).toEqual({
+      id: 'FH',
+      name: 'Finish line',
+      position: { lat: 53.39334, lng: -6.06529 },
+      placement: 'On the front of the hut',
+      source: 'SI 6.1 D',
+      via: [{ mark: 'Q', side: 'starboard', passing: true }],
+    });
+    expect(() => parseCourseCardFile({ formatVersion: 2, finish: { name: 'no id' }, courses: [] })).toThrow(FormatError);
+    expect(() =>
+      parseCourseCardFile({
+        formatVersion: 2,
+        finish: { id: 'F', via: [{ side: 'port' }] },
+        courses: [{ id: '1', marks: [{ mark: 'A' }] }],
+      }),
+    ).toThrow(/expected a mark id/);
+  });
+
   it('carry the length a club prints for a course, and refuse a bad one', () => {
     const card = parseCourseCardFile({
       formatVersion: 2,

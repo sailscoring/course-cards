@@ -71,7 +71,18 @@ def clause(items, key):
             # The key itself is the clause's label — a number, or the letter
             # and name of a lettered section the SI sets as a run-on rather
             # than as a heading — and what it introduces is the instruction.
-            return part[len(key):].strip() or part
+            text = part[len(key):].strip()
+            if text:
+                return text
+            # A label set on a line of its own introduces the paragraph after
+            # it: HYC's amendment 01 sets "Round the Cans Races" that way,
+            # where the sailing instructions it amends run it on.
+            for rest in items[i + 1:]:
+                if rest.startswith('```'):
+                    continue
+                if rest.startswith('## '):
+                    break
+                return rest
     sys.exit(f'no clause "{key}" in the document')
 
 

@@ -75,6 +75,45 @@ def start_line_file(base, artifact):
     return fh.name
 
 
+def finish_file(base, artifact):
+    """The card's finish, read out of the sailing instructions the manifest
+    names — see tools/extract_finish.py. `via` is the marks the run in
+    passes, which the instruction names and the card does not print."""
+    spec = artifact['finish']
+    with tempfile.NamedTemporaryFile('w', suffix='.json', delete=False) as meta:
+        json.dump(spec['meta'], meta)
+    cmd = [sys.executable, os.path.join(TOOLS, 'extract_finish.py'), os.path.join(base, spec['source']),
+           '--clauses', ','.join(spec['clauses']), '--meta', meta.name]
+    if spec.get('after'):
+        cmd += ['--after', spec['after']]
+    if spec.get('columns'):
+        cmd += ['--columns', spec['columns']]
+    via = None
+    if spec.get('via'):
+        with tempfile.NamedTemporaryFile('w', suffix='.json', delete=False) as fh:
+            json.dump(spec['via'], fh)
+            via = fh.name
+        cmd += ['--via', via]
+    try:
+        finish = subprocess.run(cmd, check=True, capture_output=True, text=True).stdout
+    finally:
+        os.unlink(meta.name)
+        if via:
+            os.unlink(via)
+    with tempfile.NamedTemporaryFile('w', suffix='.json', delete=False) as fh:
+        fh.write(finish)
+    return fh.name
+
+
+def added_marks_file(base, artifact):
+    """Marks the manifest declares because the club's sheet does not letter
+    them — see tools/extract_marks.py `--add`. The manifest carries a `why`
+    beside them; the tool is given only the marks."""
+    with tempfile.NamedTemporaryFile('w', suffix='.json', delete=False) as fh:
+        json.dump(artifact['addMarks']['marks'], fh)
+    return fh.name
+
+
 def document(base, spec):
     """A source document rendered as Markdown — see tools/pdf_markdown.py."""
     cmd = [sys.executable, os.path.join(TOOLS, 'pdf_markdown.py'), os.path.join(base, spec['source'])]
@@ -90,6 +129,8 @@ def extract(base, artifact, meta_path):
     source = os.path.join(base, artifact['source'])
     if tool == 'extract_marks':
         cmd = [sys.executable, os.path.join(TOOLS, 'extract_marks.py'), source, '--meta', meta_path]
+        if artifact.get('addMarks'):
+            cmd += ['--add', added_marks_file(base, artifact)]
     elif tool == 'extract_dbsc_marks':
         cmd = [sys.executable, os.path.join(TOOLS, 'extract_dbsc_marks.py'), source, '--meta', meta_path]
         if artifact.get('supplement'):
@@ -121,6 +162,8 @@ def extract(base, artifact, meta_path):
         cmd += ['--notes', notes_file(base, artifact)]
     if artifact.get('startLine'):
         cmd += ['--start-line', start_line_file(base, artifact)]
+    if artifact.get('finish'):
+        cmd += ['--finish', finish_file(base, artifact)]
     return subprocess.run(cmd, check=True, capture_output=True, text=True).stdout
 
 

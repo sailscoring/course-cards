@@ -10,6 +10,10 @@ baseline), so the JSON is a faithful, repeatable reading of the PDF.
 Marks whose position column holds prose rather than coordinates ("Upwind of
 Start Line") are emitted with a `placement` note and no `position`: they are
 laid per race and the caller of the leg library supplies where.
+
+`--add <marks.json>` appends marks the club's sailing instructions name and
+its sheet does not letter, declared in the data set's manifest; an id the
+sheet already lists is refused, so the sheet stays the source for its own.
 """
 
 import argparse
@@ -110,16 +114,36 @@ def parse_table(ws):
     return marks
 
 
+def added(path, marks):
+    """Marks the club's sailing instructions send boats round but its
+    technical sheet does not letter — HYC's Howth Mark, on the run in to the
+    offshore finish. They are declared in the data set's manifest, with the
+    instruction that names them and the source of the position, because
+    there is no table of the club's to read them from; a mark the sheet does
+    list is taken from the sheet."""
+    extra = json.load(open(path))
+    if not isinstance(extra, list) or not all(isinstance(m, dict) and m.get('id') for m in extra):
+        sys.exit(f'{path}: expected a list of marks, each with an id')
+    ids = {m['id'] for m in marks}
+    for m in extra:
+        if m['id'] in ids:
+            sys.exit(f'{m["id"]} is on the sheet; take it from there')
+    return extra
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('pdf')
     ap.add_argument('--meta', help='JSON file whose keys (club, name, source…) head the output')
+    ap.add_argument('--add', help='JSON list of marks to append that the sheet does not list')
     args = ap.parse_args()
     meta = json.load(open(args.meta)) if args.meta else {}
     ws = words(args.pdf)
     marks = parse_table(ws)
     if not marks:
         sys.exit('no marks found')
+    if args.add:
+        marks += added(args.add, marks)
     out = {'formatVersion': FORMAT_VERSION, **meta, 'marks': marks}
     json.dump(out, sys.stdout, indent=2, ensure_ascii=False)
     sys.stdout.write('\n')

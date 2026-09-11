@@ -7,14 +7,14 @@
       "source": "source/2026_AL_Sis.pdf",
       "url": "https://hyc.ie/system/resources/2557/original/2026_AL_Sis.pdf",
       "title": "Autumn League 2026 sailing instructions",
-      "why": "6.1 and 6.2 A and B place the offshore and inshore starting areas and define their starting lines, which the cards do not; 6.1 C and 6.2 C say the windward mark Z is laid to windward of the line and is the first mark of every fixed-mark course, and that the course card forms part of these instructions."
+      "why": "6.1 and 6.2 A and B place the offshore and inshore starting areas and define their starting lines, which the cards do not; 6.1 C and 6.2 C say the windward mark Z is laid to windward of the line and is the first mark of every fixed-mark course, and that the course card forms part of these instructions; 6.1 D is the run in to the offshore finish, which the card does not print either."
     },
     {
       "output": "source/Autumn_League_SI_Amendment_01.md",
       "source": "source/Autumn_League_SI_Amendment_01.pdf",
       "url": "https://hyc.ie/system/resources/2560/original/Autumn_League_SI_Amendment_01.pdf",
       "title": "Autumn League 2026, sailing instructions amendment 01",
-      "why": "Replaces 6.2 D, the inshore finishing line, adding the instruction to pass Spit to starboard on the way to it that the inshore card already printed. It leaves 6.2 A and B, which the start line is read from, as they were."
+      "why": "Replaces 6.2 D, the inshore finishing line, adding the instruction to pass Spit to starboard on the way to it that the inshore card already printed. It is the wording the inshore card's finish is read from, and it leaves 6.2 A and B, which the start line is read from, as they were."
     }
   ],
   "artifacts": [
@@ -24,9 +24,24 @@
       "source": "../al-2025/source/AL_Course_Card_Technical_Sheet.pdf",
       "url": "https://hyc.ie/system/resources/2331/original/AL_Course_Card_Technical_Sheet.pdf",
       "why": "The club has not published a 2026 technical sheet, though SI 6.1 C and 6.2 C name one; the 2025 sheet is the current list of the marks these cards letter, and the drafts these cards were published from were laid out on its positions — see the README.",
+      "addMarks": {
+        "why": "SI 6.1 D sends every offshore course in to the finish \"passing the Rowan Rocks Buoy and the Howth Mark (both IALA marks) to starboard\". Rowan Rocks is Q on the club's sheet; the Howth Mark it does not letter, and the run in cannot be marks of a course without it. The position is the Commissioners of Irish Lights buoy of that name as OpenStreetMap holds it — node 1592333181, seamark:reference CIL00910, © OpenStreetMap contributors — the same source as the chart imagery and as the East Pier lighthouse the offshore finish is placed from.",
+        "marks": [
+          {
+            "id": "HM",
+            "name": "Howth",
+            "shape": "iala",
+            "color": "green",
+            "position": {
+              "lat": 53.395451,
+              "lng": -6.059883
+            }
+          }
+        ]
+      },
       "meta": {
         "club": "HYC",
-        "name": "Autumn League racing marks, from the 2025 course card technical sheet",
+        "name": "Autumn League racing marks, from the 2025 course card technical sheet, with the Howth Mark SI 6.1 D names",
         "source": "https://hyc.ie/system/resources/2331/original/AL_Course_Card_Technical_Sheet.pdf"
       }
     },
@@ -54,22 +69,37 @@
           "source": "HYC Autumn League 2026 sailing instructions 6.1 A and B"
         }
       },
-      "chart": {
-        "note": "The card's own marks, and the water down to the East Pier it finishes at.",
-        "keep": [
+      "finish": {
+        "source": "source/2026_AL_Sis.pdf",
+        "after": "6.1 Offshore Committee Vessel Starts:",
+        "clauses": [
+          "Round the Cans Races"
+        ],
+        "why": "The card prints no course past K or G, and SI 6.1 D is what every course does next: \"boats shall sail to the finish line passing the Rowan Rocks Buoy and the Howth Mark (both IALA marks) to starboard\". The same ending for all 144 courses, so it is appended to each of them rather than left in prose — a course read off the card alone stops a mile and more short of the line, and a scorer who divides elapsed time by that length gets the boats slower than they sailed. The Windward/Leeward finish in the same instruction is a different course and no concern of this card.",
+        "meta": {
+          "id": "FH",
+          "name": "Finish line",
+          "position": {
+            "lat": 53.39334,
+            "lng": -6.06529
+          },
+          "source": "HYC Autumn League 2026 sailing instructions 6.1 D"
+        },
+        "via": [
           {
             "mark": "Q",
-            "why": "SI 6.1 D sends boats to the finish passing Rowan Rocks to starboard; no course on the card rounds it."
+            "side": "starboard",
+            "passing": true
           },
           {
-            "name": "Howth East Pier lighthouse",
-            "position": {
-              "lat": 53.39334,
-              "lng": -6.0668
-            },
-            "why": "SI 6.1 D finishes Round the Cans races between the Finisher's Hut and a black cherry buoy, and puts the hut on the East Pier about 100 m east of the old lighthouse. The old lighthouse is what this position is — OpenStreetMap way 377915968, man_made=lighthouse, © OpenStreetMap contributors — and it holds the chart open over the finishing area; the hut itself is not drawn."
+            "mark": "HM",
+            "side": "starboard",
+            "passing": true
           }
         ]
+      },
+      "chart": {
+        "note": "The card's own marks, and the run in to the East Pier its courses finish at."
       }
     },
     {
@@ -96,16 +126,31 @@
           "source": "HYC Autumn League 2026 sailing instructions 6.2 A and B"
         }
       },
+      "finish": {
+        "source": "source/Autumn_League_SI_Amendment_01.pdf",
+        "clauses": [
+          "Round the Cans Races"
+        ],
+        "why": "The card prints no course past its last fixed mark, and SI 6.2 D, as amendment 01 replaces it, is what every course does next: \"From the last mark on the displayed course, boats shall sail to the finish line passing the Spit mark to starboard\" — which the card's own note 2 prints too. The line itself is a buoy and a committee vessel laid on the day, so it has a placement and no position: a consumer is asked for it, as it is asked for the start line and for Z. The amendment is the current wording of 6.2 D and is what this reads.",
+        "meta": {
+          "id": "F",
+          "name": "Finish line",
+          "source": "HYC Autumn League 2026 sailing instructions 6.2 D, as amendment 01 replaces it"
+        },
+        "via": [
+          {
+            "mark": "S",
+            "side": "starboard",
+            "passing": true
+          }
+        ]
+      },
       "chart": {
         "note": "The card's own marks, and the Spit and South Rowan it finishes between.",
         "keep": [
           {
-            "mark": "S",
-            "why": "SI 6.2 D, as amended, and the card's own note 2 put the finish in the vicinity of Spit and pass it to starboard on the way in; no course on the card rounds it."
-          },
-          {
             "mark": "R",
-            "why": "SI 6.2 D, as amended, and the card's own note 2 put the finish in the vicinity of the South Rowan buoy; no course on the card rounds it."
+            "why": "SI 6.2 D, as amended, and the card's own note 2 put the finish in the vicinity of the South Rowan buoy; no course sails to it, the run in passing Spit alone."
           }
         ]
       }

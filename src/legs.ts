@@ -4,7 +4,7 @@
  */
 
 import { bearingDeg, distanceNm } from './geo.js';
-import type { CourseCardFile, CourseLeg, CourseMark, Mark, MarksFile, RacePositions, Waypoint } from './types.js';
+import type { Course, CourseCardFile, CourseLeg, CourseMark, Mark, MarksFile, RacePositions, Waypoint } from './types.js';
 
 export class CourseError extends Error {}
 
@@ -19,15 +19,35 @@ export interface ResolvedCourseMark {
   placed: boolean;
 }
 
-/** The marks a card's course names, in sailing order, each resolved: the
- *  start line ahead of the marks file, then the marks file. A mark the card
- *  names but neither lists is an error. This is the question "what does this
- *  course need that the card cannot supply?" — the ones with `placed` false. */
-export function courseMarks(card: CourseCardFile, marks: MarksFile, courseId: string): ResolvedCourseMark[] {
+/** The course a card gives that id, or an error naming it. */
+function courseOf(card: CourseCardFile, courseId: string): Course {
   const course = card.courses.find((c) => c.id === courseId);
   if (!course) throw new CourseError(`no course "${courseId}" on the card`);
+  return course;
+}
+
+/** The course's marks as the club prints them on the card: the sequence
+ *  without the start line at its head, and without the ending the sailing
+ *  instructions add at its tail (`card.finish` and the marks its `via` runs
+ *  in through). What to show a competitor reading the card; `courseMarks`
+ *  is what to sail. */
+export function printedMarks(card: CourseCardFile, courseId: string): CourseMark[] {
+  const course = courseOf(card, courseId);
+  const head = card.startLine && course.marks[0]?.mark === card.startLine.id ? 1 : 0;
+  const tail = card.finish ? (card.finish.via?.length ?? 0) + 1 : 0;
+  return course.marks.slice(head, course.marks.length - tail);
+}
+
+/** The marks a card's course names, in sailing order, each resolved: the
+ *  start line and the finish ahead of the marks file, then the marks file. A
+ *  mark the card names but none of them lists is an error. This is the
+ *  question "what does this course need that the card cannot supply?" — the
+ *  ones with `placed` false. */
+export function courseMarks(card: CourseCardFile, marks: MarksFile, courseId: string): ResolvedCourseMark[] {
+  const course = courseOf(card, courseId);
   const byId = new Map(marks.marks.map((m) => [m.id, m]));
   if (card.startLine) byId.set(card.startLine.id, card.startLine);
+  if (card.finish) byId.set(card.finish.id, card.finish);
   return course.marks.map((entry) => {
     const mark = byId.get(entry.mark);
     if (!mark) throw new CourseError(`course ${course.id}: unknown mark "${entry.mark}"`);

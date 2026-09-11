@@ -11,6 +11,7 @@ import {
   destination,
   parseCourseCardFile,
   parseMarksFile,
+  printedMarks,
   totalDistanceNm,
 } from '../src/index';
 
@@ -136,5 +137,65 @@ describe('legsFromWaypoints', () => {
     expect(legs[1]!.bearingDeg).toBeCloseTo(10, 2);
     expect(legsFromWaypoints([line])).toEqual([]);
     expect(legsFromWaypoints([])).toEqual([]);
+  });
+});
+
+// A card whose courses stop at the last mark the club prints, the run home
+// being in the sailing instructions: HYC's 2026 Autumn League cards, which
+// carry that ending as their `finish`.
+const al2026 = (rel: string): unknown =>
+  JSON.parse(readFileSync(join(__dirname, '..', 'data', 'hyc', 'al-2026', rel), 'utf-8'));
+const marks2026 = parseMarksFile(al2026('marks.json'));
+const offshore2026 = parseCourseCardFile(al2026('offshore.json'));
+const inshore2026 = parseCourseCardFile(al2026('inshore.json'));
+
+describe('a card whose finish the sailing instructions add', () => {
+  // North of Ireland's Eye, Zephyr a mile upwind on the row's 220°.
+  const line = { lat: 53.4205, lng: -6.0675 };
+  const day = { marks: { SL: line, Z: destination(line, 220, 1852) } };
+
+  it('sails the course to the finishing line, not to the last mark printed', () => {
+    expect(printedMarks(offshore2026, 'M2').map((m) => m.mark)).toEqual(['Z', 'G', 'E', 'K', 'E', 'K']);
+    const legs = courseLegs(offshore2026, marks2026, 'M2', day);
+    expect(legs.map((l) => l.to.mark)).toEqual(['Z', 'G', 'E', 'K', 'E', 'K', 'Q', 'HM', 'FH']);
+    // The run home from the last printed mark is a mile and a fifth of it —
+    // 13% of the course, and every course on the card has it.
+    const home = totalDistanceNm(legs.slice(-3));
+    expect(home).toBeCloseTo(1.22, 2);
+    expect(totalDistanceNm(legs)).toBeCloseTo(9.49, 2);
+    expect(totalDistanceNm(legs.slice(0, -3))).toBeCloseTo(9.49 - 1.22, 2);
+  });
+
+  it('asks for the finishing line where the club lays one per race', () => {
+    // Offshore the line has a fixed end ashore, so only the line and the
+    // windward mark are race-day facts; inshore the finish is a third.
+    const asks = (card: typeof offshore2026, id: string): string[] =>
+      courseMarks(card, marks2026, id)
+        .filter((m) => !m.placed)
+        .map((m) => m.mark.id);
+    expect(asks(offshore2026, 'M2')).toEqual(['SL', 'Z']);
+    expect(asks(inshore2026, 'A1')).toEqual(['SL', 'Z', 'F']);
+    // And the card, not the marks file, is what says where that line goes.
+    const finish = courseMarks(inshore2026, marks2026, 'A1').at(-1)!;
+    expect(finish.mark.placement).toContain('Spit Mark (S) and the South Rowan Buoy (R)');
+    expect(marks2026.marks.find((m) => m.id === 'F')!.placement).toBe('Between Island Mark and Howth Sound');
+  });
+
+  it('errors on the finishing line it cannot place, quoting the instruction', () => {
+    expect(() => courseLegs(inshore2026, marks2026, 'A1', day)).toThrow(CourseError);
+    expect(() => courseLegs(inshore2026, marks2026, 'A1', day)).toThrow(/no position for mark "F"/);
+  });
+});
+
+describe('printedMarks', () => {
+  it('is the sequence without the start line and without an added ending', () => {
+    // The 2025 cards print their own ending, so nothing is stripped but the
+    // line: course 001 ends at F on the card itself.
+    expect(printedMarks(inshore, '001').map((m) => m.mark)).toEqual(['Z', 'P', 'W', 'S', 'F']);
+    expect(printedMarks(offshore2026, 'A1').map((m) => m.mark)).toEqual(['Z', 'U', 'I', 'H', 'G']);
+  });
+
+  it('fails the same way courseLegs does for an unknown course', () => {
+    expect(() => printedMarks(offshore2026, 'ZZ')).toThrow(CourseError);
   });
 });
