@@ -239,6 +239,20 @@
         "check": "marks-table",
         "marks": "marks.json",
         "pdf": "source/DBSC_Marks_Bearings_Distances_2026_v1.pdf"
+      },
+      {
+        "check": "notice-to-mariners",
+        "marks": "marks.json",
+        "pdf": "../../cybc/season-2026/source/20-2026-Yacht-Racing-Marks.pdf",
+        "url": "https://www.dublinport.ie/wp-content/uploads/2025/12/20-2026-Yacht-Racing-Marks.pdf",
+        "club": "Dublin Bay Sailing Club",
+        "toleranceNm": 0.02,
+        "why": "Dublin Port's Notice to Mariners 20/2026 (1 January 2026) lists the marks the club has sanction to lay with the port's position for each — the one statement of where the marks are that is not DBSC's. The sheet and the notice agree on 19 of the 22 marks the notice letters; the three below differ, and which is right is for the club and the port. The notice itself says Merrion has been moved and Battery's position updated for 2026, and the sheet is the later document (April 2026).",
+        "expected": {
+          "L": "Merrion: notice 53°18.92′ N 006°09.20′ W, sheet 53°18.88′ N 006°09.12′ W — 0.06 NM apart",
+          "T": "Battery: notice 53°17.46′ N 006°06.68′ W, sheet 53°17.52′ N 006°06.64′ W — 0.07 NM apart",
+          "H": "Harbour: notice 53°18.70′ N 006°07.70′ W, sheet 53°18.74′ N 006°07.77′ W — 0.06 NM apart"
+        }
       }
     ]
   },

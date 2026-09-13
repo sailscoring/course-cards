@@ -12,7 +12,13 @@ are untested and the PDFs win. This compares them:
      positions (to the CSV's own rounding);
   3. the bearings and distances printed on the marks sheet against those
      computed from the positions — including the "Green 3" column, which
-     is the only place the sheet gives that start mark.
+     is the only place the sheet gives that start mark;
+  4. the positions against Dublin Port's Notice to Mariners "Yacht Racing
+     Marks", the harbour authority's own statement of where the marks the
+     club has sanction to lay are — the one source that is not DBSC. A
+     mark the notice puts elsewhere than the sheet is a difference the
+     manifest records as expected, with what the club and the port each
+     say, rather than one this check settles.
 
     python3 tools/check_dbsc.py data/dbsc/summer-2026
 
@@ -31,6 +37,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from extract_dbsc_marks import table  # noqa: E402
+from extract_ntm_marks import sections  # noqa: E402
 
 EARTH_RADIUS_NM = 3440.065
 
@@ -142,6 +149,39 @@ def check_table(base, marks_file, pdf, bearing_tol=1, distance_tol=0.01):
     return f'{pdf} bearings/distances vs {marks_file} positions: {n} pairs, worst {worst[0]}° / {worst[1]:.3f} NM', problems, []
 
 
+def check_notice(base, marks_file, pdf, club, tolerance_nm, expected):
+    """The port's positions for the club's marks against the sheet's. The
+    notice covers the marks laid in the port limits, so a mark of the sheet
+    it does not list (a navigation buoy, a hut start mark) is not a
+    difference; one it lists that the sheet does not is."""
+    marks = {m['id']: m for m in json.load(open(os.path.join(base, marks_file)))['marks']}
+    rows = sections(os.path.join(base, pdf)).get(club)
+    if not rows:
+        sys.exit(f'{pdf}: no table for {club!r}')
+    problems, noted, n = [], [], 0
+    seen = set()
+    for name, position, letter, _ in rows:
+        if letter == '-':
+            continue  # the notice's "Start" mark, which the sheet does not letter
+        seen.add(letter)
+        mark = marks.get(letter)
+        if not mark:
+            problems.append(f'{letter} {name}: in the notice but not on the sheet')
+            continue
+        n += 1
+        d = distance_nm(position, mark['position'])
+        line = f'{letter} {name}: notice {position["lat"]:.5f}, {position["lng"]:.5f}; sheet {mark["position"]["lat"]:.5f}, {mark["position"]["lng"]:.5f} — {d:.3f} NM apart'
+        if letter in expected:
+            if d <= tolerance_nm:
+                problems.append(f'{letter} {name}: recorded as a known difference, but the notice and the sheet now agree')
+            else:
+                noted.append('known: ' + line)
+        elif d > tolerance_nm:
+            problems.append(line)
+    unlisted = sorted(set(marks) - seen)
+    return f'{pdf} ({club}) vs {marks_file}: {n} marks compared, not in the notice: {", ".join(unlisted) or "none"}', problems, noted
+
+
 def main():
     base = sys.argv[1]
     manifest = json.load(open(os.path.join(base, 'manifest.json')))
@@ -154,6 +194,8 @@ def main():
             heading, problems, noted = check_marks(base, check['marks'], check['csv'], check['gpx'])
         elif kind == 'marks-table':
             heading, problems, noted = check_table(base, check['marks'], check['pdf'])
+        elif kind == 'notice-to-mariners':
+            heading, problems, noted = check_notice(base, check['marks'], check['pdf'], check['club'], check.get('toleranceNm', 0.02), check.get('expected', {}))
         else:
             sys.exit(f'unknown check {kind}')
         status = f'{len(problems)} DIFFERENCES' if problems else f'ok, {len(noted)} known difference(s)' if noted else 'ok'

@@ -130,6 +130,20 @@ priority) and 3 (dinghy starts) change nothing a card depends on.
   printed figures within 1° and 0.01 NM, i.e. to their printed precision.
   So the sheet's positions, its table, the CSV and the GPX are all one
   consistent set (the sheet says its bearings are true, and they are).
+- **Positions against Dublin Port's Notice to Mariners.** Notice 20 of
+  2026, "Yacht Racing Marks" (1 January 2026), lists the marks the club has
+  sanction to lay in the port limits with the port's position for each —
+  the one statement of where the marks are that is not DBSC's. It is kept
+  in `../../cybc/season-2026/source/`, the data set it also positions. The
+  sheet and the notice agree, within 0.02 NM, on 19 of the 22 marks the
+  notice letters; **Merrion (L), Battery (T) and Harbour (H) differ by
+  about 0.06 NM each**, and the manifest records the two positions of each
+  as expected differences, so the check fails if either document changes.
+  Which is right is for the club and the port: the notice itself says
+  Merrion was moved and Battery's position updated for 2026, and the sheet
+  (April 2026) is the later document. The notice does not list the hut
+  start marks `2` and `3`, nor `O` and `X`, and the sheet does not letter
+  the notice's "Start" mark.
 - Structural tests confirm each card's 16 × 8 (or 16 × 5) courses in the
   card's order, every mark on the marks file with a side, the Red Fleet
   card all to port, X passing and last on the hut cards (K1 excepted), that
