@@ -1,0 +1,45 @@
+{
+  "formatVersion": 2,
+  "club": "CY&BC",
+  "name": "East Coast Bilge Keel Championship 2026 bay courses, SI 12.1",
+  "source": "https://www.cybc.ie/uploads/2177163/download",
+  "marks": "marks.json",
+  "startLine": {
+    "id": "SL",
+    "name": "Start line",
+    "placement": "The start Line: shall be between the mainmast of the committee boat and an Outer Pin-end mark, laid on port-side of the committee boat. Restrictions: An inner-limit mark will be laid close to the committee boat; no boat shall pass between the inner limit buoy and the committee boat. Any boat passing between will be (DSQ) disqualified from the Championship. This inner-limit mark may be in front or behind the start line, OR leeward of the committee boat and does not form part of the start-line.",
+    "source": "East Coast Bilge Keel Championship 2026 sailing instructions 7.1 and 7.2"
+  },
+  "notes": [
+    {
+      "title": "8.1",
+      "text": "The finish line will be the same line as the start line (unless race is shortened), It will be from the main- mast on the committee boat and a pin-end mark. Inner limit mark must be observed."
+    },
+    {
+      "title": "12.2",
+      "text": "START-FINISH LINE & 1st LEG : the start-finish line will be laid downwind of the first mark of the course, providing a beat for the first-leg."
+    },
+    {
+      "title": "12.3",
+      "text": "Notification of Courses: Courses will be displayed on the side of the Committee boat before the race- countdown is started. (This changes rule 27.1). The RO may also announce the race-course on the VHF."
+    }
+  ],
+  "courses": [
+    {"id": "A1", "windDirectionDeg": 0, "marks": [{"mark": "SL"}, {"mark": "CW", "side": "starboard"}, {"mark": "O", "side": "port"}, {"mark": "SUT", "side": "port"}, {"mark": "SL"}]},
+    {"id": "B1", "windDirectionDeg": 45, "marks": [{"mark": "SL"}, {"mark": "DR", "side": "port"}, {"mark": "BI", "side": "starboard"}, {"mark": "SUT", "side": "starboard"}, {"mark": "SL"}]},
+    {"id": "C1", "windDirectionDeg": 90, "marks": [{"mark": "SL"}, {"mark": "O", "side": "port"}, {"mark": "CW", "side": "starboard"}, {"mark": "DR", "side": "starboard"}, {"mark": "O", "side": "starboard"}, {"mark": "SL"}]},
+    {"id": "D1", "windDirectionDeg": 135, "marks": [{"mark": "SL"}, {"mark": "IN", "side": "port"}, {"mark": "CW", "side": "starboard"}, {"mark": "O", "side": "port"}, {"mark": "SUT", "side": "starboard"}, {"mark": "DR", "side": "starboard"}, {"mark": "SL"}]},
+    {"id": "E1", "windDirectionDeg": 180, "marks": [{"mark": "SL"}, {"mark": "IN", "side": "port"}, {"mark": "SUT", "side": "starboard"}, {"mark": "O", "side": "starboard"}, {"mark": "IN", "side": "starboard"}, {"mark": "SL"}]},
+    {"id": "F1", "windDirectionDeg": 225, "marks": [{"mark": "SL"}, {"mark": "IN", "side": "starboard"}, {"mark": "SUT", "side": "port"}, {"mark": "BI", "side": "port"}, {"mark": "DR", "side": "starboard"}, {"mark": "SL"}]},
+    {"id": "G1", "windDirectionDeg": 270, "marks": [{"mark": "SL"}, {"mark": "BI", "side": "starboard"}, {"mark": "DR", "side": "port"}, {"mark": "CW", "side": "port"}, {"mark": "BI", "side": "port"}, {"mark": "SL"}]},
+    {"id": "H1", "windDirectionDeg": 315, "marks": [{"mark": "SL"}, {"mark": "BI", "side": "starboard"}, {"mark": "O", "side": "port"}, {"mark": "CW", "side": "port"}, {"mark": "O", "side": "port"}, {"mark": "CW", "side": "port"}, {"mark": "SL"}]},
+    {"id": "A2", "windDirectionDeg": 0, "marks": [{"mark": "SL"}, {"mark": "SUT", "side": "port"}, {"mark": "IN", "side": "port"}, {"mark": "O", "side": "port"}, {"mark": "SUT", "side": "port"}, {"mark": "O", "side": "port"}, {"mark": "SL"}]},
+    {"id": "B2", "windDirectionDeg": 45, "marks": [{"mark": "SL"}, {"mark": "DR"}, {"mark": "SUT"}, {"mark": "IN"}, {"mark": "DR"}, {"mark": "SL"}]},
+    {"id": "C2", "windDirectionDeg": 90, "marks": [{"mark": "SL"}, {"mark": "O", "side": "port"}, {"mark": "DR", "side": "port"}, {"mark": "IN", "side": "port"}, {"mark": "O", "side": "port"}, {"mark": "SL"}]},
+    {"id": "D2", "windDirectionDeg": 135, "marks": [{"mark": "SL"}, {"mark": "IN", "side": "port"}, {"mark": "SUT", "side": "starboard"}, {"mark": "DR", "side": "starboard"}, {"mark": "O", "side": "starboard"}, {"mark": "SL"}]},
+    {"id": "E2", "windDirectionDeg": 180, "marks": [{"mark": "SL"}, {"mark": "O", "side": "port"}, {"mark": "DR", "side": "port"}, {"mark": "SUT", "side": "port"}, {"mark": "O", "side": "port"}, {"mark": "SUT", "side": "port"}, {"mark": "SL"}]},
+    {"id": "F2", "windDirectionDeg": 225, "marks": [{"mark": "SL"}, {"mark": "IN", "side": "port"}, {"mark": "DR", "side": "port"}, {"mark": "SUT", "side": "port"}, {"mark": "O", "side": "port"}, {"mark": "DR", "side": "port"}, {"mark": "SL"}]},
+    {"id": "G2", "windDirectionDeg": 270, "marks": [{"mark": "SL"}, {"mark": "DR", "side": "port"}, {"mark": "IN", "side": "starboard"}, {"mark": "SUT", "side": "starboard"}, {"mark": "DR", "side": "port"}, {"mark": "SL"}]},
+    {"id": "H2", "windDirectionDeg": 315, "marks": [{"mark": "SL"}, {"mark": "SUT", "side": "port"}, {"mark": "O", "side": "port"}, {"mark": "DR", "side": "port"}, {"mark": "SUT", "side": "port"}, {"mark": "DR", "side": "port"}, {"mark": "SL"}]}
+  ]
+}

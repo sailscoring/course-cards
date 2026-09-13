@@ -1,0 +1,127 @@
+{
+  "club": "Clontarf Yacht and Boat Club",
+  "event": "Season 2026",
+  "documents": [
+    {
+      "output": "source/2026-CYBC-Coursecards-Cruiser.md",
+      "source": "source/2026-CYBC-Coursecards-Cruiser.pdf",
+      "url": "https://www.cybc.ie/uploads/2082651/download",
+      "title": "CY&BC Cruiser Course Card 2026",
+      "why": "The card itself: the legend that letters the club's twelve marks, and the 24 numbered courses with their marks, sides, wind directions and lengths. Published as \"2026 CY&BC Coursecards Cruiser.pdf\" on the club's Course Cards page."
+    },
+    {
+      "output": "source/EC-BKC-2026-2-SI_rev03.md",
+      "source": "source/EC-BKC-2026-2-SI_rev03.pdf",
+      "url": "https://www.cybc.ie/uploads/2177163/download",
+      "title": "East Coast Bilge Keel Championship 2026 sailing instructions, revision 3 (20 August 2026)",
+      "why": "The club's only published sailing instructions: 12.1 is a second card, sixteen courses round the six North Dublin Bay marks; 7.1 and 7.2 define the start line those courses begin at and 8.1 the finish, which is the same line; 12.2 prints the club's own positions for the six marks, which the check holds against the port's; 12.1's legend divides the marks into Harbour Marks and North Dublin Bay Marks."
+    },
+    {
+      "output": "source/20-2026-Yacht-Racing-Marks.md",
+      "source": "source/20-2026-Yacht-Racing-Marks.pdf",
+      "url": "https://www.dublinport.ie/wp-content/uploads/2025/12/20-2026-Yacht-Racing-Marks.pdf",
+      "title": "Dublin Port Company Notice to Mariners No. 20 of 2026, Yacht Racing Marks, 1 January 2026",
+      "why": "The harbour authority's statement of the yacht racing marks each club has sanction to lay within the port limits, with a position for each: the only published positions for Clontarf's six North Dublin Bay marks, and an independent statement of DBSC's, which ../../dbsc/summer-2026 checks its sheet against."
+    },
+    {
+      "output": "source/00-2026-Summary-of-Notices.md",
+      "source": "source/00-2026-Summary-of-Notices.pdf",
+      "url": "https://www.dublinport.ie/wp-content/uploads/2025/12/00-2026-Summary-of-Notices.pdf",
+      "title": "Dublin Port Company Notices to Mariners 2026, summary of notices",
+      "why": "The port's list of the year's notices, kept so the check can show notice 20 is the one in force and no later notice has replaced it. Notices not cancelled lapse at the year's end."
+    }
+  ],
+  "artifacts": [
+    {
+      "output": "marks.json",
+      "tool": "extract_cybc_marks",
+      "source": "source/2026-CYBC-Coursecards-Cruiser.pdf",
+      "url": "https://www.cybc.ie/uploads/2082651/download",
+      "notice": {
+        "source": "source/20-2026-Yacht-Racing-Marks.pdf",
+        "url": "https://www.dublinport.ie/wp-content/uploads/2025/12/20-2026-Yacht-Racing-Marks.pdf",
+        "club": "Clontarf Yacht and Boat Club",
+        "why": "The club publishes no positions. Dublin Port's notice positions the six marks the club has sanction to lay in the bay — Sutton, Drumleck, Outer, Inner, Bull Island and Causeway, by the letters the card uses — and the club's regatta instructions (12.2) print the same six positions. The notice spells two of them Drumlek and Causway; the names here are the card's."
+      },
+      "placement": "One of the club's harbour marks, west of the Bull Wall: the club's instructions list it under Harbour Marks (EC-BKC sailing instructions 12.1) and publish no position for it, and Dublin Port's notice declares only the six North Dublin Bay marks.",
+      "meta": {
+        "club": "CY&BC",
+        "name": "Racing marks 2026, lettered as the Cruiser Course Card's legend has them, the North Dublin Bay marks positioned by Dublin Port's Notice to Mariners 20/2026",
+        "source": "https://www.cybc.ie/uploads/2082651/download"
+      }
+    },
+    {
+      "output": "cruiser.json",
+      "tool": "extract_cybc_cruiser_card",
+      "source": "source/2026-CYBC-Coursecards-Cruiser.pdf",
+      "url": "https://www.cybc.ie/uploads/2082651/download",
+      "why": "The club publishes no sailing instructions for its season racing, so the card carries no start line: its courses begin at the first mark printed and end at the last, as the card has them. The wind direction is carried where the card gives one direction; a course laid out for three (\"NW+W+SW\") has none, and every course's direction and length class are in the notes as printed.",
+      "meta": {
+        "club": "CY&BC",
+        "name": "Cruiser Course Card 2026",
+        "source": "https://www.cybc.ie/uploads/2082651/download",
+        "marks": "marks.json"
+      }
+    },
+    {
+      "output": "ec-bkc.json",
+      "tool": "extract_cybc_ecbkc_card",
+      "source": "source/EC-BKC-2026-2-SI_rev03.pdf",
+      "url": "https://www.cybc.ie/uploads/2177163/download",
+      "aliases": {
+        "why": "The instructions print the Outer mark as \"0\" (a zero) twice in course E2 and as \"OUT\" twice in course A2, where every other course and the legend have \"O\". Both are read as O; nothing else on the card is a zero or an OUT.",
+        "map": { "0": "O", "OUT": "O" }
+      },
+      "meta": {
+        "club": "CY&BC",
+        "name": "East Coast Bilge Keel Championship 2026 bay courses, SI 12.1",
+        "source": "https://www.cybc.ie/uploads/2177163/download",
+        "marks": "marks.json"
+      },
+      "notesSource": "source/EC-BKC-2026-2-SI_rev03.pdf",
+      "notesClauses": ["8.1", "12.2 START-FINISH LINE", "12.3"],
+      "startLine": {
+        "source": "source/EC-BKC-2026-2-SI_rev03.pdf",
+        "clauses": ["7.1", "7.2"],
+        "why": "The card prints \"Start line\" at the head of every course and \"Finish Line\" at its foot; 7.1 and 7.2 define the line, and 8.1 says the finish is the same line unless the course is shortened, so every course ends at SL too.",
+        "meta": {
+          "id": "SL",
+          "name": "Start line",
+          "source": "East Coast Bilge Keel Championship 2026 sailing instructions 7.1 and 7.2"
+        }
+      }
+    }
+  ],
+  "checks": {
+    "tool": "check_cybc",
+    "items": [
+      {
+        "check": "notice-in-force",
+        "summary": "source/00-2026-Summary-of-Notices.pdf",
+        "notice": 20,
+        "title": "Yacht Racing Marks",
+        "why": "The port's notices supersede one another and lapse at the year's end; the positions here are only as good as the notice being the current one."
+      },
+      {
+        "check": "si-positions",
+        "marks": "marks.json",
+        "pdf": "source/EC-BKC-2026-2-SI_rev03.pdf",
+        "count": 6,
+        "why": "The club's own statement of the six bay marks' positions (12.2, to a tenth of a minute) against the port's (to a hundredth): the two must agree to the club's precision."
+      },
+      {
+        "check": "cards-marks",
+        "marks": "marks.json",
+        "cards": ["cruiser.json", "ec-bkc.json"],
+        "why": "Every mark a course names must be one the legend letters."
+      }
+    ]
+  },
+  "map": {
+    "background": "map/background.png",
+    "marks": "marks.json",
+    "layers": ["osm", "openseamap"],
+    "zoom": 14,
+    "paddingMinutes": 0.6
+  }
+}

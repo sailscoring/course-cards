@@ -179,6 +179,17 @@ and how it was checked.
   FB 2.1's committee-vessel line.
   [README](data/kyc/sovereigns-2025/README.md).
 
+- `data/cybc/season-2026/` — Clontarf Yacht and Boat Club's 2026 season:
+  the twelve marks of the club's Cruiser Course Card legend, the six laid in
+  North Dublin Bay positioned by Dublin Port's Notice to Mariners 20/2026
+  (the club publishes no positions) and the six harbour marks by nobody;
+  the card's 24 numbered courses, read from its text layer, with wind
+  directions and lengths; and the East Coast Bilge Keel Championship's 16
+  courses from its sailing instructions, with their start line. The season
+  card has no start line to carry, the club publishing no instructions for
+  its season racing. The same notice cross-checks DBSC's sheet.
+  [README](data/cybc/season-2026/README.md).
+
 ```sh
 pnpm data        # rewrite the JSON from the PDFs, then the HTML from the JSON
 pnpm data:check  # verify the committed files are what a fresh run produces

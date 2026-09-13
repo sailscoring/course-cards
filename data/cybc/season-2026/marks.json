@@ -1,0 +1,86 @@
+{
+  "formatVersion": 2,
+  "club": "CY&BC",
+  "name": "Racing marks 2026, lettered as the Cruiser Course Card's legend has them, the North Dublin Bay marks positioned by Dublin Port's Notice to Mariners 20/2026",
+  "source": "https://www.cybc.ie/uploads/2082651/download",
+  "marks": [
+    {
+      "id": "BI",
+      "name": "Bull Island",
+      "position": {
+        "lat": 53.351667,
+        "lng": -6.146667
+      }
+    },
+    {
+      "id": "CH",
+      "name": "Churn",
+      "placement": "One of the club's harbour marks, west of the Bull Wall: the club's instructions list it under Harbour Marks (EC-BKC sailing instructions 12.1) and publish no position for it, and Dublin Port's notice declares only the six North Dublin Bay marks."
+    },
+    {
+      "id": "CW",
+      "name": "Causeway",
+      "position": {
+        "lat": 53.358333,
+        "lng": -6.14
+      }
+    },
+    {
+      "id": "DR",
+      "name": "Drumleck",
+      "position": {
+        "lat": 53.356667,
+        "lng": -6.116667
+      }
+    },
+    {
+      "id": "H",
+      "name": "Hub",
+      "placement": "One of the club's harbour marks, west of the Bull Wall: the club's instructions list it under Harbour Marks (EC-BKC sailing instructions 12.1) and publish no position for it, and Dublin Port's notice declares only the six North Dublin Bay marks."
+    },
+    {
+      "id": "IN",
+      "name": "Inner",
+      "position": {
+        "lat": 53.346667,
+        "lng": -6.136667
+      }
+    },
+    {
+      "id": "NB",
+      "name": "North Bank",
+      "placement": "One of the club's harbour marks, west of the Bull Wall: the club's instructions list it under Harbour Marks (EC-BKC sailing instructions 12.1) and publish no position for it, and Dublin Port's notice declares only the six North Dublin Bay marks."
+    },
+    {
+      "id": "O",
+      "name": "Outer",
+      "position": {
+        "lat": 53.35,
+        "lng": -6.125
+      }
+    },
+    {
+      "id": "S",
+      "name": "Spit",
+      "placement": "One of the club's harbour marks, west of the Bull Wall: the club's instructions list it under Harbour Marks (EC-BKC sailing instructions 12.1) and publish no position for it, and Dublin Port's notice declares only the six North Dublin Bay marks."
+    },
+    {
+      "id": "SUT",
+      "name": "Sutton",
+      "position": {
+        "lat": 53.363333,
+        "lng": -6.13
+      }
+    },
+    {
+      "id": "SW",
+      "name": "South West",
+      "placement": "One of the club's harbour marks, west of the Bull Wall: the club's instructions list it under Harbour Marks (EC-BKC sailing instructions 12.1) and publish no position for it, and Dublin Port's notice declares only the six North Dublin Bay marks."
+    },
+    {
+      "id": "V",
+      "name": "Vernon",
+      "placement": "One of the club's harbour marks, west of the Bull Wall: the club's instructions list it under Harbour Marks (EC-BKC sailing instructions 12.1) and publish no position for it, and Dublin Port's notice declares only the six North Dublin Bay marks."
+    }
+  ]
+}
