@@ -105,12 +105,25 @@ def decolumn(lines, n):
     return out
 
 
-def pages(pdf, columns):
-    """The PDF's pages as lists of lines, trailing space stripped."""
-    text = subprocess.run(['pdftotext', '-layout', pdf, '-'], check=True, capture_output=True, text=True).stdout
+def page_range(spec):
+    """`--pages` parsed: (first, last) document page numbers, or None for all."""
+    if not spec:
+        return None
+    first, _, last = spec.partition('-')
+    return int(first), int(last or first)
+
+
+def pages(pdf, columns, only=None):
+    """The PDF's pages as lists of lines, trailing space stripped. `only`
+    restricts the reading to a range of the document's pages; the pages left
+    out are still counted, so a `columns` spec names pages as the document
+    numbers them."""
+    span = page_range(only)
+    cmd = ['pdftotext', '-layout'] + (['-f', str(span[0]), '-l', str(span[1])] if span else []) + [pdf, '-']
+    text = subprocess.run(cmd, check=True, capture_output=True, text=True).stdout
     counts = columns_spec(columns)
     out = []
-    for number, page in enumerate(text.split('\f'), 1):
+    for number, page in enumerate(text.split('\f'), span[0] if span else 1):
         lines = [line.rstrip() for line in page.split('\n')]
         n = counts.get(number, 1)
         out.append(decolumn(lines, n) if n > 1 and any(l.strip() for l in lines) else lines)
@@ -227,10 +240,10 @@ def heading(text):
     return None
 
 
-def parts(pdf, columns=None):
+def parts(pdf, columns=None, only=None):
     """The document as a list of Markdown blocks in reading order: headings
     ("## H4 The Start"), paragraphs, and fenced blocks of columned text."""
-    doc = pages(pdf, columns)
+    doc = pages(pdf, columns, only)
     drop = furniture(doc)
     out = []
     for page in doc:
@@ -248,8 +261,8 @@ def parts(pdf, columns=None):
     return out
 
 
-def render(pdf, title, columns):
-    out = parts(pdf, columns)
+def render(pdf, title, columns, only=None):
+    out = parts(pdf, columns, only)
     if not title:
         title = next((line for line in out if not line.startswith('```')), pdf)
         title = title.lstrip('# ')
@@ -261,8 +274,9 @@ def main():
     ap.add_argument('pdf')
     ap.add_argument('--title', help='the document\'s title; the first line of text by default')
     ap.add_argument('--columns', help='how many columns a page is set in, e.g. "2@2-3"')
+    ap.add_argument('--pages', help='only these pages of the document, e.g. "2-4" — for a chart page whose overlapping labels render differently from one poppler to the next')
     args = ap.parse_args()
-    sys.stdout.write(render(args.pdf, args.title, args.columns))
+    sys.stdout.write(render(args.pdf, args.title, args.columns, args.pages))
 
 
 if __name__ == '__main__':

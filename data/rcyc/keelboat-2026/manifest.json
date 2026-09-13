@@ -7,7 +7,8 @@
       "source": "source/RCYC-Course-Card-Art-2026.pdf",
       "url": "https://www.royalcork.com/wp-content/uploads/2026/04/RCYC-Course-Card-Art-2026.pdf",
       "title": "Royal Cork Yacht Club Keelboat Racing Course Card, 2026 update",
-      "why": "The card itself: forty numbered courses as rounds with cumulative distances under wind headings, the notes that the General Sailing Instructions say form part of them, and the card's own description of its two starting and finishing lines. Published on the club's Keelboats Notice Board."
+      "why": "The card itself: forty numbered courses as rounds with cumulative distances under wind headings, the notes that the General Sailing Instructions say form part of them, and the card's own description of its two starting and finishing lines. Published on the club's Keelboats Notice Board. The sidecar leaves out page 1, the chart: its labels overlap (\"COURSE CARD UPDATE 2026\" is set twice over itself) and pdftotext splits them differently from one poppler version to the next, so a sidecar of that page would not reproduce in CI; nothing on it is text a reader needs.",
+      "pages": "2-4"
     },
     {
       "output": "source/General-Sailing-Instructions-for-Royal-Cork-Yacht-Club-Keelboat-Racing-2026.md",

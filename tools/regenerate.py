@@ -126,6 +126,8 @@ def document(base, spec):
         cmd += ['--title', spec['title']]
     if spec.get('columns'):
         cmd += ['--columns', spec['columns']]
+    if spec.get('pages'):
+        cmd += ['--pages', spec['pages']]
     return subprocess.run(cmd, check=True, capture_output=True, text=True).stdout
 
 
