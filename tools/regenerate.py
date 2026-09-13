@@ -42,6 +42,7 @@ NOTES_TOOLS = {
     'extract_dlcc_card': ['extract_dlcc_card.py', 'notes'],
     'extract_kyc_card': ['extract_kyc_card.py', 'notes'],
     'extract_cybc_ecbkc_card': ['extract_cybc_card.py', 'notes'],
+    'extract_rcyc_card': ['extract_rcyc_card.py', 'notes'],
 }
 
 
@@ -173,6 +174,13 @@ def extract(base, artifact, meta_path):
             cmd += ['--overrides', os.path.join(base, artifact['overrides'])]
     elif tool == 'extract_kyc_ssi_card':
         cmd = [sys.executable, os.path.join(TOOLS, 'extract_kyc_card.py'), 'ssi', source, '--meta', meta_path]
+    elif tool == 'extract_rcyc_marks':
+        cmd = [sys.executable, os.path.join(TOOLS, 'extract_rcyc_card.py'), 'marks', source, '--meta', meta_path,
+               '--card', os.path.join(base, artifact['card'])]
+        if artifact.get('addMarks'):
+            cmd += ['--add', added_marks_file(base, artifact)]
+    elif tool == 'extract_rcyc_card':
+        cmd = [sys.executable, os.path.join(TOOLS, 'extract_rcyc_card.py'), 'card', source, '--meta', meta_path]
     elif tool == 'extract_cybc_marks':
         n = artifact['notice']
         cmd = [sys.executable, os.path.join(TOOLS, 'extract_cybc_card.py'), 'marks', source, '--meta', meta_path,
