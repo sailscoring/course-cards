@@ -190,6 +190,18 @@ and how it was checked.
   its season racing. The same notice cross-checks DBSC's sheet.
   [README](data/cybc/season-2026/README.md).
 
+- `data/rcyc/keelboat-2026/` — Royal Cork Yacht Club's keelboat racing
+  2026: the club's Keelboat Racing Course Card, forty numbered courses set
+  out as rounds with cumulative distances under wind headings, read from
+  the card's text layer, which also serves the Cork Harbour Combined League
+  with Cove and Monkstown Bay; and thirty marks, of which the four Port of
+  Cork laid race marks are positioned from the club's General Sailing
+  Instructions and the twenty-three harbour navigation buoys by nothing
+  anyone publishes — so no course is computable from the card alone, and
+  the README says why and what would fix it. The start line is the
+  instructions' 26, and every course finishes on it.
+  [README](data/rcyc/keelboat-2026/README.md).
+
 ```sh
 pnpm data        # rewrite the JSON from the PDFs, then the HTML from the JSON
 pnpm data:check  # verify the committed files are what a fresh run produces
