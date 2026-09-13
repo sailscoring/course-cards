@@ -46,20 +46,66 @@ describe('the Royal Cork 2026 marks file', () => {
     expect(byId.get('Ringabella')!.position).toEqual({ lat: 51.770667, lng: -8.292 });
     expect(byId.get('Harp')!.position).toEqual({ lat: 51.7865, lng: -8.236833 });
     expect(byId.get('East Mark')).toMatchObject({ name: 'East Mark (Formerly Mark B)', position: { lat: 51.771833, lng: -8.236333 } });
-    expect(marks.marks.filter((m) => m.position).map((m) => m.id)).toEqual(['Dosco', 'Ringabella', 'Harp', 'East Mark']);
+    expect(marks.marks.filter((m) => m.position).slice(0, 4).map((m) => m.id)).toEqual(['Dosco', 'Ringabella', 'Harp', 'East Mark']);
   });
 
-  it('lists every other mark the card names, unplaced, and says why', () => {
+  it('positions twenty harbour navigation buoys traced from OpenStreetMap', () => {
     expect(marks.marks).toHaveLength(30);
-    for (const id of ['No.3', 'No.20', 'E1', 'W4', 'EF2', 'Cage']) {
+    expect(byId.get('No.3')!.position).toEqual({ lat: 51.801736, lng: -8.259799 });
+    expect(byId.get('No.20')!.position).toEqual({ lat: 51.847303, lng: -8.287576 });
+    expect(byId.get('E1')!.position).toEqual({ lat: 51.794378, lng: -8.25878 });
+    expect(byId.get('W4')!.position).toEqual({ lat: 51.800244, lng: -8.26526 });
+    // A placed mark carries no placement: that field is for marks laid per race.
+    for (const id of ['No.3', 'No.20', 'E1', 'W4']) expect(byId.get(id)!.placement, id).toBeUndefined();
+    expect(marks.marks.filter((m) => m.position)).toHaveLength(24);
+  });
+
+  it('leaves unplaced the three buoys not identified, and the marks the card only describes', () => {
+    for (const id of ['EF2', 'EF4', 'Cage']) {
       expect(byId.get(id)!.position, id).toBeUndefined();
       expect(byId.get(id)!.placement, id).toMatch(/navigation buoy|Cage/);
     }
     expect(byId.get('Cage')).toMatchObject({ name: 'Cage (C1)', shape: 'conical', color: 'green' });
     expect(byId.get('Dutchman')!.placement).toMatch(/approx\. 2 cables SE of the Dutchman Rock/);
     expect(byId.get('Curlane')!.placement).toBe('“Curlane” will be a mark laid on the Curlane Bank.');
+    expect(byId.get('White Bay')!.position).toBeUndefined();
     const named = new Set(card.courses.flatMap((c) => c.marks.map((m) => m.mark)));
     for (const id of named) if (id !== 'SL') expect(byId.has(id), id).toBe(true);
+  });
+
+  it('runs each series of buoys from the entrance inward, no two in one place', () => {
+    // The numbering runs inbound, and each series is checked end to end: the
+    // lowest number lies nearer the harbour mouth than the highest. Buoy by
+    // buoy the claim does not hold — the odd and even numbers run up opposite
+    // sides of a channel that bends west past Cobh, so no distance from one
+    // point rises monotonically along either, and asserting that it does would
+    // take a channel centreline this data set has no source for.
+    const roches = { lat: 51.793, lng: -8.2547 };
+    const nm = (p: { lat: number; lng: number }) =>
+      Math.hypot((p.lat - roches.lat) * 60, (p.lng - roches.lng) * 60 * Math.cos((p.lat * Math.PI) / 180));
+    const series: [string, RegExp, number?][] = [
+      ['odd channel', /^No\.(\d+)$/, 1],
+      ['even channel', /^No\.(\d+)$/, 0],
+      ['entrance', /^E(\d+)$/],
+      ['west', /^W(\d+)$/],
+    ];
+    for (const [label, re, parity] of series) {
+      const run = marks.marks
+        .map((m) => ({ m, n: Number(re.exec(m.id)?.[1]) }))
+        .filter((x) => !Number.isNaN(x.n) && x.m.position && (parity === undefined || x.n % 2 === parity))
+        .sort((a, b) => a.n - b.n);
+      expect(run.length, label).toBeGreaterThan(2);
+      const first = run[0]!.m, last = run[run.length - 1]!.m;
+      expect(nm(first.position!), `${label}: ${first.id} before ${last.id}`).toBeLessThan(nm(last.position!));
+    }
+    const placed = marks.marks.filter((m) => m.position);
+    expect(new Set(placed.map((m) => `${m.position!.lat},${m.position!.lng}`)).size).toBe(placed.length);
+    for (const m of placed) {
+      expect(m.position!.lat, m.id).toBeGreaterThan(51.76);
+      expect(m.position!.lat, m.id).toBeLessThan(51.87);
+      expect(m.position!.lng, m.id).toBeGreaterThan(-8.31);
+      expect(m.position!.lng, m.id).toBeLessThan(-8.22);
+    }
   });
 });
 
@@ -97,10 +143,13 @@ describe('the Keelboat Racing Course Card 2026', () => {
     expect(card.notes!.map((n) => n.title).slice(1)).toEqual(['IMPORTANT NOTES', 'COMMITTEE VESSEL', 'GRASSY WALK LINE']);
   });
 
-  it('cannot yet be sailed from the card alone: the navigation buoys are unplaced', () => {
-    expect(() => courseLegs(card, marks, '1', { marks: { SL: { lat: 51.81, lng: -8.29 } } })).toThrow(/no position for mark "W2" \(A Port of Cork navigation buoy/);
-    const positions = { SL: { lat: 51.81, lng: -8.29 }, W2: { lat: 51.795, lng: -8.27 }, Cage: { lat: 51.806, lng: -8.284 }, 'No.7': { lat: 51.822, lng: -8.27 } };
+  it('needs from the caller only the line and the marks still unplaced', () => {
+    expect(() => courseLegs(card, marks, '1', { marks: { SL: { lat: 51.81, lng: -8.29 } } })).toThrow(/no position for mark "Cage" \(Buoy C1, the Cage/);
+    const positions = { SL: { lat: 51.81, lng: -8.29 }, Cage: { lat: 51.806, lng: -8.284 } };
     const legs = courseLegs(card, marks, '1', { marks: positions });
     expect(legs.map((l) => l.to.mark)).toEqual(['Ringabella', 'W2', 'Cage', 'No.7', 'Cage', 'Dosco', 'SL']);
+    // W2 and No.7 come from the file now, so the legs are real distances.
+    expect(legs[1]!.distanceNm).toBeCloseTo(1.608, 2);
+    expect(legs[3]!.distanceNm).toBeCloseTo(1.401, 2);
   });
 });

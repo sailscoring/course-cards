@@ -1,7 +1,7 @@
 {
   "formatVersion": 2,
   "club": "RCYC",
-  "name": "Keelboat racing marks 2026: the Port of Cork laid race marks the General Sailing Instructions position, and every other mark the course card names",
+  "name": "Keelboat racing marks 2026: the Port of Cork laid race marks the General Sailing Instructions position, the harbour navigation buoys traced from OpenStreetMap, and every other mark the course card names",
   "source": "https://www.royalcork.com/wp-content/uploads/2026/03/General-Sailing-Instructions-for-Royal-Cork-Yacht-Club-Keelboat-Racing-2026.pdf",
   "marks": [
     {
@@ -47,102 +47,162 @@
     {
       "id": "No.3",
       "name": "Harbour navigation buoy No.3",
-      "placement": "A Port of Cork navigation buoy, charted (Admiralty 1777) and maintained by the port; the club publishes no position for it, and none was found in any port publication. Its position is a race-day fact until one is."
+      "position": {
+        "lat": 51.801736,
+        "lng": -8.259799
+      }
     },
     {
       "id": "No.5",
       "name": "Harbour navigation buoy No.5",
-      "placement": "A Port of Cork navigation buoy, charted (Admiralty 1777) and maintained by the port; the club publishes no position for it, and none was found in any port publication. Its position is a race-day fact until one is."
+      "position": {
+        "lat": 51.816964,
+        "lng": -8.270356
+      }
     },
     {
       "id": "No.6",
       "name": "Harbour navigation buoy No.6",
-      "placement": "A Port of Cork navigation buoy, charted (Admiralty 1777) and maintained by the port; the club publishes no position for it, and none was found in any port publication. Its position is a race-day fact until one is."
+      "position": {
+        "lat": 51.804616,
+        "lng": -8.265475
+      }
     },
     {
       "id": "No.7",
       "name": "Harbour navigation buoy No.7",
-      "placement": "A Port of Cork navigation buoy, charted (Admiralty 1777) and maintained by the port; the club publishes no position for it, and none was found in any port publication. Its position is a race-day fact until one is."
+      "position": {
+        "lat": 51.826951,
+        "lng": -8.267406
+      }
     },
     {
       "id": "No.8",
       "name": "Harbour navigation buoy No.8",
-      "placement": "A Port of Cork navigation buoy, charted (Admiralty 1777) and maintained by the port; the club publishes no position for it, and none was found in any port publication. Its position is a race-day fact until one is."
+      "position": {
+        "lat": 51.82087,
+        "lng": -8.277416
+      }
     },
     {
       "id": "No.9",
       "name": "Harbour navigation buoy No.9",
-      "placement": "A Port of Cork navigation buoy, charted (Admiralty 1777) and maintained by the port; the club publishes no position for it, and none was found in any port publication. Its position is a race-day fact until one is."
+      "position": {
+        "lat": 51.840383,
+        "lng": -8.256752
+      }
     },
     {
       "id": "No.10",
       "name": "Harbour navigation buoy No.10",
-      "placement": "A Port of Cork navigation buoy, charted (Admiralty 1777) and maintained by the port; the club publishes no position for it, and none was found in any port publication. Its position is a race-day fact until one is."
+      "position": {
+        "lat": 51.829146,
+        "lng": -8.275828
+      }
     },
     {
       "id": "No.11",
       "name": "Harbour navigation buoy No.11",
-      "placement": "A Port of Cork navigation buoy, charted (Admiralty 1777) and maintained by the port; the club publishes no position for it, and none was found in any port publication. Its position is a race-day fact until one is."
+      "position": {
+        "lat": 51.844012,
+        "lng": -8.258683
+      }
     },
     {
       "id": "No.12",
       "name": "Harbour navigation buoy No.12",
-      "placement": "A Port of Cork navigation buoy, charted (Admiralty 1777) and maintained by the port; the club publishes no position for it, and none was found in any port publication. Its position is a race-day fact until one is."
+      "position": {
+        "lat": 51.83262,
+        "lng": -8.269627
+      }
     },
     {
       "id": "No.13",
       "name": "Harbour navigation buoy No.13",
-      "placement": "A Port of Cork navigation buoy, charted (Admiralty 1777) and maintained by the port; the club publishes no position for it, and none was found in any port publication. Its position is a race-day fact until one is."
+      "position": {
+        "lat": 51.849553,
+        "lng": -8.265228
+      }
     },
     {
       "id": "No.14",
       "name": "Harbour navigation buoy No.14",
-      "placement": "A Port of Cork navigation buoy, charted (Admiralty 1777) and maintained by the port; the club publishes no position for it, and none was found in any port publication. Its position is a race-day fact until one is."
+      "position": {
+        "lat": 51.835477,
+        "lng": -8.267138
+      }
     },
     {
       "id": "No.16",
       "name": "Harbour navigation buoy No.16",
-      "placement": "A Port of Cork navigation buoy, charted (Admiralty 1777) and maintained by the port; the club publishes no position for it, and none was found in any port publication. Its position is a race-day fact until one is."
+      "position": {
+        "lat": 51.844794,
+        "lng": -8.264219
+      }
     },
     {
       "id": "No.18",
       "name": "Harbour navigation buoy No.18",
-      "placement": "A Port of Cork navigation buoy, charted (Admiralty 1777) and maintained by the port; the club publishes no position for it, and none was found in any port publication. Its position is a race-day fact until one is."
+      "position": {
+        "lat": 51.84893,
+        "lng": -8.271322
+      }
     },
     {
       "id": "No.20",
       "name": "Harbour navigation buoy No.20",
-      "placement": "A Port of Cork navigation buoy, charted (Admiralty 1777) and maintained by the port; the club publishes no position for it, and none was found in any port publication. Its position is a race-day fact until one is."
+      "position": {
+        "lat": 51.847303,
+        "lng": -8.287576
+      }
     },
     {
       "id": "E1",
       "name": "Harbour navigation buoy E1",
-      "placement": "A Port of Cork navigation buoy, charted (Admiralty 1777) and maintained by the port; the club publishes no position for it, and none was found in any port publication. Its position is a race-day fact until one is."
+      "position": {
+        "lat": 51.794378,
+        "lng": -8.25878
+      }
     },
     {
       "id": "E2",
       "name": "Harbour navigation buoy E2",
-      "placement": "A Port of Cork navigation buoy, charted (Admiralty 1777) and maintained by the port; the club publishes no position for it, and none was found in any port publication. Its position is a race-day fact until one is."
+      "position": {
+        "lat": 51.792806,
+        "lng": -8.261462
+      }
     },
     {
       "id": "E4",
       "name": "Harbour navigation buoy E4",
-      "placement": "A Port of Cork navigation buoy, charted (Admiralty 1777) and maintained by the port; the club publishes no position for it, and none was found in any port publication. Its position is a race-day fact until one is."
+      "position": {
+        "lat": 51.798718,
+        "lng": -8.26246
+      }
     },
     {
       "id": "W1",
       "name": "Harbour navigation buoy W1",
-      "placement": "A Port of Cork navigation buoy, charted (Admiralty 1777) and maintained by the port; the club publishes no position for it, and none was found in any port publication. Its position is a race-day fact until one is."
+      "position": {
+        "lat": 51.794504,
+        "lng": -8.26762
+      }
     },
     {
       "id": "W2",
       "name": "Harbour navigation buoy W2",
-      "placement": "A Port of Cork navigation buoy, charted (Admiralty 1777) and maintained by the port; the club publishes no position for it, and none was found in any port publication. Its position is a race-day fact until one is."
+      "position": {
+        "lat": 51.794604,
+        "lng": -8.272566
+      }
     },
     {
       "id": "W4",
       "name": "Harbour navigation buoy W4",
-      "placement": "A Port of Cork navigation buoy, charted (Admiralty 1777) and maintained by the port; the club publishes no position for it, and none was found in any port publication. Its position is a race-day fact until one is."
+      "position": {
+        "lat": 51.800244,
+        "lng": -8.26526
+      }
     },
     {
       "id": "EF2",

@@ -14,7 +14,7 @@ start and finish lines (26).
 
 | File | Source | Made by |
 |---|---|---|
-| `marks.json` | `source/General-Sailing-Instructions-…-2026.pdf`, 22.3, for the four positions; the card, for every mark its courses name | `tools/extract_rcyc_card.py marks` |
+| `marks.json` | `source/General-Sailing-Instructions-…-2026.pdf`, 22.3, for the four laid marks; OpenStreetMap for twenty harbour buoys, numbered by eye; the card, for every mark its courses name | `tools/extract_rcyc_card.py marks` |
 | `keelboat.json` | `source/RCYC-Course-Card-Art-2026.pdf`, pages 2–4; the instructions' 26 for the start line | `tools/extract_rcyc_card.py card`, `… notes`, `tools/extract_start_line.py` |
 | `source/*.md` | the two documents | `tools/pdf_markdown.py` |
 | `keelboat.html`, `map/marks.svg` | the JSON above, `map/background.png` | `tools/render-cards.ts` |
@@ -24,8 +24,9 @@ start and finish lines (26).
 Keelboats Notice Board) and the general instructions verbatim, with the
 URLs they were fetched from in the manifest. `manifest.json` records each
 artifact's source, the metadata that heads the output, and — at length —
-the twenty-six marks added to the four the instructions place, and why
-they have no position; `pnpm data` rebuilds everything and `pnpm data:check`
+the twenty-six marks added to the four the instructions place, where the
+twenty traced from OpenStreetMap came from and why the other six have no
+position; `pnpm data` rebuilds everything and `pnpm data:check`
 verifies the committed files against a fresh run.
 
 ## What the survey got wrong, and what the club has
@@ -40,8 +41,9 @@ Keelboat Racing Course Card" (22.1), and the card is a real one. The
 Cork Harbour Combined League's own instructions (2025) say the same: its
 round-the-cans courses come from the Royal Cork card, which every boat
 should carry. So the one card here serves three clubs' league racing, as
-hoped — and the club with the most marks in `data/` is also the one with
-the fewest of them placed.
+hoped — and the club with the most marks in `data/` was long the one with
+the fewest of them placed, until twenty of the harbour buoys were traced
+from OpenStreetMap and numbered against the chart.
 
 ## How the JSON is produced
 
@@ -56,29 +58,55 @@ numbered channel buoys (No.3 to No.20), eight are the lettered buoys of
 the entrance and East Ferry channels (E1, E2, E4, W1, W2, W4, EF2, EF4) and
 one is Cage, buoy C1, the green conical the Grassy Walk line finishes at.
 They are Port of Cork navigation marks, on Admiralty chart 1777, and **no
-document found gives a position for any of them**: not the club's
+document publishes a position for any of them**: not the club's
 instructions, not the Cork Harbour Combined League's or the Autumn
 League's, not any year's Cork Week instructions (whose harbour-marks
 exhibit is a picture, and whose mark list positions only the offshore and
-laid marks), and not the Port of Cork's Information Manual or its passage
-plans, which name the buoys and place none. OpenStreetMap holds the
-harbour's forty-odd lateral buoys with colours but without their numbers,
-so which is No.7 is a matter of reading a chart by eye — which this data
-set does not do, because a buoy mis-numbered here would put every course
-that rounds it wrong in a way nothing downstream could detect. Each of
-the twenty-three carries a `placement` saying all this and no position.
-The other three are laid marks: Dutchman ("approx. 2 cables SE of the
-Dutchman Rock/Fennels Bay") and Curlane ("a mark laid on the Curlane
-Bank") in the card's own words, and White Bay, which course 73 names and
-nothing describes. The manifest lists all twenty-six with the reasoning
-beside them.
+laid marks), not the Port of Cork's Information Manual or its passage
+plans, which name the buoys and place none, and not the NGA List of Lights
+(Pub. 114), which carries Cork Harbour's shore, range and pier lights —
+Roche's Point, White Bay Range, Fort Davis Range, Spit Bank, Haulbowline,
+Monkstown — and not one channel buoy.
 
-The consequence is stated plainly: **no course on this card can be
-computed from the card alone.** Every one rounds at least one navigation
-buoy, and a caller must supply those positions per race as it supplies
-the start line. The card and the courses are complete and correct; the
-positions are the gap, and the README of the day this changes should say
-where they came from.
+**Twenty of them are positioned here anyway, and this is where they came
+from.** OpenStreetMap holds the harbour's forty-six buoys with their
+positions and, for thirty-two of them, their lateral colour; it holds no
+name, number or reference for a single one, and neither does the
+OpenSeaMap rendering of it, which draws the cones unlabelled. So the
+positions are open data and the numbering is not: which cone is No.7 was
+read off the chart, buoy by buoy, by this data set's maintainer, against
+a plot of all forty-six. That is a human reading, not a citation, and it
+is the one thing here that no document backs.
+
+Three checks hold across all twenty, and they are what makes the reading
+worth trusting. Every mark is a distinct OpenStreetMap node — no node
+serves two numbers. Every node's recorded colour agrees with the
+odd-is-green, even-is-red convention of IALA region A, which the card's own
+Cage settles: the instructions call C1 "Green Conical", and C1 is odd.
+And each series runs from the harbour mouth inward, its lowest number
+nearer the entrance than its highest. `tests/rcyc.test.ts` asserts all
+three. What is **not** asserted is that the numbers rise monotonically buoy
+by buoy: the odd and even runs climb opposite sides of a channel that
+bends west past Cobh, so no distance from any one point rises along either,
+and a test that claimed otherwise would need a channel centreline this data
+set has no source for.
+
+Six marks are still unplaced, each with a `placement` and no position.
+**EF2 and EF4** were not identified — OpenStreetMap has three nodes in the
+East Ferry channel, but tagged `seamark:type=yes` with no colour, so
+nothing distinguishes them. **Cage** was not identified either, which is
+the awkward one: it is the Grassy Walk line's outer distance mark, so the
+line cannot be computed without it. The other three are laid marks:
+Dutchman ("approx. 2 cables SE of the Dutchman Rock/Fennels Bay") and
+Curlane ("a mark laid on the Curlane Bank") in the card's own words, and
+White Bay, which course 73 names and nothing describes. The manifest lists
+all twenty-six with the reasoning beside them.
+
+The consequence has shifted but not closed: **most courses on this card can
+now be computed with only the start line supplied**, which was the point of
+the exercise. A course that rounds Cage, EF2 or EF4 still needs that mark
+from the caller, as it needs the line. Course 1, for instance, resolves
+Ringabella, W2 and No.7 from this file and asks only for SL and Cage.
 
 **Card.** Pages 2 and 3 of the card are two columns of courses; the tool
 reads each column of each page top to bottom from `pdftotext -bbox` word
@@ -125,13 +153,22 @@ The marks tool refuses a card that names a mark neither the instructions
 nor the manifest supplies. Structural tests (`tests/rcyc.test.ts`) check
 the forty courses' order, a dozen of them against the printed card round by
 round, every course's start and finish at the line, the first note's
-content, and that the courses are unplaceable until the buoys are placed.
+content, that no OpenStreetMap node serves two numbers, that every buoy's
+colour agrees with the odd-is-green convention, that each series runs from
+the entrance inward, and that a course still asks the caller only for the
+line and the marks left unplaced.
 
 ## Notes on the card
 
 - The card is the 2026 update of a card the club has kept since at least
   2008 (the chart on the club's website is "Revised 2008"); the 2025
   edition is also on the club's site.
-- The harbour buoys' positions are the open question for this set — see
-  the manifest and above. A Port of Cork notice or list, or the club adding
-  them to its instructions, would settle it in a line each.
+- The twenty buoy positions are traced from OpenStreetMap and numbered by
+  eye against the chart; the numbering is the one claim here no document
+  backs, and a Port of Cork notice or list, or the club adding positions to
+  its instructions, would replace it with a citation. OpenStreetMap's data
+  is ODbL, which the MIT licence on this repository does not carry — worth
+  settling before release, since these are positions taken as data, not
+  tiles shown with attribution.
+- EF2, EF4 and Cage are the three still open. Cage matters most: it is the
+  Grassy Walk line's ODM, so the line cannot be computed without it.
