@@ -63,6 +63,16 @@ Around that:
   card: the sequence without the start line at its head, and without an
   ending the sailing instructions add at its tail. What to show a competitor
   reading the card; `courseMarks` is what to sail.
+- `calledCourseLegs(card, marks, sequence, race)` and
+  `calledCourseMarks(card, marks, sequence)` — the same, for a course the
+  race officer called on the day rather than picked off the card: "Dosco to
+  starboard, W2 to port, Harp to port, finish at No 15" as a sequence of the
+  club's mark ids with sides. The card's start line is put at its head, since
+  nobody calls the line, and everything else — the start line and finish
+  resolving ahead of the marks file, the error that names a mark nobody can
+  place — is as for a numbered course. `calledCourse(card, sequence)` is that
+  sequence as a `Course`, for `renderCourseSvg`. Most clubs race this way,
+  and the ones with cards call courses off them too.
 - `legsFromWaypoints(waypoints)` — the leg arithmetic on its own, for a
   course built by hand from placed marks with no card behind it.
 - `parsePosition` / `formatPosition` — positions the way sailors write

@@ -199,6 +199,15 @@ helper. A mark with no position from either source is an error naming it and
 quoting where the club says it goes, so the caller knows what to ask the
 race officer for.
 
+A course the race officer **called on the day** rather than displayed by
+number — most clubs' racing, and a possibility at every club with a card —
+is not in either file: it is a sequence of the marks file's ids with sides,
+handed to the library per race like the positions are, and resolved against
+the card (for its start line and finish) and the marks file exactly as a
+numbered course is. Nothing is stored, so the format does not change; a
+club with no numbered courses at all publishes a card with `courses: []`,
+carrying its start line, its finish and its notes, over its marks file.
+
 ## Versioning
 
 `formatVersion` bumps when a change would make an older reader mis-read a
