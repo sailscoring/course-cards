@@ -40,6 +40,7 @@ NOTES_TOOLS = {
     'extract_dbsc_card': ['extract_dbsc_marks.py', '--notes'],
     'extract_hyc_si_card': ['extract_hyc_si.py', 'notes'],
     'extract_dlcc_card': ['extract_dlcc_card.py', 'notes'],
+    'extract_kyc_card': ['extract_kyc_card.py', 'notes'],
 }
 
 
@@ -156,6 +157,19 @@ def extract(base, artifact, meta_path):
                '--templates', os.path.join(TOOLS, 'templates', artifact['templates'])]
         if artifact.get('overrides'):
             cmd += ['--overrides', os.path.join(base, artifact['overrides'])]
+    elif tool == 'extract_kyc_marks':
+        cmd = [sys.executable, os.path.join(TOOLS, 'extract_kyc_marks.py'), source, '--meta', meta_path]
+        for amendment in artifact.get('amendments', []):
+            cmd += ['--amend', os.path.join(base, amendment['source'])]
+        if artifact.get('addMarks'):
+            cmd += ['--add', added_marks_file(base, artifact)]
+    elif tool == 'extract_kyc_card':
+        cmd = [sys.executable, os.path.join(TOOLS, 'extract_kyc_card.py'), 'card', source, '--meta', meta_path,
+               '--templates', os.path.join(TOOLS, 'templates', artifact['templates'])]
+        if artifact.get('overrides'):
+            cmd += ['--overrides', os.path.join(base, artifact['overrides'])]
+    elif tool == 'extract_kyc_ssi_card':
+        cmd = [sys.executable, os.path.join(TOOLS, 'extract_kyc_card.py'), 'ssi', source, '--meta', meta_path]
     else:
         sys.exit(f'{artifact["output"]}: unknown tool {tool}')
     if artifact.get('notesSource'):
