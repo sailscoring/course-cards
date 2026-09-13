@@ -51,7 +51,8 @@
   .map { margin: 0; }
   .map svg { width: 100%; height: auto; border: 1px solid #ccc; background: #f4f9fd; }
   .map figcaption { color: #555; font-size: 12px; margin-top: .3rem; }
-  .note p { margin: .3rem 0; max-width: 46rem; }
+  .note p, .called { margin: .3rem 0; max-width: 46rem; }
+  .called + .map { max-width: 46rem; }
   .swatch { display: inline-block; width: .8em; height: .8em; border: 1px solid #555; vertical-align: -1px; margin-right: .3em; }
   @media print { body { padding: 0; } h2 { break-after: avoid; } .course-view { position: static; max-height: none; overflow: visible; } }
 body:has(#pick-N1:checked) #course-N1, body:has(#pick-N1:checked) #legs-N1,

@@ -264,7 +264,7 @@ const setHtml = sets
         (c) => `
         <li class="card">
           <div class="name"><a href="${esc(c.html)}">${esc(c.name)}</a></div>
-          <div class="sub">${c.courses} courses ·
+          <div class="sub">${c.courses ? `${c.courses} courses` : 'courses called on the day'} ·
             <a href="${esc(c.json)}">JSON</a> ·
             <a href="${esc(versionDir + '/' + c.json)}">JSON v${esc(version)}</a>${
               c.source ? ` · <a href="${esc(c.source)}">club's PDF</a>` : ''

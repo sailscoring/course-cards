@@ -100,7 +100,8 @@ const CSS = `
   .map { margin: 0; }
   .map svg { width: 100%; height: auto; border: 1px solid #ccc; background: #f4f9fd; }
   .map figcaption { color: #555; font-size: 12px; margin-top: .3rem; }
-  .note p { margin: .3rem 0; max-width: 46rem; }
+  .note p, .called { margin: .3rem 0; max-width: 46rem; }
+  .called + .map { max-width: 46rem; }
   .swatch { display: inline-block; width: .8em; height: .8em; border: 1px solid #555; vertical-align: -1px; margin-right: .3em; }
   @media print { body { padding: 0; } h2 { break-after: avoid; } .course-view { position: static; max-height: none; overflow: visible; } }
 `;
@@ -577,16 +578,25 @@ export function renderCardHtml(card: CourseCardFile, marks: MarksFile, options: 
     (options.background ? `Chart: ${esc(options.background.attribution)}. ` : '') +
     (area ? `${esc(area.note ?? 'Only the marks this card uses are shown.')} ` : '') +
     'Marks laid per race are not shown.';
+  // A card with no courses is a club whose race officer calls the course on
+  // the day: it carries the start line, the finish, the notes and the marks,
+  // and the page says so in place of a table it has nothing to put in.
+  const called = card.courses.length === 0;
+  const courses = called
+    ? `<h2>Courses</h2><p class="called">This card lists no courses: the race officer calls the course on the day, ` +
+      `as a sequence of the marks below, and the club's instructions on how are in the notes.</p>` +
+      (chartSvg ? `<figure class="map">${chartSvg}<figcaption>${caption}</figcaption></figure>` : '')
+    : `<h2>Courses</h2><div class="courses-layout"><div>${courseTable(card)}</div>` +
+      (chartSvg
+        ? `<aside class="course-view"><figure class="map">${chartSvg}<figcaption>${caption}</figcaption></figure>` +
+          `<p class="pick">Select a course to draw it on the chart.</p>${card.courses.map((c) => legTable(c, byId)).join('')}</aside>`
+        : '') +
+      `</div>`;
   return (
     `<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">` +
-    `<title>${esc(title)}</title><style>${CSS}${pickRules(card.courses)}\n</style></head><body>\n` +
+    `<title>${esc(title)}</title><style>${CSS}${called ? '' : pickRules(card.courses)}\n</style></head><body>\n` +
     `<h1>${esc(title)}</h1><p class="meta">${meta}</p>\n` +
-    `<h2>Courses</h2><div class="courses-layout"><div>${courseTable(card)}</div>` +
-    (chartSvg
-      ? `<aside class="course-view"><figure class="map">${chartSvg}<figcaption>${caption}</figcaption></figure>` +
-        `<p class="pick">Select a course to draw it on the chart.</p>${card.courses.map((c) => legTable(c, byId)).join('')}</aside>`
-      : '') +
-    `</div>\n` +
+    `${courses}\n` +
     (card.startLine ? startLineSection(card.startLine) + '\n' : '') +
     (card.finish ? finishSection(card.finish) + '\n' : '') +
     `<h2>Marks</h2>${marksTable(marks)}\n` +

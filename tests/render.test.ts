@@ -83,6 +83,21 @@ describe('renderCardHtml', () => {
     expect(courses).toContain('<span class="port">Z</span> <span class="port">P</span>');
   });
 
+  it('renders a card with no courses — a club whose race officer calls them — without a table or a picker', () => {
+    const called = { ...inshore, courses: [] };
+    const page = renderCardHtml(called, marks);
+    expect(page).toContain('<h2>Courses</h2><p class="called">This card lists no courses: the race officer calls the course on the day');
+    expect(page).not.toContain('<input type="radio"');
+    expect(page).not.toContain('Select a course');
+    expect(page).not.toContain('<table class="card');
+    expect(page).not.toMatch(/body:has\(#pick-/);
+    expect(page).toContain('<figure class="map"><svg');
+    expect(page).toContain('<h2>Start line</h2>');
+    expect(page).toContain('<h2>Marks</h2>');
+    expect(page).toContain('<h2>Bearings between marks (° true)</h2>');
+    for (const note of inshore.notes ?? []) expect(page).toContain(note.title);
+  });
+
   it('lists every mark and maps the fixed ones', () => {
     for (const m of marks.marks) expect(html).toContain(`<th>${m.id}</th><td>${m.name}</td>`);
     expect(html).toContain('53° 26.76′ N 006° 03.26′ W'); // Apex, as the sheet prints it
