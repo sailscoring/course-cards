@@ -1,0 +1,29 @@
+{
+  "formatVersion": 2,
+  "club": "KYC",
+  "name": "Jeanot Petch Sovereign's Cup races 2025, courses ALPHA–DELTA",
+  "source": "https://www.kyc.ie/wp-content/uploads/2025/06/Supplementary_Sailing_Instructions_v1.pdf",
+  "marks": "marks.json",
+  "startLine": {
+    "id": "SL",
+    "name": "Start line",
+    "placement": "The starting line will be between a Red & White Pole on the Committee Vessel and a Mark (or a vessel displaying an orange flag) at the port end. An IDM may be laid off the Committee Vessel and boats shall not pass between the CV and the IDM when starting.",
+    "source": "Sovereign's Cup 2025 sailing instructions FB 2.1, which the supplementary instructions apply"
+  },
+  "notes": [
+    {
+      "title": "Supplementary sailing instructions",
+      "text": "Supplementary Sailing Instructions for\nJeanot Petch Sovereign’s Cup Races Thursday 26 June 2025\nBoats are divided into the following Groups:\nGroup 1: Spinnaker Classes 0 & 1, Coastal Class 1 FG 10.25\nGroup 2: Spinnaker Classes 2 & 3, Coastal Class 2, Non-Spinnaker Classes 1 & 2 FG 10.35\nPlease refer to SI’s 7.3, 7.3.1 and amended SI 7.3.2\nAll communications for all classes will be on the VHF Ch. 69 for these races. This includes\n‘change of course’ or shortened course information.\nStart Area – see individual course below\nStarting Line: SI FB 2.1 applies\nFinishing Line: SI FC 6 applies\nCOURSES:"
+    },
+    {
+      "title": "Start areas and midway points",
+      "text": "Course ALPHA (A): start area at mark C; midway point Mark E (bearing 090 degrees).\nCourse BRAVO (B): start area at mark C; midway point Black Tom (bearing 090 degrees).\nCourse CHARLIE (C): start area at mark J; midway point Black Tom (bearing 090 degrees).\nCourse DELTA (D): start area at mark J; midway point Black Tom (bearing 090 degrees)."
+    }
+  ],
+  "courses": [
+    {"id": "A", "marks": [{"mark": "SL"}, {"mark": "Cork Buoy", "side": "port"}, {"mark": "E", "side": "starboard"}, {"mark": "Lge Sov", "side": "port"}, {"mark": "Black Tom", "side": "starboard"}, {"mark": "B", "side": "port"}, {"mark": "K", "side": "starboard"}, {"mark": "M", "side": "starboard"}, {"mark": "A", "side": "port"}, {"mark": "CF"}]},
+    {"id": "B", "marks": [{"mark": "SL"}, {"mark": "E", "side": "port"}, {"mark": "C", "side": "port"}, {"mark": "G", "side": "starboard"}, {"mark": "Black Tom", "side": "starboard"}, {"mark": "C", "side": "port"}, {"mark": "J", "side": "starboard"}, {"mark": "K", "side": "starboard"}, {"mark": "M", "side": "starboard"}, {"mark": "A", "side": "port"}, {"mark": "CF"}]},
+    {"id": "C", "marks": [{"mark": "SL"}, {"mark": "E", "side": "starboard"}, {"mark": "H", "side": "port"}, {"mark": "F", "side": "starboard"}, {"mark": "Black Tom", "side": "starboard"}, {"mark": "Lge Sov", "side": "port"}, {"mark": "J", "side": "starboard"}, {"mark": "B", "side": "port"}, {"mark": "K", "side": "starboard"}, {"mark": "M", "side": "starboard"}, {"mark": "A", "side": "port"}, {"mark": "CF"}]},
+    {"id": "D", "marks": [{"mark": "SL"}, {"mark": "B", "side": "port"}, {"mark": "J", "side": "port"}, {"mark": "C", "side": "starboard"}, {"mark": "Black Tom", "side": "starboard"}, {"mark": "D", "side": "port"}, {"mark": "B", "side": "starboard"}, {"mark": "K", "side": "starboard"}, {"mark": "M", "side": "starboard"}, {"mark": "A", "side": "port"}, {"mark": "CF"}]}
+  ]
+}

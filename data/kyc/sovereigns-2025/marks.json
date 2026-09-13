@@ -1,0 +1,145 @@
+{
+  "formatVersion": 2,
+  "club": "KYC",
+  "name": "Sovereign's Cup 2025 racing marks, from the sailing instructions with amendment 1, and the navigation marks the courses name",
+  "source": "https://www.kyc.ie/wp-content/uploads/2025/06/SOVS_2025_SIS_v6.pdf",
+  "marks": [
+    {
+      "id": "A",
+      "color": "green",
+      "position": {
+        "lat": 51.6865,
+        "lng": -8.495667
+      }
+    },
+    {
+      "id": "B",
+      "name": "Bulman",
+      "shape": "south cardinal buoy",
+      "position": {
+        "lat": 51.668667,
+        "lng": -8.495
+      }
+    },
+    {
+      "id": "C",
+      "shape": "conical",
+      "color": "yellow",
+      "position": {
+        "lat": 51.656667,
+        "lng": -8.504167
+      }
+    },
+    {
+      "id": "D",
+      "shape": "conical",
+      "color": "yellow",
+      "position": {
+        "lat": 51.676,
+        "lng": -8.4585
+      }
+    },
+    {
+      "id": "E",
+      "shape": "conical",
+      "color": "yellow",
+      "position": {
+        "lat": 51.658333,
+        "lng": -8.448333
+      }
+    },
+    {
+      "id": "F",
+      "shape": "conical",
+      "color": "yellow",
+      "position": {
+        "lat": 51.630833,
+        "lng": -8.440333
+      }
+    },
+    {
+      "id": "G",
+      "shape": "conical",
+      "color": "yellow",
+      "position": {
+        "lat": 51.608333,
+        "lng": -8.480833
+      }
+    },
+    {
+      "id": "H",
+      "shape": "conical",
+      "color": "yellow",
+      "position": {
+        "lat": 51.615,
+        "lng": -8.526667
+      }
+    },
+    {
+      "id": "J",
+      "shape": "conical",
+      "color": "yellow",
+      "position": {
+        "lat": 51.633333,
+        "lng": -8.535833
+      }
+    },
+    {
+      "id": "K",
+      "shape": "conical",
+      "color": "yellow",
+      "position": {
+        "lat": 51.658,
+        "lng": -8.526333
+      }
+    },
+    {
+      "id": "M",
+      "shape": "conical",
+      "color": "yellow",
+      "position": {
+        "lat": 51.668333,
+        "lng": -8.520833
+      }
+    },
+    {
+      "id": "Black Tom",
+      "name": "Black Tom",
+      "shape": "lateral buoy",
+      "color": "green",
+      "position": {
+        "lat": 51.607017,
+        "lng": -8.632467
+      }
+    },
+    {
+      "id": "Lge Sov",
+      "name": "Great Sovereign",
+      "shape": "island",
+      "position": {
+        "lat": 51.675779,
+        "lng": -8.449779
+      }
+    },
+    {
+      "id": "Cork Buoy",
+      "name": "Cork",
+      "shape": "safe water buoy",
+      "color": "red and white",
+      "position": {
+        "lat": 51.71599,
+        "lng": -8.26017
+      }
+    },
+    {
+      "id": "CF",
+      "name": "Charles Fort",
+      "shape": "lighthouse",
+      "placement": "Finish at Charles Fort: the finishing line laid by the committee boat there, between the red and white pole on the Committee Boat and an adjacent mark (FB 6 / FC 6); the position is the fort's lighthouse.",
+      "position": {
+        "lat": 51.695736,
+        "lng": -8.499636
+      }
+    }
+  ]
+}

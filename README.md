@@ -156,6 +156,19 @@ and how it was checked.
   West Pier hut for cards 2 and 5.
   [README](data/dbsc/summer-2026/README.md).
 
+- `data/kyc/sovereigns-2025/` — Kinsale Yacht Club's Sovereign's Cup 2025,
+  the first data set outside Dublin Bay: the club's eleven lettered marks
+  and Black Tom from the sailing instructions' positions table (with
+  amendment 1, which corrects M), the 68 "RTC/Coastal Courses" read by a
+  purpose-built OCR from the four picture pages of the instructions — a
+  table per wind direction, each course with its marks and sides, where it
+  finishes and its printed length — and the four Jeanot Petch courses from
+  the supplementary instructions' text. The marks the courses name and the
+  club does not place (the Great Sovereign, Cork Buoy, Charles Fort) are
+  positioned from OpenStreetMap, as the manifest records. The start line is
+  FB 2.1's committee-vessel line.
+  [README](data/kyc/sovereigns-2025/README.md).
+
 ```sh
 pnpm data        # rewrite the JSON from the PDFs, then the HTML from the JSON
 pnpm data:check  # verify the committed files are what a fresh run produces

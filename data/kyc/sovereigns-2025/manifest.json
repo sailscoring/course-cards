@@ -1,0 +1,195 @@
+{
+  "club": "Kinsale Yacht Club",
+  "event": "Sovereign's Cup 2025",
+  "documents": [
+    {
+      "output": "source/SOVS_2025_SIS_v6.md",
+      "source": "source/SOVS_2025_SIS_v6.pdf",
+      "url": "https://www.kyc.ie/wp-content/uploads/2025/06/SOVS_2025_SIS_v6.pdf",
+      "columns": "2@3-15",
+      "title": "Sovereign's Cup 2025 sailing instructions, version 6",
+      "why": "The whole data set is read from these: the RTC/Coastal Courses tables (pages 16–19, pictures) are the round-the-cans card, the racing marks table (page 21) is the marks file, FB 2.1 and 2.2 define the start line the card's courses begin at, FB 4 / FC 4 say which marks are used and what they look like, and FB 6 / FC 6 define the finishing line the courses end at."
+    },
+    {
+      "output": "source/Amendment-1-2-SIs.md",
+      "source": "source/Amendment-1-2-SIs.pdf",
+      "url": "https://www.kyc.ie/wp-content/uploads/2025/06/Amendment-1-2-SIs.pdf",
+      "title": "Sovereign's Cup 2025 sailing instructions, amendments 1 and 2",
+      "why": "Amendment 1 corrects mark M's position in the racing marks table, which the instructions print with K's latitude; the marks file is read with it applied. Amendment 2 changes the fleets, the programme and Fleet A's laid courses, none of which the cards here depend on. Amendments 3 and 4 (starting order, the RTC time limit) change nothing a card depends on and are not kept."
+    },
+    {
+      "output": "source/Supplementary_Sailing_Instructions_v1.md",
+      "source": "source/Supplementary_Sailing_Instructions_v1.pdf",
+      "url": "https://www.kyc.ie/wp-content/uploads/2025/06/Supplementary_Sailing_Instructions_v1.pdf",
+      "title": "Supplementary sailing instructions for the Jeanot Petch Sovereign's Cup races, Thursday 26 June 2025",
+      "why": "The four lettered courses ALPHA–DELTA of the Jeanot Petch races, as mark sequences with sides, each with its start area and finish, are the second card; it also says the start line is SI FB 2.1's and the finishing line SI FC 6's."
+    }
+  ],
+  "artifacts": [
+    {
+      "output": "marks.json",
+      "tool": "extract_kyc_marks",
+      "source": "source/SOVS_2025_SIS_v6.pdf",
+      "url": "https://www.kyc.ie/wp-content/uploads/2025/06/SOVS_2025_SIS_v6.pdf",
+      "amendments": [
+        {
+          "source": "source/Amendment-1-2-SIs.pdf",
+          "why": "Amendment 1: \"KINSALE YACHT CLUB - RACING MARKS -APPROXIMATE POSITIONS is changed as follows: M 51.40.10 N 008.31.25 W\". The instructions print M at 51.39.48 N, which is K's latitude; the amendment puts it back where the club's own 2022 card has it."
+        }
+      ],
+      "addMarks": {
+        "why": "The courses name three marks the table does not place. \"Lge Sov\" (the supplementary instructions' \"Big Sovereign\") is the Great Sovereign island east of Kinsale, which boats round; \"Cork Buoy\" is the Commissioners of Irish Lights safe water mark off Cork Harbour, the eastern limit FB 4 sets on the navigation marks used; \"CF\" is Charles Fort, where courses \"Finish at CF\" on a line the committee boat lays there (FB 6 / FC 6). None has a position in the club's documents. The positions are OpenStreetMap's, © OpenStreetMap contributors — the same source as the chart imagery: the island is way 97382978's centre (a rounding mark the size of an island has no better point), the buoy node 1593411492 (CIL00240) and the fort's lighthouse node 322520677 (Charles Fort light, A 5712). A finishing line laid off Charles Fort is where the race officer puts it on the day, so a caller may override CF as it may any mark.",
+        "marks": [
+          {
+            "id": "Lge Sov",
+            "name": "Great Sovereign",
+            "shape": "island",
+            "position": {
+              "lat": 51.675779,
+              "lng": -8.449779
+            }
+          },
+          {
+            "id": "Cork Buoy",
+            "name": "Cork",
+            "shape": "safe water buoy",
+            "color": "red and white",
+            "position": {
+              "lat": 51.71599,
+              "lng": -8.26017
+            }
+          },
+          {
+            "id": "CF",
+            "name": "Charles Fort",
+            "shape": "lighthouse",
+            "placement": "Finish at Charles Fort: the finishing line laid by the committee boat there, between the red and white pole on the Committee Boat and an adjacent mark (FB 6 / FC 6); the position is the fort's lighthouse.",
+            "position": {
+              "lat": 51.695736,
+              "lng": -8.499636
+            }
+          }
+        ]
+      },
+      "meta": {
+        "club": "KYC",
+        "name": "Sovereign's Cup 2025 racing marks, from the sailing instructions with amendment 1, and the navigation marks the courses name",
+        "source": "https://www.kyc.ie/wp-content/uploads/2025/06/SOVS_2025_SIS_v6.pdf"
+      }
+    },
+    {
+      "output": "rtc-coastal.json",
+      "tool": "extract_kyc_card",
+      "source": "source/SOVS_2025_SIS_v6.pdf",
+      "url": "https://www.kyc.ie/wp-content/uploads/2025/06/SOVS_2025_SIS_v6.pdf",
+      "templates": "kyc-sovereigns-2025",
+      "overrides": "overrides.json",
+      "meta": {
+        "club": "KYC",
+        "name": "Sovereign's Cup 2025 RTC/Coastal courses",
+        "source": "https://www.kyc.ie/wp-content/uploads/2025/06/SOVS_2025_SIS_v6.pdf",
+        "marks": "marks.json"
+      },
+      "notesSource": "source/SOVS_2025_SIS_v6.pdf",
+      "notesSections": [
+        "FB 3 COURSES",
+        "FB 4 MARKS",
+        "FB 6 FINISHING LINE",
+        "FC 3 COURSES",
+        "FC 6 FINISHING LINE"
+      ],
+      "startLine": {
+        "source": "source/SOVS_2025_SIS_v6.pdf",
+        "after": "FB 2 STARTING LINE",
+        "clauses": [
+          "2.1",
+          "2.2"
+        ],
+        "columns": "2@3-15",
+        "meta": {
+          "id": "SL",
+          "name": "Start line",
+          "source": "Sovereign's Cup 2025 sailing instructions FB 2.1 and 2.2"
+        }
+      }
+    },
+    {
+      "output": "jeanot-petch.json",
+      "tool": "extract_kyc_ssi_card",
+      "source": "source/Supplementary_Sailing_Instructions_v1.pdf",
+      "url": "https://www.kyc.ie/wp-content/uploads/2025/06/Supplementary_Sailing_Instructions_v1.pdf",
+      "meta": {
+        "club": "KYC",
+        "name": "Jeanot Petch Sovereign's Cup races 2025, courses ALPHA–DELTA",
+        "source": "https://www.kyc.ie/wp-content/uploads/2025/06/Supplementary_Sailing_Instructions_v1.pdf",
+        "marks": "marks.json"
+      },
+      "startLine": {
+        "source": "source/SOVS_2025_SIS_v6.pdf",
+        "after": "FB 2 STARTING LINE",
+        "clauses": [
+          "2.1"
+        ],
+        "columns": "2@3-15",
+        "meta": {
+          "id": "SL",
+          "name": "Start line",
+          "source": "Sovereign's Cup 2025 sailing instructions FB 2.1, which the supplementary instructions apply"
+        },
+        "why": "The supplementary instructions say \"Starting Line: SI FB 2.1 applies\" and give each course its own start area, at mark C or mark J — carried in the card's notes."
+      }
+    }
+  ],
+  "checks": {
+    "tool": "check_kyc",
+    "items": [
+      {
+        "check": "osm-positions",
+        "marks": "marks.json",
+        "toleranceNm": 0.1,
+        "why": "Two of the club's marks are Commissioners of Irish Lights buoys with charted positions, which OpenStreetMap carries from CIL: the club's \"approximate\" position for each should be within a cable of the charted one.",
+        "positions": {
+          "B": {
+            "node": 1593411477,
+            "lat": 51.669722,
+            "lng": -8.495,
+            "name": "Bulman, CIL00220"
+          },
+          "Black Tom": {
+            "node": 1593411446,
+            "lat": 51.607222,
+            "lng": -8.632222,
+            "name": "Black Tom, CIL00190"
+          }
+        }
+      },
+      {
+        "check": "same-start-line",
+        "pdf": "source/SOVS_2025_SIS_v6.pdf",
+        "headings": [
+          "FB 2 STARTING LINE",
+          "FC 2 STARTING LINE"
+        ],
+        "why": "The RTC/Coastal card serves Fleets B and C; its start line is read from FB 2, so FC 2 must define the line the same way, the VHF channel apart."
+      },
+      {
+        "check": "printed-lengths",
+        "card": "rtc-coastal.json",
+        "marks": "marks.json",
+        "maxGapNm": 9.5,
+        "slackNm": 0.5,
+        "why": "Every course prints an approximate length. The legs between the marks the card places must fall short of it — the legs to and from the start area, which is chosen on the day, are what is missing — by no more than the two legs out to the farthest mark could be: 9.5 NM covers NE1D, whose only placed marks are Cork Buoy and J. A misread mark letter would move a course by miles."
+      }
+    ]
+  },
+  "map": {
+    "background": "map/background.png",
+    "marks": "marks.json",
+    "layers": [
+      "osm",
+      "openseamap"
+    ],
+    "zoom": 13,
+    "paddingMinutes": 0.8
+  }
+}
