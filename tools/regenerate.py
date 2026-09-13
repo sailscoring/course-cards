@@ -41,6 +41,7 @@ NOTES_TOOLS = {
     'extract_hyc_si_card': ['extract_hyc_si.py', 'notes'],
     'extract_dlcc_card': ['extract_dlcc_card.py', 'notes'],
     'extract_kyc_card': ['extract_kyc_card.py', 'notes'],
+    'extract_cybc_ecbkc_card': ['extract_cybc_card.py', 'notes'],
 }
 
 
@@ -48,6 +49,8 @@ def notes_file(base, artifact):
     tool, *flags = NOTES_TOOLS[artifact['tool']]
     if artifact.get('notesSections'):
         flags += ['--sections', ','.join(artifact['notesSections'])]
+    if artifact.get('notesClauses'):
+        flags += ['--clauses', ','.join(artifact['notesClauses'])]
     notes = subprocess.run([sys.executable, os.path.join(TOOLS, tool)] + flags + [os.path.join(base, artifact['notesSource'])],
                            check=True, capture_output=True, text=True).stdout
     with tempfile.NamedTemporaryFile('w', suffix='.json', delete=False) as fh:
@@ -170,6 +173,18 @@ def extract(base, artifact, meta_path):
             cmd += ['--overrides', os.path.join(base, artifact['overrides'])]
     elif tool == 'extract_kyc_ssi_card':
         cmd = [sys.executable, os.path.join(TOOLS, 'extract_kyc_card.py'), 'ssi', source, '--meta', meta_path]
+    elif tool == 'extract_cybc_marks':
+        n = artifact['notice']
+        cmd = [sys.executable, os.path.join(TOOLS, 'extract_cybc_card.py'), 'marks', source, '--meta', meta_path,
+               '--notice', os.path.join(base, n['source']), '--club', n['club'], '--placement', artifact['placement']]
+    elif tool == 'extract_cybc_cruiser_card':
+        cmd = [sys.executable, os.path.join(TOOLS, 'extract_cybc_card.py'), 'cruiser', source, '--meta', meta_path]
+    elif tool == 'extract_cybc_ecbkc_card':
+        cmd = [sys.executable, os.path.join(TOOLS, 'extract_cybc_card.py'), 'ecbkc', source, '--meta', meta_path]
+        if artifact.get('aliases'):
+            with tempfile.NamedTemporaryFile('w', suffix='.json', delete=False) as fh:
+                json.dump(artifact['aliases']['map'], fh)
+            cmd += ['--aliases', fh.name]
     else:
         sys.exit(f'{artifact["output"]}: unknown tool {tool}')
     if artifact.get('notesSource'):
