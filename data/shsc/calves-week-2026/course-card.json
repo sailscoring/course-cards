@@ -1,0 +1,38 @@
+{
+  "formatVersion": 2,
+  "club": "SHSC",
+  "name": "Calves Week 2026: courses called on the day over the club's marks",
+  "source": "https://www.racingrulesofsailing.org/documents/15264/event",
+  "marks": "marks.json",
+  "startLine": {
+    "id": "SL",
+    "name": "Start line",
+    "placement": "The starting line is between a red and white pole on the committee boat at the one end and the course side of the starting mark at the other. An inner-distance mark may be laid. Boats shall not sail between this mark and the committee boat at any time.",
+    "source": "Calves Week 2026 sailing instructions 12.1"
+  },
+  "finish": {
+    "id": "FL",
+    "name": "Finish line",
+    "placement": "The finishing line is between the red and white pole on the finishing vessel displaying a blue flag and the course side of a laid mark, or Mark No. 6 as indicated.",
+    "source": "Calves Week 2026 sailing instructions 13.1"
+  },
+  "notes": [
+    {
+      "title": "Racing area",
+      "text": "9.1 The racing area is Long Island Bay and the Fastnet Rock. All races will Start near Copper Point or Inside Harbour, and finish inside Schull Harbour."
+    },
+    {
+      "title": "Courses",
+      "text": "10.1 Courses will be determined by the Race Committee using fixed marks (other than Start/Finish marks) and islands in Long Island Bay as well as the Fastnet Rock & displayed on a board on the Committee Boat on the day of the race.\n10.2 Course details may be announced on VHF channel 69 prior to the start of each class."
+    },
+    {
+      "title": "Marks",
+      "text": "11.1 A chart showing the positions of the permanently laid marks is available on registration."
+    },
+    {
+      "title": "Marks, distances and bearings",
+      "text": "Bearings in Black, relative to True North. Distances in Red, in NM. Mark Positions may vary slightly. All figures are approximate. WARNING: Some direct paths are obstructed."
+    }
+  ],
+  "courses": []
+}

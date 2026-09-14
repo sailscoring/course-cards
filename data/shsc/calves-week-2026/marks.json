@@ -1,0 +1,151 @@
+{
+  "formatVersion": 2,
+  "club": "SHSC",
+  "name": "Calves Week 2026 racing marks, from the club's marks, distances and bearings sheet, lettered by its chartlet, and the Fastnet Rock",
+  "source": "https://www.racingrulesofsailing.org/documents/15264/event",
+  "marks": [
+    {
+      "id": "W",
+      "name": "Weather Mark",
+      "color": "red conical",
+      "placement": "Laid on the day as the weather mark; the sheet lists it with no position."
+    },
+    {
+      "id": "A",
+      "name": "Amelia",
+      "shape": "nav bouy",
+      "color": "conical green",
+      "position": {
+        "lat": 51.5,
+        "lng": -9.523833
+      }
+    },
+    {
+      "id": "C",
+      "name": "Cush",
+      "shape": "north cardinal",
+      "color": "yellow nav",
+      "position": {
+        "lat": 51.505167,
+        "lng": -9.5465
+      }
+    },
+    {
+      "id": "EC",
+      "name": "East Calf",
+      "shape": "island",
+      "position": {
+        "lat": 51.479,
+        "lng": -9.476333
+      }
+    },
+    {
+      "id": "G",
+      "name": "Goat Island",
+      "shape": "island",
+      "position": {
+        "lat": 51.489167,
+        "lng": -9.605667
+      }
+    },
+    {
+      "id": "P",
+      "name": "Perch/Bull Rock",
+      "shape": "iron beacon",
+      "position": {
+        "lat": 51.5125,
+        "lng": -9.536667
+      }
+    },
+    {
+      "id": "WC",
+      "name": "West Calf",
+      "shape": "island",
+      "position": {
+        "lat": 51.469333,
+        "lng": -9.5215
+      }
+    },
+    {
+      "id": "1",
+      "name": "Castle Grounds",
+      "color": "red conical",
+      "position": {
+        "lat": 51.507167,
+        "lng": -9.528833
+      }
+    },
+    {
+      "id": "2",
+      "name": "NW - Long Island",
+      "color": "yellow flag on pole",
+      "position": {
+        "lat": 51.496167,
+        "lng": -9.577833
+      }
+    },
+    {
+      "id": "3",
+      "name": "NE - Castle Island",
+      "color": "conical with parnells wrap",
+      "position": {
+        "lat": 51.515,
+        "lng": -9.501667
+      }
+    },
+    {
+      "id": "4",
+      "name": "SW - Long Island",
+      "color": "yellow flag on pole",
+      "position": {
+        "lat": 51.468,
+        "lng": -9.5725
+      }
+    },
+    {
+      "id": "5",
+      "name": "S - Calf Island Middle",
+      "color": "bouy with yellow flag & burgee",
+      "position": {
+        "lat": 51.471667,
+        "lng": -9.501667
+      }
+    },
+    {
+      "id": "6",
+      "name": "Middle - Harbour",
+      "color": "conical with uk sails wrap",
+      "position": {
+        "lat": 51.521667,
+        "lng": -9.535833
+      }
+    },
+    {
+      "id": "7",
+      "name": "SW - Horse Island",
+      "color": "yellow flag on pole",
+      "position": {
+        "lat": 51.507,
+        "lng": -9.484167
+      }
+    },
+    {
+      "id": "8",
+      "name": "Crookhaven",
+      "color": "conical with parnells wrap",
+      "position": {
+        "lat": 51.479,
+        "lng": -9.691167
+      }
+    },
+    {
+      "id": "Fastnet",
+      "name": "Fastnet Rock",
+      "shape": "rock",
+      "position": {
+        "lat": 51.389282,
+        "lng": -9.602686
+      }
+    }
+  ]
+}

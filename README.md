@@ -108,7 +108,10 @@ left out when they do not, and the manifest records which and why. Every one
 gets a Markdown sidecar (`foo.pdf` → `foo.md`, by `tools/pdf_markdown.py`)
 so its text is greppable and diffable without a PDF viewer, following the
 practice of the sibling `reference-docs` store; the PDF stays the source of
-truth and the sidecar is regenerated and verified like every other artifact. The same pipeline renders each card
+truth and the sidecar is regenerated and verified like every other artifact. A
+document that is a scan with no text layer gets its sidecar transcribed by
+hand instead, the manifest marks it `transcribed`, and the pipeline keeps it
+and reads the card's start line, finish and notes from it. The same pipeline renders each card
 as a self-contained HTML page: the course table as printed, the marks over
 an OpenStreetMap + OpenSeaMap chart — pick a course and it is drawn there,
 leg by leg, with each leg's true bearing and distance — bearings and
@@ -203,6 +206,22 @@ and how it was checked.
   the caller for it. The start line is the instructions' 26, and every
   course finishes on it.
   [README](data/rcyc/keelboat-2026/README.md).
+
+- `data/shsc/calves-week-2026/` — Schull Harbour Sailing Club's Calves Week
+  2026, the first data set for a club that prints no courses: the sailing
+  instructions have the race committee set each course on the day from the
+  fixed marks, the islands and the Fastnet Rock, so the card carries its
+  start line (SI 12.1), its finish (13.1) and the instructions on courses
+  over an empty course list, for a called course to be resolved against.
+  The sixteen marks are read from the club's marks, distances and bearings
+  sheet — six fixed marks lettered by the club's chartlet, eight laid marks
+  numbered, the weather mark unplaced — plus the Fastnet Rock from
+  OpenStreetMap; the chartlet and the club's buoy photographs confirm every
+  printed position, and the sheet's own table, which the club calls
+  approximate, is held to a wide tolerance with its slips listed. The
+  instructions are a scan, so their sidecar is transcribed by hand and
+  the manifest says so.
+  [README](data/shsc/calves-week-2026/README.md).
 
 ```sh
 pnpm data        # rewrite the JSON from the PDFs, then the HTML from the JSON

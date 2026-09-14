@@ -1,0 +1,183 @@
+{
+  "club": "Schull Harbour Sailing Club",
+  "event": "Calves Week 2026",
+  "documents": [
+    {
+      "output": "source/Calves_Week_Sailing_Instructions_2026.md",
+      "source": "source/Calves_Week_Sailing_Instructions_2026.pdf",
+      "url": "https://www.racingrulesofsailing.org/documents/199319",
+      "title": "Quintas Capital Calves Week 2026 sailing instructions",
+      "transcribed": true,
+      "why": "10.1 has the race committee set each course on the day from the fixed marks, the islands and the Fastnet Rock and display it on the committee boat, which is why the card carries no courses; 9.1 gives the racing area and where races start and finish; 11.1 says a chart of the permanently laid marks is issued at registration; 12.1 defines the start line and 13.1 the finishing line the card carries. The PDF on the official notice board (posted 20 July 2026) is a scan with no text layer, so its sidecar is transcribed by hand and kept rather than generated; the start line, the finish and the notes are read from the transcript."
+    },
+    {
+      "output": "source/Calves_Week_Chartlet_2026.md",
+      "source": "source/Calves_Week_Chartlet_2026.pdf",
+      "url": "https://www.racingrulesofsailing.org/documents/199322",
+      "title": "Quintas Capital Calves Week 2026 chartlet",
+      "why": "The chart SI 11.1 promises: the marks over an Admiralty chart of Long Island Bay, with the index that letters the six fixed marks — the ids the marks file uses — and, on its second page, the three navigation marks photographed with their positions, which cross-check the sheet's."
+    },
+    {
+      "output": "source/Calves_Week_Buoy_Photos_2026.md",
+      "source": "source/Calves_Week_Buoy_Photos_2026.pdf",
+      "url": "https://www.racingrulesofsailing.org/documents/199320",
+      "title": "Quintas Capital Calves Week 2026 buoy photos",
+      "furniture": false,
+      "why": "The eight laid marks photographed, each captioned with its position, which cross-check the sheet's. Every line of this two-page document repeats in shape on both pages, so the sidecar keeps them all rather than dropping them as running headers."
+    }
+  ],
+  "artifacts": [
+    {
+      "output": "marks.json",
+      "tool": "extract_shsc_marks",
+      "source": "source/CalvesWeek_Marks_Bearings_Distances_2026_v1.pdf",
+      "chartlet": "source/Calves_Week_Chartlet_2026.pdf",
+      "why": "The sheet (version 1, 9 July 2026) is the one document that positions all fourteen fixed and laid marks; it was not found on the official notice board or the club's site, and the copy here was supplied to the project. Its rows are named; the chartlet's index letters the six fixed marks, and those letters are the ids. The \"Start\" and \"Finish\" rows are the lines the sailing instructions define and the card carries; \"Weather Mark\" is laid on the day and has a placement and no position.",
+      "addMarks": {
+        "why": "SI 9.1 makes the Fastnet Rock part of the racing area and 10.1 a mark the race committee may set a course round; the chartlet shows it, and the sheet does not list it. The position is OpenStreetMap's, © OpenStreetMap contributors — the same source as the chart imagery: the centre of way 348787096, the islet, as a rounding mark the size of a rock is placed (the lighthouse, node 322520722, is 25 m from it).",
+        "marks": [
+          {
+            "id": "Fastnet",
+            "name": "Fastnet Rock",
+            "shape": "rock",
+            "position": {
+              "lat": 51.389282,
+              "lng": -9.602686
+            }
+          }
+        ]
+      },
+      "meta": {
+        "club": "SHSC",
+        "name": "Calves Week 2026 racing marks, from the club's marks, distances and bearings sheet, lettered by its chartlet, and the Fastnet Rock",
+        "source": "https://www.racingrulesofsailing.org/documents/15264/event"
+      }
+    },
+    {
+      "output": "course-card.json",
+      "tool": "extract_shsc_card",
+      "source": "source/CalvesWeek_Marks_Bearings_Distances_2026_v1.pdf",
+      "why": "No courses: SI 10.1 has the race committee set each course on the day and display it on the committee boat, so this card is the start line, the finish and the instructions on courses over the marks file, with the sheet's caveats as its last note.",
+      "meta": {
+        "club": "SHSC",
+        "name": "Calves Week 2026: courses called on the day over the club's marks",
+        "source": "https://www.racingrulesofsailing.org/documents/15264/event",
+        "marks": "marks.json"
+      },
+      "notesSource": "source/Calves_Week_Sailing_Instructions_2026.md",
+      "notesSections": [
+        "9",
+        "10",
+        "11"
+      ],
+      "startLine": {
+        "source": "source/Calves_Week_Sailing_Instructions_2026.md",
+        "clauses": [
+          "12.1"
+        ],
+        "meta": {
+          "id": "SL",
+          "name": "Start line",
+          "source": "Calves Week 2026 sailing instructions 12.1"
+        }
+      },
+      "finish": {
+        "source": "source/Calves_Week_Sailing_Instructions_2026.md",
+        "clauses": [
+          "13.1"
+        ],
+        "why": "9.1 puts every finish inside Schull Harbour; 13.1 defines the line, laid on the day or at Mark No. 6, so it has a placement and no position.",
+        "meta": {
+          "id": "FL",
+          "name": "Finish line",
+          "source": "Calves Week 2026 sailing instructions 13.1"
+        }
+      }
+    }
+  ],
+  "checks": {
+    "tool": "check_shsc",
+    "items": [
+      {
+        "check": "captions",
+        "marks": "marks.json",
+        "pdf": "source/Calves_Week_Chartlet_2026.pdf",
+        "labels": {
+          "AMELIA BUOY": "A",
+          "CUSH BUOY": "C",
+          "PERCH/BULL ROCK": "P"
+        }
+      },
+      {
+        "check": "captions",
+        "marks": "marks.json",
+        "pdf": "source/Calves_Week_Buoy_Photos_2026.pdf",
+        "labels": {
+          "Mark 1": "1",
+          "Mark 2": "2",
+          "Mark 3": "3",
+          "Mark 4": "4",
+          "Mark 5": "5",
+          "Mark 6": "6",
+          "Mark 7": "7",
+          "Mark 8": "8"
+        }
+      },
+      {
+        "check": "marks-table",
+        "marks": "marks.json",
+        "pdf": "source/CalvesWeek_Marks_Bearings_Distances_2026_v1.pdf",
+        "names": {
+          "Amelia": "A",
+          "Cush": "C",
+          "East Calf": "EC",
+          "Goat Island": "G",
+          "Perch/Bull Rock": "P",
+          "West Calf": "WC",
+          "1": "1",
+          "2": "2",
+          "3": "3",
+          "4": "4",
+          "5": "5",
+          "6": "6",
+          "7": "7",
+          "8": "8"
+        },
+        "toleranceDeg": 15,
+        "toleranceNm": 0.5,
+        "why": "The sheet says its figures are approximate, and they are: at DBSC's tolerance of 1° and 0.01 NM only one of the 182 pairs agrees with the positions, and the typical miss is a few degrees and a tenth or two of a mile. The positions themselves are borne out to the minute by the chartlet and the buoy photos, so the table is the weaker statement. It is held here to 15° and 0.5 NM, and the nineteen pairs beyond that are listed with what the sheet prints and what its positions give: where the reciprocal cell agrees with the positions the cell is a slip, and where both directions miss the pair was worked from other positions.",
+        "expected": {
+          "Amelia→3": "The reciprocal 3→Amelia (212° 1.78 NM) misses too, so it is not a slip in one cell",
+          "Amelia→6": "The reciprocal 6→Amelia prints 167° 1.54 NM, which the positions bear out, so this cell is a slip",
+          "Cush→6": "The reciprocal 6→Cush prints 214° 1.19 NM, which the positions bear out, so this cell is a slip",
+          "East Calf→3": "The reciprocal 3→East Calf prints 161° 2.38 NM, which the positions bear out, so this cell is a slip",
+          "East Calf→5": "The reciprocal 5→East Calf (045° 1.04 NM) misses too, so it is not a slip in one cell",
+          "Goat Island→2": "The reciprocal 2→Goat Island (220° 1.20 NM) misses too, so it is not a slip in one cell",
+          "Goat Island→6": "The reciprocal 6→Goat Island prints 234° 3.30 NM, which the positions bear out, so this cell is a slip",
+          "Goat Island→8": "The reciprocal 8→Goat Island prints 083° 3.27 NM, which the positions bear out, so this cell is a slip",
+          "Perch/Bull Rock→1": "The reciprocal 1→Perch/Bull Rock (352° 0.54 NM) misses too, so it is not a slip in one cell",
+          "1→Goat Island": "The reciprocal Goat Island→1 prints 067° 2.94 NM, which the positions bear out, so this cell is a slip",
+          "1→Perch/Bull Rock": "The reciprocal Perch/Bull Rock→1 (172° 0.54 NM) misses too, so it is not a slip in one cell",
+          "1→2": "The reciprocal 2→1 prints 076° 1.86 NM, which the positions bear out, so this cell is a slip",
+          "2→Goat Island": "The reciprocal Goat Island→2 (052° 1.14 NM) misses too, so it is not a slip in one cell",
+          "3→Amelia": "The reciprocal Amelia→3 (081° 0.98 NM) misses too, so it is not a slip in one cell",
+          "3→6": "The reciprocal 6→3 (089° 1.20 NM) misses too, so it is not a slip in one cell",
+          "3→7": "The reciprocal 7→3 prints 320° 1.05 NM, which the positions bear out, so this cell is a slip",
+          "5→East Calf": "The reciprocal East Calf→5 (218° 1.20 NM) misses too, so it is not a slip in one cell",
+          "6→3": "The reciprocal 3→6 (270° 1.30 NM) misses too, so it is not a slip in one cell",
+          "7→Goat Island": "The reciprocal Goat Island→7 prints 076° 4.79 NM, which the positions bear out, so this cell is a slip"
+        }
+      }
+    ]
+  },
+  "map": {
+    "background": "map/background.png",
+    "marks": "marks.json",
+    "layers": [
+      "osm",
+      "openseamap"
+    ],
+    "zoom": 13,
+    "paddingMinutes": 1.0
+  }
+}
