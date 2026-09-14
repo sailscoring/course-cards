@@ -189,11 +189,26 @@ const why = (error: unknown): string => {
   return e.cause?.message ? `${e.message}: ${e.cause.message}` : e.message;
 };
 
-/** One asset of a release, or null when the release has not published it. */
+const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
+
+/**
+ * One asset of a release, or null when the release has not published it.
+ *
+ * A tag push starts the release workflow and this build together, so the
+ * first fetches of a new version land while GitHub is still creating the
+ * release; that is the 404 the null answers. But GitHub has also answered
+ * that window with a 504, and a server error is not an answer at all — it
+ * is retried a few times before it fails the build.
+ */
 async function releaseAsset(tag: string, name: string): Promise<Uint8Array | null> {
   const cached = join(cacheDir, tag, name);
   if (existsSync(cached)) return readFileSync(cached);
-  const response = await fetch(`${repoUrl}/releases/download/${tag}/${name}`);
+  let response = await fetch(`${repoUrl}/releases/download/${tag}/${name}`);
+  for (let attempt = 1; response.status >= 500 && attempt <= 4; attempt++) {
+    console.warn(`${tag}/${name}: ${response.status} ${response.statusText}, retrying (${attempt}/4)`);
+    await sleep(attempt * 5_000);
+    response = await fetch(`${repoUrl}/releases/download/${tag}/${name}`);
+  }
   if (response.status === 404) return null;
   if (!response.ok) throw new Error(`${name}: ${response.status} ${response.statusText}`);
   const bytes = new Uint8Array(await response.arrayBuffer());
