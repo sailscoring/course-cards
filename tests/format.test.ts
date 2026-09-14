@@ -134,6 +134,20 @@ describe('the parsers', () => {
     expect(() => parseCourseCardFile({ formatVersion: 3, courses: [] })).toThrow(/newer/);
   });
 
+  it('read a card with no courses — a club whose race officer calls them — as its start line, finish and notes', () => {
+    const card = parseCourseCardFile({
+      formatVersion: 2,
+      startLine: { id: 'SL', placement: 'Near Copper Point', source: 'SI 12.1' },
+      finish: { id: 'FL', placement: 'Inside the harbour', source: 'SI 13.1' },
+      notes: [{ title: 'Courses', text: 'Displayed on the committee boat.' }],
+      courses: [],
+    });
+    expect(card.courses).toEqual([]);
+    expect(card.startLine!.id).toBe('SL');
+    expect(card.finish!.id).toBe('FL');
+    expect(() => parseCourseCardFile({ formatVersion: 2 })).toThrow(FormatError);
+  });
+
   it('read a card’s start line as the mark it is', () => {
     const card = parseCourseCardFile({
       formatVersion: 2,

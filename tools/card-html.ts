@@ -229,11 +229,16 @@ function endingText(finish: Finish): string {
  *  them. It closes every course — the marks of `via`, then the line — so the
  *  leg table's last row ends at it; like the start line it is not one of the
  *  club's marks and is not in their table. */
-function finishSection(finish: Finish): string {
+function finishSection(finish: Finish, called: boolean): string {
   const where = finish.position ? formatPosition(finish.position) : `<em>${esc(finish.placement ?? '')}</em>`;
+  // On a card with no courses the finish is where a called course ends,
+  // not a run home the card leaves unprinted.
+  const ending = called
+    ? `A course called on the day ends at ${esc(endingText(finish))}.`
+    : `Every course on this card continues past its last printed mark: ${esc(endingText(finish))}. The card prints none of it.`;
   return (
     `<h2>Finish</h2><table><tbody><tr><th>${esc(finish.id)}</th><td>${esc(finish.name ?? '')}</td><td>${where}</td></tr></tbody></table>` +
-    `<p class="meta">Every course on this card continues past its last printed mark: ${esc(endingText(finish))}. The card prints none of it.` +
+    `<p class="meta">${ending}` +
     (finish.source ? ` ${esc(finish.source)}.` : '') +
     '</p>' +
     (finish.position && finish.placement ? `<p class="meta">${esc(finish.placement)}</p>` : '')
@@ -598,7 +603,7 @@ export function renderCardHtml(card: CourseCardFile, marks: MarksFile, options: 
     `<h1>${esc(title)}</h1><p class="meta">${meta}</p>\n` +
     `${courses}\n` +
     (card.startLine ? startLineSection(card.startLine) + '\n' : '') +
-    (card.finish ? finishSection(card.finish) + '\n' : '') +
+    (card.finish ? finishSection(card.finish, called) + '\n' : '') +
     `<h2>Marks</h2>${marksTable(marks)}\n` +
     `<h2>Bearings between marks (° true)</h2>${pairTable(marks.marks, (a, b) => String(Math.round(bearingDeg(a, b)) % 360).padStart(3, '0'))}\n` +
     `<h2>Distances between marks (NM)</h2>${pairTable(marks.marks, (a, b) => distanceNm(a, b).toFixed(2))}\n` +

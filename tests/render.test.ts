@@ -84,8 +84,10 @@ describe('renderCardHtml', () => {
   });
 
   it('renders a card with no courses — a club whose race officer calls them — without a table or a picker', () => {
-    const called = { ...inshore, courses: [] };
+    const called = { ...inshore, courses: [], finish: { id: 'FL', name: 'Finish line', placement: 'Inside the harbour', source: 'SI 13.1' } };
     const page = renderCardHtml(called, marks);
+    expect(page).toContain('A course called on the day ends at FL. SI 13.1.');
+    expect(page).not.toContain('continues past its last printed mark');
     expect(page).toContain('<h2>Courses</h2><p class="called">This card lists no courses: the race officer calls the course on the day');
     expect(page).not.toContain('<input type="radio"');
     expect(page).not.toContain('Select a course');

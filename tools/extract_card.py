@@ -356,9 +356,12 @@ def emit(card, fh):
     """Pretty JSON with each course on one line, so the card reads like a card."""
     head = {k: v for k, v in card.items() if k != 'courses'}
     text = json.dumps(head, indent=2, ensure_ascii=False)
-    text = text[:-2] + ',\n  "courses": [\n'
-    lines = ['    ' + json.dumps(c, separators=(', ', ': '), ensure_ascii=False) for c in card['courses']]
-    text += ',\n'.join(lines) + '\n  ]\n}\n'
+    if not card['courses']:
+        text = text[:-2] + ',\n  "courses": []\n}\n'  # a club whose race officer calls the course
+    else:
+        text = text[:-2] + ',\n  "courses": [\n'
+        lines = ['    ' + json.dumps(c, separators=(', ', ': '), ensure_ascii=False) for c in card['courses']]
+        text += ',\n'.join(lines) + '\n  ]\n}\n'
     fh.write(text)
 
 

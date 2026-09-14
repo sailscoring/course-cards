@@ -115,7 +115,9 @@ export function parseCourseCardFile(data: unknown): CourseCardFile {
   if (typeof data !== 'object' || data === null) fail('card', 'expected an object');
   const obj = data as Record<string, unknown>;
   const formatVersion = checkVersion(obj.formatVersion, 'card.formatVersion');
-  if (!Array.isArray(obj.courses) || obj.courses.length === 0) fail('card.courses', 'expected courses');
+  // A club whose race officer calls the course on the day publishes a card
+  // with no courses: its start line, finish and notes over its marks.
+  if (!Array.isArray(obj.courses)) fail('card.courses', 'expected a list of courses');
 
   // The start line is a mark, plus the instruction that defines it.
   let startLine: { startLine?: StartLine } = {};
