@@ -14,7 +14,7 @@ start and finish lines (26).
 
 | File | Source | Made by |
 |---|---|---|
-| `marks.json` | `source/General-Sailing-Instructions-…-2026.pdf`, 22.3, for the four laid marks; OpenStreetMap for twenty harbour buoys, numbered by eye; the card, for every mark its courses name | `tools/extract_rcyc_card.py marks` |
+| `marks.json` | `source/General-Sailing-Instructions-…-2026.pdf`, 22.3, for the four laid marks; OpenStreetMap for twenty harbour buoys, numbered by eye; the club, for Cage; the card, for every mark its courses name | `tools/extract_rcyc_card.py marks` |
 | `keelboat.json` | `source/RCYC-Course-Card-Art-2026.pdf`, pages 2–4; the instructions' 26 for the start line | `tools/extract_rcyc_card.py card`, `… notes`, `tools/extract_start_line.py` |
 | `source/*.md` | the two documents | `tools/pdf_markdown.py` |
 | `keelboat.html`, `map/marks.svg` | the JSON above, `map/background.png` | `tools/render-cards.ts` |
@@ -25,8 +25,9 @@ Keelboats Notice Board) and the general instructions verbatim, with the
 URLs they were fetched from in the manifest. `manifest.json` records each
 artifact's source, the metadata that heads the output, and — at length —
 the twenty-six marks added to the four the instructions place, where the
-twenty traced from OpenStreetMap came from and why the other six have no
-position; `pnpm data` rebuilds everything and `pnpm data:check`
+twenty traced from OpenStreetMap and the one the club gave came from, and
+why the other five have no position; `pnpm data` rebuilds everything and
+`pnpm data:check`
 verifies the committed files against a fresh run.
 
 ## What the survey got wrong, and what the club has
@@ -91,22 +92,48 @@ bends west past Cobh, so no distance from any one point rises along either,
 and a test that claimed otherwise would need a channel centreline this data
 set has no source for.
 
-Six marks are still unplaced, each with a `placement` and no position.
+**Cage is placed from neither source, and on the club's word alone.** Buoy
+C1 is in no publication, and it is not in OpenStreetMap either — the
+nearest node to it is 850 m away — so it could not be read off the chart
+with the others. The club supplied its position directly: 51°48.834'N
+8°16.968'W, the green conical the instructions describe at 26.1. That is
+correspondence, not a document, and it is cited to nothing; if the club
+ever prints it, the citation replaces the courtesy.
+
+It is worth having, because it is the Grassy Walk line's outer distance
+mark, and placing it made a check possible that tests everything at once.
+Solve for the start line position that best fits the card's own printed
+distances — 28 courses, nothing fed in but the mark positions and the
+printed totals — and the answer lands at 51°48.693'N 8°17.676'W: 853 m from
+Cage, 817 m from the club's pier at Crosshaven, on the 1500 m line between
+them, 367 m from its midpoint. The fit recovered a point on the Grassy Walk
+line without being told the line exists. A wrong Cage would have dragged it
+off; so would a mis-numbered buoy. Median error 0.46 nm on courses of six to
+twelve miles.
+
+That check also settles course 12, whose third round prints "(3nm)" after
+rounds of 7 and 9. Computed from positions it is 10.04 nm, which is what a
+third round after 7 and 9 should be: the card has a misprint, and the JSON
+still carries 3 as printed. Courses 3 and 19 sit furthest out — printed 12.0
+against 9.09 and 10.38 — and are unexplained; every other course over the
+same marks fits.
+
+Five marks are still unplaced, each with a `placement` and no position.
 **EF2 and EF4** were not identified — OpenStreetMap has three nodes in the
 East Ferry channel, but tagged `seamark:type=yes` with no colour, so
-nothing distinguishes them. **Cage** was not identified either, which is
-the awkward one: it is the Grassy Walk line's outer distance mark, so the
-line cannot be computed without it. The other three are laid marks:
+nothing distinguishes them. The other three are laid marks:
 Dutchman ("approx. 2 cables SE of the Dutchman Rock/Fennels Bay") and
 Curlane ("a mark laid on the Curlane Bank") in the card's own words, and
 White Bay, which course 73 names and nothing describes. The manifest lists
 all twenty-six with the reasoning beside them.
 
-The consequence has shifted but not closed: **most courses on this card can
-now be computed with only the start line supplied**, which was the point of
-the exercise. A course that rounds Cage, EF2 or EF4 still needs that mark
-from the caller, as it needs the line. Course 1, for instance, resolves
-Ringabella, W2 and No.7 from this file and asks only for SL and Cage.
+The consequence has shifted but not closed: **thirty of the forty courses
+can now be computed with only the start line supplied**, which was the point
+of the exercise. Course 1, for instance, resolves Ringabella, W2, Cage, No.7
+and Dosco from this file and asks only for SL. The ten that cannot are the
+five rounding EF2 (8, 20, 76, 81) or EF4 (71), the four at Curlane (72, 75,
+83) or Dutchman (2), and course 73 at White Bay — each asks the caller for
+that mark, as every course asks for the line.
 
 **Card.** Pages 2 and 3 of the card are two columns of courses; the tool
 reads each column of each page top to bottom from `pdftotext -bbox` word
@@ -155,8 +182,15 @@ the forty courses' order, a dozen of them against the printed card round by
 round, every course's start and finish at the line, the first note's
 content, that no OpenStreetMap node serves two numbers, that every buoy's
 colour agrees with the odd-is-green convention, that each series runs from
-the entrance inward, and that a course still asks the caller only for the
-line and the marks left unplaced.
+the entrance inward, and that a course asks the caller only for the line
+and the marks left unplaced.
+
+The strongest check is the card's own arithmetic, described above: fitting
+a start line to the printed distances of 28 courses puts it on the Grassy
+Walk line, which corroborates Cage and the numbering together. It is not a
+test, because it fits a free parameter and would need an optimiser in the
+suite to assert; `tools/` has no script for it either. Re-derive it from
+`marks.json` and the card's `distanceNm` if a position is ever disputed.
 
 ## Notes on the card
 
@@ -164,11 +198,11 @@ line and the marks left unplaced.
   2008 (the chart on the club's website is "Revised 2008"); the 2025
   edition is also on the club's site.
 - The twenty buoy positions are traced from OpenStreetMap and numbered by
-  eye against the chart; the numbering is the one claim here no document
-  backs, and a Port of Cork notice or list, or the club adding positions to
-  its instructions, would replace it with a citation. OpenStreetMap's data
-  is ODbL, which the MIT licence on this repository does not carry — worth
-  settling before release, since these are positions taken as data, not
-  tiles shown with attribution.
-- EF2, EF4 and Cage are the three still open. Cage matters most: it is the
-  Grassy Walk line's ODM, so the line cannot be computed without it.
+  eye against the chart, and Cage is the club's own figure given in
+  correspondence; neither is backed by a document, and a Port of Cork notice
+  or list, or the club adding positions to its instructions, would replace
+  both with a citation. OpenStreetMap's data is ODbL, which the MIT licence
+  on this repository does not carry — worth settling, since these are
+  positions taken as data, not tiles shown with attribution.
+- EF2 and EF4 are the two still open, and nothing distinguishes
+  OpenStreetMap's three East Ferry nodes from one another.

@@ -1,7 +1,7 @@
 {
   "formatVersion": 2,
   "club": "RCYC",
-  "name": "Keelboat racing marks 2026: the Port of Cork laid race marks the General Sailing Instructions position, the harbour navigation buoys traced from OpenStreetMap, and every other mark the course card names",
+  "name": "Keelboat racing marks 2026: the Port of Cork laid race marks the General Sailing Instructions position, the harbour navigation buoys traced from OpenStreetMap, Cage as the club gave it, and every other mark the course card names",
   "source": "https://www.royalcork.com/wp-content/uploads/2026/03/General-Sailing-Instructions-for-Royal-Cork-Yacht-Club-Keelboat-Racing-2026.pdf",
   "marks": [
     {
@@ -219,7 +219,10 @@
       "name": "Cage (C1)",
       "shape": "conical",
       "color": "green",
-      "placement": "Buoy C1, the Cage: the Port of Cork navigation buoy the General Sailing Instructions (26.1) describe as \"Green Conical\" and make the ODM of the Grassy Walk line; charted, but positioned in no club or port publication found."
+      "position": {
+        "lat": 51.8139,
+        "lng": -8.2828
+      }
     },
     {
       "id": "Dutchman",

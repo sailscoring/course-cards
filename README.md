@@ -199,12 +199,13 @@ and how it was checked.
   the card's text layer, which also serves the Cork Harbour Combined League
   with Cove and Monkstown Bay; and thirty marks, of which the four Port of
   Cork laid race marks are positioned from the club's General Sailing
-  Instructions and twenty harbour navigation buoys from OpenStreetMap,
-  which holds the buoys but not their numbers — so the numbering is read
-  off the chart, and the README says what checks that reading. EF2, EF4
-  and Cage are still unplaced by anything, and a course rounding one asks
-  the caller for it. The start line is the instructions' 26, and every
-  course finishes on it.
+  Instructions, twenty harbour navigation buoys from OpenStreetMap, which
+  holds the buoys but not their numbers — so the numbering is read off the
+  chart — and Cage from the club, which gave the position directly. Fitting
+  a start line to the card's own printed distances lands it on the club's
+  Grassy Walk line, which corroborates both. EF2 and EF4 are still unplaced,
+  and a course rounding one asks the caller for it. The start line is the
+  instructions' 26, and every course finishes on it.
   [README](data/rcyc/keelboat-2026/README.md).
 
 - `data/shsc/calves-week-2026/` — Schull Harbour Sailing Club's Calves Week

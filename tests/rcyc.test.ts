@@ -57,15 +57,24 @@ describe('the Royal Cork 2026 marks file', () => {
     expect(byId.get('W4')!.position).toEqual({ lat: 51.800244, lng: -8.26526 });
     // A placed mark carries no placement: that field is for marks laid per race.
     for (const id of ['No.3', 'No.20', 'E1', 'W4']) expect(byId.get(id)!.placement, id).toBeUndefined();
-    expect(marks.marks.filter((m) => m.position)).toHaveLength(24);
+    expect(marks.marks.filter((m) => m.position)).toHaveLength(25);
   });
 
-  it('leaves unplaced the three buoys not identified, and the marks the card only describes', () => {
-    for (const id of ['EF2', 'EF4', 'Cage']) {
+  it('places Cage from the position the club gave, not from OpenStreetMap', () => {
+    // 51°48.834'N 8°16.968'W. Buoy C1 is in no publication and in no OSM node
+    // either — the nearest is 850 m off — so it is here on the club's word.
+    expect(byId.get('Cage')).toMatchObject({
+      name: 'Cage (C1)', shape: 'conical', color: 'green',
+      position: { lat: 51.8139, lng: -8.2828 },
+    });
+    expect(byId.get('Cage')!.placement).toBeUndefined();
+  });
+
+  it('leaves unplaced the two buoys not identified, and the marks the card only describes', () => {
+    for (const id of ['EF2', 'EF4']) {
       expect(byId.get(id)!.position, id).toBeUndefined();
-      expect(byId.get(id)!.placement, id).toMatch(/navigation buoy|Cage/);
+      expect(byId.get(id)!.placement, id).toMatch(/navigation buoy/);
     }
-    expect(byId.get('Cage')).toMatchObject({ name: 'Cage (C1)', shape: 'conical', color: 'green' });
     expect(byId.get('Dutchman')!.placement).toMatch(/approx\. 2 cables SE of the Dutchman Rock/);
     expect(byId.get('Curlane')!.placement).toBe('“Curlane” will be a mark laid on the Curlane Bank.');
     expect(byId.get('White Bay')!.position).toBeUndefined();
@@ -143,13 +152,27 @@ describe('the Keelboat Racing Course Card 2026', () => {
     expect(card.notes!.map((n) => n.title).slice(1)).toEqual(['IMPORTANT NOTES', 'COMMITTEE VESSEL', 'GRASSY WALK LINE']);
   });
 
-  it('needs from the caller only the line and the marks still unplaced', () => {
-    expect(() => courseLegs(card, marks, '1', { marks: { SL: { lat: 51.81, lng: -8.29 } } })).toThrow(/no position for mark "Cage" \(Buoy C1, the Cage/);
-    const positions = { SL: { lat: 51.81, lng: -8.29 }, Cage: { lat: 51.806, lng: -8.284 } };
-    const legs = courseLegs(card, marks, '1', { marks: positions });
+  it('needs from the caller only the line, for thirty of the forty courses', () => {
+    const SL = { lat: 51.81155, lng: -8.29461 };
+    const legs = courseLegs(card, marks, '1', { marks: { SL } });
     expect(legs.map((l) => l.to.mark)).toEqual(['Ringabella', 'W2', 'Cage', 'No.7', 'Cage', 'Dosco', 'SL']);
-    // W2 and No.7 come from the file now, so the legs are real distances.
+    // Every mark of course 1 but the line comes from the file, so these are real.
     expect(legs[1]!.distanceNm).toBeCloseTo(1.608, 2);
-    expect(legs[3]!.distanceNm).toBeCloseTo(1.401, 2);
+    expect(legs[3]!.distanceNm).toBeCloseTo(0.970, 2);
+
+    const resolved = card.courses.filter((c) => {
+      try { courseLegs(card, marks, c.id, { marks: { SL } }); return true; } catch { return false; }
+    });
+    expect(resolved).toHaveLength(30);
+  });
+
+  it('still asks the caller for EF2, EF4 and the marks the card only describes', () => {
+    const SL = { lat: 51.81155, lng: -8.29461 };
+    expect(() => courseLegs(card, marks, '8', { marks: { SL } })).toThrow(/no position for mark "EF2" \(A Port of Cork navigation buoy/);
+    expect(() => courseLegs(card, marks, '71', { marks: { SL } })).toThrow(/no position for mark "EF4"/);
+    expect(() => courseLegs(card, marks, '2', { marks: { SL } })).toThrow(/no position for mark "Dutchman"/);
+    expect(() => courseLegs(card, marks, '73', { marks: { SL } })).toThrow(/no position for mark "White Bay"/);
+    const legs = courseLegs(card, marks, '8', { marks: { SL, EF2: { lat: 51.84, lng: -8.243 } } });
+    expect(legs.map((l) => l.to.mark)).toContain('EF2');
   });
 });
