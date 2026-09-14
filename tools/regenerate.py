@@ -43,6 +43,7 @@ NOTES_TOOLS = {
     'extract_kyc_card': ['extract_kyc_card.py', 'notes'],
     'extract_cybc_ecbkc_card': ['extract_cybc_card.py', 'notes'],
     'extract_rcyc_card': ['extract_rcyc_card.py', 'notes'],
+    'extract_shsc_card': ['extract_shsc.py', 'notes'],
 }
 
 
@@ -128,7 +129,20 @@ def document(base, spec):
         cmd += ['--columns', spec['columns']]
     if spec.get('pages'):
         cmd += ['--pages', spec['pages']]
+    if spec.get('furniture') is False:
+        cmd += ['--no-furniture']
     return subprocess.run(cmd, check=True, capture_output=True, text=True).stdout
+
+
+def transcribed(base, spec, check):
+    """A document that is a scan with no text layer gets its sidecar written
+    by hand, and the manifest says so with `transcribed`: nothing here can
+    regenerate it, so it is kept, and only its presence is verified."""
+    path = os.path.join(base, spec['output'])
+    rel = os.path.relpath(path, ROOT)
+    present = os.path.exists(path)
+    print(f'{rel}: {"kept, transcribed by hand" if present else "MISSING"}')
+    return present
 
 
 def extract(base, artifact, meta_path):
@@ -183,6 +197,13 @@ def extract(base, artifact, meta_path):
             cmd += ['--add', added_marks_file(base, artifact)]
     elif tool == 'extract_rcyc_card':
         cmd = [sys.executable, os.path.join(TOOLS, 'extract_rcyc_card.py'), 'card', source, '--meta', meta_path]
+    elif tool == 'extract_shsc_marks':
+        cmd = [sys.executable, os.path.join(TOOLS, 'extract_shsc.py'), 'marks', source, '--meta', meta_path,
+               '--chartlet', os.path.join(base, artifact['chartlet'])]
+        if artifact.get('addMarks'):
+            cmd += ['--add', added_marks_file(base, artifact)]
+    elif tool == 'extract_shsc_card':
+        cmd = [sys.executable, os.path.join(TOOLS, 'extract_shsc.py'), 'card', source, '--meta', meta_path]
     elif tool == 'extract_cybc_marks':
         n = artifact['notice']
         cmd = [sys.executable, os.path.join(TOOLS, 'extract_cybc_card.py'), 'marks', source, '--meta', meta_path,
@@ -239,6 +260,9 @@ def main():
         base = os.path.dirname(manifest)
         spec = json.load(open(manifest))
         for doc in spec.get('documents', []):
+            if doc.get('transcribed'):
+                failures += not transcribed(base, doc, args.check)
+                continue
             try:
                 failures += not write(base, doc['output'], document(base, doc), args.check)
             except subprocess.CalledProcessError as e:

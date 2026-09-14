@@ -37,6 +37,8 @@ def verbatim(pdf, columns, text):
     """That the placement really is what the document says, not something the
     paragraph rejoining made up: the text, its spacing normalised, has to
     appear in the document's own lines."""
+    if pdf.endswith('.md'):
+        return  # a transcript of a scanned document: the text is the transcript's own
     flat = re.sub(r'\s+', ' ', ' '.join(line for page in pages(pdf, columns) for line in page))
     if re.sub(r'\s+', ' ', text) not in flat:
         sys.exit(f'the text read is not in {pdf} verbatim:\n{text}')

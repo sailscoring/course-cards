@@ -240,11 +240,27 @@ def heading(text):
     return None
 
 
-def parts(pdf, columns=None, only=None):
+def transcript(path):
+    """A sidecar written by hand — for a document that is a scan with no
+    text layer, which nothing here can read — read back as the blocks
+    `parts` would give: the title dropped, each blank-line-separated block
+    one item. The manifest marks such a document `transcribed`, and
+    tools/regenerate.py keeps the file rather than rewriting it."""
+    text = open(path, encoding='utf-8').read()
+    items = [b.strip() for b in re.split(r'\n\s*\n', text) if b.strip()]
+    if items and items[0].startswith('# '):
+        items = items[1:]
+    return items
+
+
+def parts(pdf, columns=None, only=None, drop_furniture=True):
     """The document as a list of Markdown blocks in reading order: headings
-    ("## H4 The Start"), paragraphs, and fenced blocks of columned text."""
+    ("## H4 The Start"), paragraphs, and fenced blocks of columned text. A
+    `.md` is a transcript, read back as it is."""
+    if pdf.endswith('.md'):
+        return transcript(pdf)
     doc = pages(pdf, columns, only)
-    drop = furniture(doc)
+    drop = furniture(doc) if drop_furniture else set()
     out = []
     for page in doc:
         for block in blocks(page):
@@ -261,8 +277,8 @@ def parts(pdf, columns=None, only=None):
     return out
 
 
-def render(pdf, title, columns, only=None):
-    out = parts(pdf, columns, only)
+def render(pdf, title, columns, only=None, drop_furniture=True):
+    out = parts(pdf, columns, only, drop_furniture)
     if not title:
         title = next((line for line in out if not line.startswith('```')), pdf)
         title = title.lstrip('# ')
@@ -275,8 +291,9 @@ def main():
     ap.add_argument('--title', help='the document\'s title; the first line of text by default')
     ap.add_argument('--columns', help='how many columns a page is set in, e.g. "2@2-3"')
     ap.add_argument('--pages', help='only these pages of the document, e.g. "2-4" — for a chart page whose overlapping labels render differently from one poppler to the next')
+    ap.add_argument('--no-furniture', action='store_true', help='keep every line, for a short document whose lines all look like running headers — a sheet of photographs captioned alike on each page')
     args = ap.parse_args()
-    sys.stdout.write(render(args.pdf, args.title, args.columns, args.pages))
+    sys.stdout.write(render(args.pdf, args.title, args.columns, args.pages, not args.no_furniture))
 
 
 if __name__ == '__main__':
