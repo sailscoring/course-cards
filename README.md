@@ -256,14 +256,23 @@ https://courses.sailscoring.ie/v0.1.0/course-cards-v0.1.0.zip
 https://courses.sailscoring.ie/index.json
 ```
 
+The version is `package.json`'s. While it is unreleased the site is built
+from `data/` — the release in progress, at its unversioned paths and under
+its `/vX.Y.Z/`. Once that version has a GitHub Release, the site is the
+assets that release attached, verbatim: a `/vX.Y.Z/` URL is served as
+immutable, and a consumer pinned to one must get the files the release
+published, whatever has landed on `main` since. So a change to `data/`
+after a release shows nowhere until `version` is bumped — bump it in the
+same commit as the change, or the deploy is a no-op.
+
 A deploy carries the three most recent releases under their `/vX.Y.Z/`
-paths — the current one built from `data/`, the two before it unpacked from
-the assets of their own GitHub Releases, so what they serve is what those
-releases published rather than a rebuild of it. That is the upgrade window:
-a consumer pinned to a versioned URL keeps working across two further
-releases, and is not cut off the moment the next one deploys. Older releases
-stay downloadable from GitHub, and every release is there however old. The
-number kept is `RETAINED_RELEASES` in `tools/build-site.ts`.
+paths, the two before the current one unpacked from the assets of their own
+GitHub Releases, so what they serve is what those releases published rather
+than a rebuild of it. That is the upgrade window: a consumer pinned to a
+versioned URL keeps working across two further releases, and is not cut off
+the moment the next one deploys. Older releases stay downloadable from
+GitHub, and every release is there however old. The number kept is
+`RETAINED_RELEASES` in `tools/build-site.ts`.
 
 If a retained release's assets cannot be fetched, the build warns and carries
 on rather than failing the deploy, so that path 404s until the next build —

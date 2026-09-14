@@ -9,12 +9,18 @@
  *   /v<version>/course-cards-v<version>.zip
  *   /v<earlier>/…                     the same, for the releases before it
  *
- * The version is package.json's, and a deploy also carries the versioned
- * trees of the RETAINED_RELEASES - 1 releases before it, rebuilt from the
- * assets those releases attached. That is what makes a /v<version>/ URL
- * usable: a consumer pinned to one keeps working while it upgrades, rather
- * than losing it the moment the next release deploys. Anything older stays
- * downloadable from its GitHub Release.
+ * The version is package.json's. While that version is unreleased the site
+ * is built from data/ — the release in progress. Once it has a GitHub
+ * Release, the site is that release's assets, verbatim: a /v<version>/ URL
+ * is served as immutable, and a consumer pinned to one must get the files
+ * the release published, whatever has landed on main since. A change to
+ * data/ after a release therefore shows nowhere until the version is bumped.
+ *
+ * A deploy also carries the versioned trees of the RETAINED_RELEASES - 1
+ * releases before it, from their own assets. That is what makes a
+ * /v<version>/ URL usable: a consumer pinned to one keeps working while it
+ * upgrades, rather than losing it the moment the next release deploys.
+ * Anything older stays downloadable from its GitHub Release.
  *
  *     pnpm site
  */
@@ -124,46 +130,44 @@ rmSync(site, { recursive: true, force: true });
 mkdirSync(site, { recursive: true });
 
 const versionDir = `v${version}`;
-const zipName = `course-cards-v${version}.zip`;
+const zipName = `course-cards-${versionDir}.zip`;
 
-// Artifacts: once at the top level (current), once under the version.
-for (const target of ['', versionDir]) {
-  cpSync(join(root, 'data'), join(site, target), { recursive: true });
+// The zip carries these beside the artifacts; the site tree is the artifacts.
+const zipExtras = new Set(['README.md', 'LICENSE', 'docs/format.md']);
+
+/** The catalogue data/ publishes, typed as the library reads it, so a
+ *  consumer's parseCatalogue and this writer cannot drift apart. */
+function catalogueFromData(): Catalogue {
+  const catalogue: Catalogue = {
+    version,
+    generated: new Date().toISOString().slice(0, 10),
+    formatVersion: FORMAT_VERSION,
+    site: siteUrl,
+    repository: repoUrl,
+    zip: `${siteUrl}/${versionDir}/${zipName}`,
+    sets: sets.map((s) => ({
+      ...s,
+      marks: { ...s.marks, url: `${siteUrl}/${versionDir}/${s.marks.file}` },
+      cards: s.cards.map((c) => ({ ...c, url: `${siteUrl}/${versionDir}/${c.json}`, page: `${siteUrl}/${versionDir}/${c.html}` })),
+    })),
+  };
+  return parseCatalogue(JSON.parse(JSON.stringify(catalogue)));
 }
 
-// The zip: data/ plus the format spec, README and licence.
-const zipEntries: Record<string, Uint8Array> = {};
-const prefix = `course-cards-v${version}/`;
-for (const file of files(join(root, 'data'))) {
-  zipEntries[prefix + relative(join(root, 'data'), file)] = readFileSync(file);
+/** The zip data/ publishes: the artifacts plus the format spec, README and licence. */
+function zipFromData(): Uint8Array {
+  const entries: Record<string, Uint8Array> = {};
+  const prefix = `course-cards-${versionDir}/`;
+  for (const file of files(join(root, 'data'))) {
+    entries[prefix + relative(join(root, 'data'), file)] = readFileSync(file);
+  }
+  for (const extra of zipExtras) {
+    entries[prefix + extra] = readFileSync(join(root, extra));
+  }
+  return zipSync(entries, { level: 6 });
 }
-for (const extra of ['README.md', 'LICENSE', 'docs/format.md']) {
-  zipEntries[prefix + extra] = readFileSync(join(root, extra));
-}
-const zip = zipSync(zipEntries, { level: 6 });
-writeFileSync(join(site, 'course-cards.zip'), zip);
-writeFileSync(join(site, versionDir, zipName), zip);
 
-// Catalogue: typed as the library reads it, so a consumer's parseCatalogue
-// and this writer cannot drift apart.
-const catalogue: Catalogue = {
-  version,
-  generated: new Date().toISOString().slice(0, 10),
-  formatVersion: FORMAT_VERSION,
-  site: siteUrl,
-  repository: repoUrl,
-  zip: `${siteUrl}/${versionDir}/${zipName}`,
-  sets: sets.map((s) => ({
-    ...s,
-    marks: { ...s.marks, url: `${siteUrl}/${versionDir}/${s.marks.file}` },
-    cards: s.cards.map((c) => ({ ...c, url: `${siteUrl}/${versionDir}/${c.json}`, page: `${siteUrl}/${versionDir}/${c.html}` })),
-  })),
-};
-parseCatalogue(JSON.parse(JSON.stringify(catalogue)));
-writeFileSync(join(site, 'index.json'), JSON.stringify(catalogue, null, 2) + '\n');
-writeFileSync(join(site, versionDir, 'index.json'), JSON.stringify(catalogue, null, 2) + '\n');
-
-// --- the releases before this one --------------------------------------------
+// --- releases ----------------------------------------------------------------
 
 /**
  * How many releases a deploy carries under /v<version>/, this one included —
@@ -176,9 +180,6 @@ const RETAINED_RELEASES = 3;
 // directory build caches keep, so a deploy re-fetches only what is new.
 const cacheDir = join(root, 'node_modules', '.cache', 'course-cards-releases');
 
-// The zip carries these beside the artifacts; the site tree is the artifacts.
-const zipExtras = new Set(['README.md', 'LICENSE', 'docs/format.md']);
-
 const rank = (v: string): number => v.split('.').reduce((n, part) => n * 100_000 + Number(part), 0);
 
 // fetch's own message for a network failure is just "fetch failed"; the cause
@@ -188,15 +189,33 @@ const why = (error: unknown): string => {
   return e.cause?.message ? `${e.message}: ${e.cause.message}` : e.message;
 };
 
-async function releaseAsset(tag: string, name: string): Promise<Uint8Array> {
+/** One asset of a release, or null when the release has not published it. */
+async function releaseAsset(tag: string, name: string): Promise<Uint8Array | null> {
   const cached = join(cacheDir, tag, name);
   if (existsSync(cached)) return readFileSync(cached);
   const response = await fetch(`${repoUrl}/releases/download/${tag}/${name}`);
+  if (response.status === 404) return null;
   if (!response.ok) throw new Error(`${name}: ${response.status} ${response.statusText}`);
   const bytes = new Uint8Array(await response.arrayBuffer());
   mkdirSync(dirname(cached), { recursive: true });
   writeFileSync(cached, bytes);
   return bytes;
+}
+
+interface Release {
+  tag: string;
+  /** `course-cards-v<version>.zip`, as attached. */
+  archive: Uint8Array;
+  /** `catalogue.json`, as attached. */
+  index: Uint8Array;
+}
+
+/** A release's attached assets, or null when no such release is published. */
+async function release(version: string): Promise<Release | null> {
+  const tag = `v${version}`;
+  const [archive, index] = await Promise.all([releaseAsset(tag, `course-cards-${tag}.zip`), releaseAsset(tag, 'catalogue.json')]);
+  if (!archive || !index) return null;
+  return { tag, archive, index };
 }
 
 /** The versions of every published release, newest first. */
@@ -215,14 +234,11 @@ async function published(): Promise<string[]> {
 }
 
 /**
- * A release's tree under /v<version>/, unpacked from the zip and the
- * catalogue it attached — the files that release published, verbatim, not a
- * rebuild of them from today's data or today's tools.
+ * A release's tree, unpacked into dir from the zip and the catalogue it
+ * attached — the files that release published, verbatim, not a rebuild of
+ * them from today's data or today's tools. Returns how many were written.
  */
-async function retain(release: string): Promise<number> {
-  const tag = `v${release}`;
-  const [archive, index] = await Promise.all([releaseAsset(tag, `course-cards-${tag}.zip`), releaseAsset(tag, 'catalogue.json')]);
-  const dir = join(site, tag);
+function unpack({ tag, archive, index }: Release, dir: string, zipAs: string): number {
   const zipPrefix = `course-cards-${tag}/`;
   let written = 0;
   for (const [entry, bytes] of Object.entries(unzipSync(archive))) {
@@ -233,10 +249,44 @@ async function retain(release: string): Promise<number> {
     writeFileSync(join(dir, path), bytes);
     written++;
   }
-  writeFileSync(join(dir, `course-cards-${tag}.zip`), archive);
+  writeFileSync(join(dir, zipAs), archive);
   writeFileSync(join(dir, 'index.json'), index);
   return written;
 }
+
+// --- the current version -----------------------------------------------------
+
+// Once package.json's version is released, what its GitHub Release attached
+// is what the site serves — at the top level and under /v<version>/ alike.
+// data/ is still read above, so a broken file fails the build either way, but
+// nothing of it is published until the version is bumped. A release that
+// cannot be checked for is a failed build, not a fall-back to data/: a
+// /v<version>/ path is served as immutable, and publishing main's files under
+// a released version is the one thing this must never do.
+const current = await release(version);
+let catalogue: Catalogue;
+let archive: Uint8Array;
+if (current) {
+  catalogue = parseCatalogue(JSON.parse(new TextDecoder().decode(current.index)));
+  if (catalogue.version !== version) throw new Error(`release ${current.tag} attached a catalogue of version ${catalogue.version}`);
+  archive = current.archive;
+  const written = unpack(current, join(site, versionDir), zipName);
+  unpack(current, site, 'course-cards.zip');
+  console.log(`site/, site/${versionDir}/: ${written} files each, from the assets of release ${current.tag} (not data/)`);
+} else {
+  catalogue = catalogueFromData();
+  archive = zipFromData();
+  // Artifacts: once at the top level (current), once under the version.
+  for (const target of ['', versionDir]) {
+    cpSync(join(root, 'data'), join(site, target), { recursive: true });
+    writeFileSync(join(site, target, 'index.json'), JSON.stringify(catalogue, null, 2) + '\n');
+  }
+  writeFileSync(join(site, 'course-cards.zip'), archive);
+  writeFileSync(join(site, versionDir, zipName), archive);
+  console.log(`site/, site/${versionDir}/: v${version} is not yet released, built from data/`);
+}
+
+// --- the releases before this one --------------------------------------------
 
 // A release that cannot be fetched is a warning, not a failed deploy: the
 // current site is still correct without it, and its paths 404 as they would
@@ -248,16 +298,18 @@ try {
 } catch (error) {
   console.warn(`site/: could not list earlier releases (${why(error)}); no /v<earlier>/ paths in this deploy`);
 }
-for (const release of retained) {
+for (const earlier of retained) {
   try {
-    console.log(`site/v${release}/: ${await retain(release)} files, from the assets of its release`);
+    const assets = await release(earlier);
+    if (!assets) throw new Error('its release has no zip and catalogue attached');
+    console.log(`site/v${earlier}/: ${unpack(assets, join(site, `v${earlier}`), `course-cards-v${earlier}.zip`)} files, from the assets of its release`);
   } catch (error) {
-    console.warn(`site/v${release}/: not retained (${why(error)}); its paths will 404`);
+    console.warn(`site/v${earlier}/: not retained (${why(error)}); its paths will 404`);
   }
 }
 
 // --- landing page ------------------------------------------------------------
-const setHtml = sets
+const setHtml = catalogue.sets
   .map((s) => {
     const cards = s.cards
       .map(
@@ -346,4 +398,4 @@ const index = `<!doctype html>
 writeFileSync(join(site, 'index.html'), index);
 
 const count = [...files(site)].length;
-console.log(`site/: ${count} files, ${sets.reduce((n, s) => n + s.cards.length, 0)} cards, v${version}, zip ${(zip.length / 1024).toFixed(0)} KB`);
+console.log(`site/: ${count} files, ${catalogue.sets.reduce((n, s) => n + s.cards.length, 0)} cards, v${version}, zip ${(archive.length / 1024).toFixed(0)} KB`);
