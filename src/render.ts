@@ -5,10 +5,13 @@
  * so the same string can be dropped inline into a results page, a dialog,
  * or a file, several times on one page, and look the same everywhere.
  *
- * It is a sanity check, not a chart: a coordinate that went in wrong should
- * be obviously wrong at a glance. So there is no land, no soundings, and no
- * background, only the marks and the legs, with the marks a club charts
- * drawn differently from the ones the race committee laid on the day.
+ * On its own it is a sanity check, not a chart: a coordinate that went in
+ * wrong should be obviously wrong at a glance, so plain ground, the marks
+ * and the legs, with the marks a club charts drawn differently from the ones
+ * the race committee laid on the day. Given a data set's captured chart as
+ * `background`, the same drawing sits on the club's own water, with the
+ * shore, the soundings and the seamarks the crew sees — embedded, never
+ * linked, so a published page still fetches nothing.
  */
 
 import { bearingDeg, distanceNm } from './geo.js';
@@ -31,6 +34,21 @@ export interface DrawnCourseMark {
   passing?: boolean;
 }
 
+/**
+ * A raster chart to draw the course on: a north-up Web Mercator image
+ * covering exactly `bounds`, which is what a data set's `map/background.png`
+ * and its sidecar are, with the attribution its tile sources require. The
+ * image is embedded whole and the drawing's own frame crops it; where the
+ * course runs past what it covers, the marks are drawn on plain ground.
+ */
+export interface CourseBackground {
+  png: Uint8Array;
+  bounds: { south: number; west: number; north: number; east: number };
+  width: number;
+  height: number;
+  attribution: string;
+}
+
 export interface RenderCourseOptions {
   /** Pixel width of the drawing; the height follows the marks' extent,
    *  kept between 0.6 and 1.4 times the width. Default 640. */
@@ -39,6 +57,9 @@ export interface RenderCourseOptions {
   highlight?: string;
   /** The picture's accessible name. */
   title?: string;
+  /** The club's chart to draw on, where the marks come from a data set that
+   *  captured one. */
+  background?: CourseBackground;
 }
 
 // Web Mercator on the unit square.
@@ -53,6 +74,33 @@ function esc(text: string): string {
 }
 
 const f = (n: number): string => n.toFixed(1);
+
+const B64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+
+/** Base64 without Buffer or btoa: the renderer runs in a browser as often as
+ *  in Node, and a chart of a few hundred kilobytes has to encode the same
+ *  bytes in both. Built in chunks rather than one string per triple. */
+function base64(bytes: Uint8Array): string {
+  const chunks: string[] = [];
+  let chunk = '';
+  for (let i = 0; i < bytes.length; i += 3) {
+    const a = bytes[i]!;
+    const b = bytes[i + 1];
+    const c = bytes[i + 2];
+    const n = (a << 16) | ((b ?? 0) << 8) | (c ?? 0);
+    chunk +=
+      B64[(n >> 18) & 63]! +
+      B64[(n >> 12) & 63]! +
+      (b === undefined ? '=' : B64[(n >> 6) & 63]!) +
+      (c === undefined ? '=' : B64[n & 63]!);
+    if (chunk.length >= 8192) {
+      chunks.push(chunk);
+      chunk = '';
+    }
+  }
+  chunks.push(chunk);
+  return chunks.join('');
+}
 
 /**
  * Draw `marks`, and the `course` over them when there is one. Every mark
@@ -96,21 +144,42 @@ export function renderCourseSvg(marks: DrawnMark[], course: DrawnCourseMark[] = 
   const y = (lat: number): number => ((my(lat) - my(north)) / (my(south) - my(north))) * height;
   const font = (px: number): string => `font-family="system-ui, sans-serif" font-size="${f(px * u)}"`;
 
+  // What a label's outline is painted in, so it reads over whatever is
+  // under it: the plain ground, or the chart.
+  const chart = options.background;
+  const halo = chart ? '#fff' : '#f4f9fd';
+
   let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" role="img" aria-label="${esc(options.title ?? (course.length ? 'Course drawing' : 'Marks drawing'))}">`;
   svg += `<rect x="0" y="0" width="${width}" height="${height}" fill="#f4f9fd"/>`;
+  if (chart) {
+    // Placed by its own corners: the drawing and the image are both north-up
+    // Web Mercator, so the projection between them is linear and the frame
+    // crops whatever falls outside. Plain ground shows wherever the chart
+    // does not reach — a mark laid beyond what the club captured.
+    const ix = x(chart.bounds.west);
+    const iy = y(chart.bounds.north);
+    svg += `<image href="data:image/png;base64,${base64(chart.png)}" x="${f(ix)}" y="${f(iy)}" width="${f(x(chart.bounds.east) - ix)}" height="${f(y(chart.bounds.south) - iy)}" preserveAspectRatio="none"/>`;
+  }
 
-  // The minute grid, labelled along the left and bottom edges.
-  svg += `<g stroke="#c5d5e6" stroke-width="${f(u)}" ${font(10)} fill="#5b6b7c">`;
+  // The minute grid, labelled along the left and bottom edges. Over a chart
+  // it is a reference, not the ground itself, so it fades back, its labels
+  // take an outline to read over the shore, and the bottom line of the
+  // drawing goes to the attribution instead.
+  const gridHalo = chart
+    ? `stroke="${halo}" stroke-opacity="1" stroke-width="${f(3 * u)}" paint-order="stroke"`
+    : 'stroke="none"';
+  const lngLabelY = chart ? height - 16 * u : height - 4 * u;
+  svg += `<g stroke="${chart ? '#5b6b7c' : '#c5d5e6'}" stroke-opacity="${chart ? '0.35' : '1'}" stroke-width="${f(u)}" ${font(10)} fill="${chart ? '#3b4b5c' : '#5b6b7c'}">`;
   const step = gridStep(north - south, east - west);
   for (let lat = Math.ceil(south / step) * step; lat < north; lat += step) {
     const yy = f(y(lat));
     svg += `<line x1="0" y1="${yy}" x2="${width}" y2="${yy}"/>`;
-    svg += `<text x="${f(3 * u)}" y="${f(y(lat) - 3 * u)}" stroke="none">${gridLabel(lat, 'lat', step)}</text>`;
+    svg += `<text x="${f(3 * u)}" y="${f(y(lat) - 3 * u)}" ${gridHalo}>${gridLabel(lat, 'lat', step)}</text>`;
   }
   for (let lng = Math.ceil(west / step) * step; lng < east; lng += step) {
     const xx = f(x(lng));
     svg += `<line x1="${xx}" y1="0" x2="${xx}" y2="${height}"/>`;
-    svg += `<text x="${f(x(lng) + 3 * u)}" y="${f(height - 4 * u)}" stroke="none">${gridLabel(lng, 'lng', step)}</text>`;
+    svg += `<text x="${f(x(lng) + 3 * u)}" y="${f(lngLabelY)}" ${gridHalo}>${gridLabel(lng, 'lng', step)}</text>`;
   }
   svg += '</g>';
 
@@ -167,7 +236,7 @@ export function renderCourseSvg(marks: DrawnMark[], course: DrawnCourseMark[] = 
     const anchor = -uy > 0.2 ? 'start' : -uy < -0.2 ? 'end' : 'middle';
     const brg = String(Math.round(bearingDeg(a.position, b.position)) % 360).padStart(3, '0');
     const dist = distanceNm(a.position, b.position).toFixed(2);
-    labels += `<text x="${f(lx)}" y="${f(ly + 4 * u)}" ${font(11)} text-anchor="${anchor}" fill="#0b3d91" stroke="#f4f9fd" stroke-width="${f(3 * u)}" paint-order="stroke"><tspan font-weight="700">${i + 1}</tspan> ${brg}° ${dist} NM</text>`;
+    labels += `<text x="${f(lx)}" y="${f(ly + 4 * u)}" ${font(11)} text-anchor="${anchor}" fill="#0b3d91" stroke="${halo}" stroke-width="${f(3 * u)}" paint-order="stroke"><tspan font-weight="700">${i + 1}</tspan> ${brg}° ${dist} NM</text>`;
   }
   svg += legs;
 
@@ -190,9 +259,13 @@ export function renderCourseSvg(marks: DrawnMark[], course: DrawnCourseMark[] = 
     const fill = m.fixed ? '#333' : '#fff';
     const stroke = m.fixed ? '#fff' : '#d84315';
     svg += `<circle cx="${f(cx)}" cy="${f(cy)}" r="${f(5 * u)}" fill="${fill}" stroke="${stroke}" stroke-width="${f(2 * u)}"><title>${esc(m.label)}</title></circle>`;
-    svg += `<text x="${f(cx + 8 * u)}" y="${f(cy + 4 * u)}" ${font(13)} font-weight="700" fill="#111" stroke="#f4f9fd" stroke-width="${f(3 * u)}" paint-order="stroke">${esc(m.label)}</text>`;
+    svg += `<text x="${f(cx + 8 * u)}" y="${f(cy + 4 * u)}" ${font(13)} font-weight="700" fill="#111" stroke="${halo}" stroke-width="${f(3 * u)}" paint-order="stroke">${esc(m.label)}</text>`;
   }
   svg += labels;
+  // Both tile sources require attribution wherever their pixels are shown.
+  if (chart) {
+    svg += `<text x="${f(3 * u)}" y="${f(height - 4 * u)}" ${font(10)} fill="#222" stroke="#fff" stroke-width="${f(3 * u)}" paint-order="stroke">${esc(chart.attribution)}</text>`;
+  }
   return svg + '</svg>';
 }
 
