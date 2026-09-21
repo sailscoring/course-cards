@@ -27,7 +27,16 @@ const index = {
           page: `${site}/v0.3.0/hyc/al-2026/offshore.html`,
         },
       ],
-      map: { svg: 'hyc/al-2026/map/marks.svg', background: 'hyc/al-2026/map/background.png', layers: ['osm', 'openseamap'] },
+      map: {
+        svg: 'hyc/al-2026/map/marks.svg',
+        background: 'hyc/al-2026/map/background.png',
+        layers: ['osm', 'openseamap'],
+        bounds: { south: 53.378333, west: -6.117948, north: 53.465167, east: -6.004886 },
+        width: 1317,
+        height: 1698,
+        zoom: 14,
+        attribution: '© OpenStreetMap contributors · © OpenSeaMap contributors',
+      },
     },
   ],
 };
@@ -58,5 +67,15 @@ describe('parseCatalogue', () => {
     expect(() => parseCatalogue({ ...index, sets: [{ ...index.sets[0]!, marks: { file: 'x' } }] })).toThrow(
       'catalogue.sets[0].marks.count',
     );
+    // A chart a consumer cannot place is worse than no chart: the bounds,
+    // size and attribution travel with the image or the release is wrong.
+    const { bounds: _bounds, ...mapless } = index.sets[0]!.map!;
+    void _bounds;
+    expect(() => parseCatalogue({ ...index, sets: [{ ...index.sets[0]!, map: mapless }] })).toThrow(
+      'catalogue.sets[0].map.bounds: expected an object',
+    );
+    expect(() =>
+      parseCatalogue({ ...index, sets: [{ ...index.sets[0]!, map: { ...index.sets[0]!.map!, attribution: 12 } }] }),
+    ).toThrow('catalogue.sets[0].map.attribution: expected a string');
   });
 });

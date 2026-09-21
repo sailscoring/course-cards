@@ -84,7 +84,19 @@ interface SetEntry {
   event: string;
   marks: { file: string; count: number; source?: string };
   cards: CardEntry[];
-  map?: { svg: string; background: string; layers: string[] };
+  map?: NonNullable<Catalogue['sets'][number]['map']>;
+}
+
+/** What `tools/fetch_map.py` wrote beside the chart image: what it covers,
+ *  at what resolution, from which layers. The catalogue republishes it, so a
+ *  consumer that draws on the chart fetches the image and nothing else. */
+interface MapSidecar {
+  bounds: { south: number; west: number; north: number; east: number };
+  width: number;
+  height: number;
+  zoom: number;
+  layers: string[];
+  attribution: string;
 }
 
 const sets: SetEntry[] = [];
@@ -119,7 +131,23 @@ for (const manifest of manifests(join(root, 'data'))) {
     },
     cards,
     ...(m.map
-      ? { map: { svg: `${rel}/${dirname(m.map.background)}/marks.svg`, background: `${rel}/${m.map.background}`, layers: m.map.layers } }
+      ? (() => {
+          const sidecar = JSON.parse(
+            readFileSync(join(base, m.map.background.replace(/\.png$/, '.json')), 'utf-8'),
+          ) as MapSidecar;
+          return {
+            map: {
+              svg: `${rel}/${dirname(m.map.background)}/marks.svg`,
+              background: `${rel}/${m.map.background}`,
+              layers: m.map.layers,
+              bounds: sidecar.bounds,
+              width: sidecar.width,
+              height: sidecar.height,
+              zoom: sidecar.zoom,
+              attribution: sidecar.attribution,
+            },
+          };
+        })()
       : {}),
   });
 }

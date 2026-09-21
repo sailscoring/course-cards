@@ -36,8 +36,21 @@ export interface CatalogueSet {
   };
   cards: CatalogueCard[];
   /** The set's chart, where it has one: the marks drawn as SVG, the chart
-   *  image under them, and the tile layers it was fetched from. */
-  map?: { svg: string; background: string; layers: string[] };
+   *  image under them, the tile layers it was fetched from, and what the
+   *  image covers — its Web Mercator bounds, pixel size, zoom and the
+   *  attribution its sources require, as `map/background.json` records them.
+   *  A consumer drawing on the chart needs only the image itself; everything
+   *  it has to know about the image is here. */
+  map?: {
+    svg: string;
+    background: string;
+    layers: string[];
+    bounds: { south: number; west: number; north: number; east: number };
+    width: number;
+    height: number;
+    zoom: number;
+    attribution: string;
+  };
 }
 
 export interface Catalogue {
@@ -108,6 +121,7 @@ export function parseCatalogue(data: unknown): Catalogue {
     let map: { map?: CatalogueSet['map'] } = {};
     if (s.map != null) {
       const m = record(s.map, `${path}.map`);
+      const b = record(m.bounds, `${path}.map.bounds`);
       map = {
         map: {
           svg: str(m, 'svg', `${path}.map`),
@@ -116,6 +130,16 @@ export function parseCatalogue(data: unknown): Catalogue {
             if (typeof l !== 'string') fail(`${path}.map.layers[${k}]`, 'expected a string');
             return l;
           }),
+          bounds: {
+            south: num(b, 'south', `${path}.map.bounds`),
+            west: num(b, 'west', `${path}.map.bounds`),
+            north: num(b, 'north', `${path}.map.bounds`),
+            east: num(b, 'east', `${path}.map.bounds`),
+          },
+          width: num(m, 'width', `${path}.map`),
+          height: num(m, 'height', `${path}.map`),
+          zoom: num(m, 'zoom', `${path}.map`),
+          attribution: str(m, 'attribution', `${path}.map`),
         },
       };
     }
