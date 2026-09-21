@@ -154,21 +154,31 @@ export function renderCourseSvg(marks: DrawnMark[], course: DrawnCourseMark[] = 
   const y = (lat: number): number => ((my(lat) - my(north)) / (my(south) - my(north))) * height;
   const font = (px: number): string => `font-family="system-ui, sans-serif" font-size="${f(px * u)}"`;
 
-  // What a label's outline is painted in, so it reads over whatever is
-  // under it: the plain ground, or the chart.
-  const chart = options.background;
+  // Where the chart goes, if it is drawn at all. It is placed by its own
+  // corners: the drawing and the image are both north-up Web Mercator, so
+  // the projection between them is linear and the frame crops whatever falls
+  // outside. Plain ground shows wherever the chart does not reach — a mark
+  // laid beyond what the club captured. A chart of water this drawing never
+  // reaches is dropped rather than embedded off-frame, because the bytes
+  // would ride on the page for nothing.
+  const placed = options.background && {
+    chart: options.background,
+    x: x(options.background.bounds.west),
+    y: y(options.background.bounds.north),
+    w: x(options.background.bounds.east) - x(options.background.bounds.west),
+    h: y(options.background.bounds.south) - y(options.background.bounds.north),
+  };
+  const chart = placed && placed.x < width && placed.y < height && placed.x + placed.w > 0 && placed.y + placed.h > 0
+    ? placed
+    : undefined;
+  // What a label's outline is painted in, so it reads over whatever is under
+  // it: the plain ground, or the chart.
   const halo = chart ? '#fff' : '#f4f9fd';
 
   let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" role="img" aria-label="${esc(options.title ?? (course.length ? 'Course drawing' : 'Marks drawing'))}">`;
   svg += `<rect x="0" y="0" width="${width}" height="${height}" fill="#f4f9fd"/>`;
   if (chart) {
-    // Placed by its own corners: the drawing and the image are both north-up
-    // Web Mercator, so the projection between them is linear and the frame
-    // crops whatever falls outside. Plain ground shows wherever the chart
-    // does not reach — a mark laid beyond what the club captured.
-    const ix = x(chart.bounds.west);
-    const iy = y(chart.bounds.north);
-    svg += `<image href="data:image/png;base64,${base64(chart.png)}" x="${f(ix)}" y="${f(iy)}" width="${f(x(chart.bounds.east) - ix)}" height="${f(y(chart.bounds.south) - iy)}" preserveAspectRatio="none"/>`;
+    svg += `<image href="data:image/png;base64,${base64(chart.chart.png)}" x="${f(chart.x)}" y="${f(chart.y)}" width="${f(chart.w)}" height="${f(chart.h)}" preserveAspectRatio="none"/>`;
   }
 
   // The minute grid, labelled along the left and bottom edges. Over a chart
@@ -274,7 +284,7 @@ export function renderCourseSvg(marks: DrawnMark[], course: DrawnCourseMark[] = 
   svg += labels;
   // Both tile sources require attribution wherever their pixels are shown.
   if (chart) {
-    svg += `<text x="${f(3 * u)}" y="${f(height - 4 * u)}" ${font(10)} fill="#222" stroke="#fff" stroke-width="${f(3 * u)}" paint-order="stroke">${esc(chart.attribution)}</text>`;
+    svg += `<text x="${f(3 * u)}" y="${f(height - 4 * u)}" ${font(10)} fill="#222" stroke="#fff" stroke-width="${f(3 * u)}" paint-order="stroke">${esc(chart.chart.attribution)}</text>`;
   }
   return svg + '</svg>';
 }

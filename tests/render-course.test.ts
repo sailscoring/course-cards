@@ -151,4 +151,18 @@ describe('renderCourseSvg', () => {
     expect(Number(rect[1]) + Number(rect[2])).toBeLessThan(width);
     expect(drawn).toContain('>K</text>');
   });
+
+  it('leaves out a chart of water the course never reaches', () => {
+    // A club's marks in Cork drawn with Howth's chart: nothing of it would
+    // show, and a few hundred kilobytes would ride on the page for nothing.
+    const elsewhere = [
+      { id: 'a', label: 'A', position: { lat: 51.79, lng: -8.29 } },
+      { id: 'b', label: 'B', position: { lat: 51.81, lng: -8.26 } },
+    ];
+    const drawn = renderCourseSvg(elsewhere, [{ mark: 'a' }, { mark: 'b' }], { background: chart });
+    expect(drawn).not.toMatch(/<image|href=/);
+    // And with it, no attribution: nothing of theirs is shown.
+    expect(drawn).not.toContain('OpenStreetMap');
+    expect(drawn).toContain('>A</text>');
+  });
 });
