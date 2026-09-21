@@ -77,10 +77,18 @@ const f = (n: number): string => n.toFixed(1);
 
 const B64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
+/** The encoding of a chart already drawn, kept as long as the caller keeps
+ *  the bytes. A page draws the same club's water once per race, and a dialog
+ *  redraws it on every keystroke; encoding a few hundred kilobytes each time
+ *  is the one expensive thing this renderer could do. */
+const encoded = new WeakMap<Uint8Array, string>();
+
 /** Base64 without Buffer or btoa: the renderer runs in a browser as often as
  *  in Node, and a chart of a few hundred kilobytes has to encode the same
  *  bytes in both. Built in chunks rather than one string per triple. */
 function base64(bytes: Uint8Array): string {
+  const already = encoded.get(bytes);
+  if (already !== undefined) return already;
   const chunks: string[] = [];
   let chunk = '';
   for (let i = 0; i < bytes.length; i += 3) {
@@ -99,7 +107,9 @@ function base64(bytes: Uint8Array): string {
     }
   }
   chunks.push(chunk);
-  return chunks.join('');
+  const b64 = chunks.join('');
+  encoded.set(bytes, b64);
+  return b64;
 }
 
 /**
