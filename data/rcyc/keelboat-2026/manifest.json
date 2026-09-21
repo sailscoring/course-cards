@@ -265,7 +265,7 @@
       "osm",
       "openseamap"
     ],
-    "zoom": 13,
+    "zoom": 14,
     "paddingMinutes": 1.0
   }
 }
