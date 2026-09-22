@@ -140,11 +140,13 @@ for (const manifest of manifests(join(root, 'data'))) {
               svg: `${rel}/${dirname(m.map.background)}/marks.svg`,
               background: `${rel}/${m.map.background}`,
               layers: m.map.layers,
-              bounds: sidecar.bounds,
-              width: sidecar.width,
-              height: sidecar.height,
-              zoom: sidecar.zoom,
-              attribution: sidecar.attribution,
+              placement: {
+                bounds: sidecar.bounds,
+                width: sidecar.width,
+                height: sidecar.height,
+                zoom: sidecar.zoom,
+                attribution: sidecar.attribution,
+              },
             },
           };
         })()

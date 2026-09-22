@@ -36,20 +36,25 @@ export interface CatalogueSet {
   };
   cards: CatalogueCard[];
   /** The set's chart, where it has one: the marks drawn as SVG, the chart
-   *  image under them, the tile layers it was fetched from, and what the
-   *  image covers — its Web Mercator bounds, pixel size, zoom and the
-   *  attribution its sources require, as `map/background.json` records them.
-   *  A consumer drawing on the chart needs only the image itself; everything
-   *  it has to know about the image is here. */
+   *  image under them, and the tile layers it was fetched from. */
   map?: {
     svg: string;
     background: string;
     layers: string[];
-    bounds: { south: number; west: number; north: number; east: number };
-    width: number;
-    height: number;
-    zoom: number;
-    attribution: string;
+    /** Where the background image goes, as `map/background.json` records it:
+     *  the ground it covers, its pixel size, the zoom it was fetched at, and
+     *  the attribution its sources require. A consumer drawing on the chart
+     *  needs the image and this, and nothing else. Absent from releases
+     *  before 0.8.0, which published the paths alone — so a newer library
+     *  still reads an older release's catalogue, and simply has no chart to
+     *  draw on. */
+    placement?: {
+      bounds: { south: number; west: number; north: number; east: number };
+      width: number;
+      height: number;
+      zoom: number;
+      attribution: string;
+    };
   };
 }
 
@@ -121,7 +126,25 @@ export function parseCatalogue(data: unknown): Catalogue {
     let map: { map?: CatalogueSet['map'] } = {};
     if (s.map != null) {
       const m = record(s.map, `${path}.map`);
-      const b = record(m.bounds, `${path}.map.bounds`);
+      let placement: { placement?: NonNullable<CatalogueSet['map']>['placement'] } = {};
+      if (m.placement != null) {
+        const pl = record(m.placement, `${path}.map.placement`);
+        const b = record(pl.bounds, `${path}.map.placement.bounds`);
+        placement = {
+          placement: {
+            bounds: {
+              south: num(b, 'south', `${path}.map.placement.bounds`),
+              west: num(b, 'west', `${path}.map.placement.bounds`),
+              north: num(b, 'north', `${path}.map.placement.bounds`),
+              east: num(b, 'east', `${path}.map.placement.bounds`),
+            },
+            width: num(pl, 'width', `${path}.map.placement`),
+            height: num(pl, 'height', `${path}.map.placement`),
+            zoom: num(pl, 'zoom', `${path}.map.placement`),
+            attribution: str(pl, 'attribution', `${path}.map.placement`),
+          },
+        };
+      }
       map = {
         map: {
           svg: str(m, 'svg', `${path}.map`),
@@ -130,16 +153,7 @@ export function parseCatalogue(data: unknown): Catalogue {
             if (typeof l !== 'string') fail(`${path}.map.layers[${k}]`, 'expected a string');
             return l;
           }),
-          bounds: {
-            south: num(b, 'south', `${path}.map.bounds`),
-            west: num(b, 'west', `${path}.map.bounds`),
-            north: num(b, 'north', `${path}.map.bounds`),
-            east: num(b, 'east', `${path}.map.bounds`),
-          },
-          width: num(m, 'width', `${path}.map`),
-          height: num(m, 'height', `${path}.map`),
-          zoom: num(m, 'zoom', `${path}.map`),
-          attribution: str(m, 'attribution', `${path}.map`),
+          ...placement,
         },
       };
     }
