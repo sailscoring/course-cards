@@ -36,6 +36,7 @@ const expected = [
   'parseMarksFile',
   'parsePosition',
   'printedMarks',
+  'renderCourseBackgroundSymbol',
   'renderCourseSvg',
   'totalDistanceNm',
 ];

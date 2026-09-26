@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { destination, renderCourseSvg, type CourseBackground, type DrawnMark } from '../src/index';
+import { destination, renderCourseBackgroundSymbol, renderCourseSvg, type CourseBackground, type DrawnMark } from '../src/index';
 
 // A Saturday off Howth: the line, two windward marks laid inner and outer,
 // and the club's fixed marks W, C, H and S.
@@ -150,6 +150,32 @@ describe('renderCourseSvg', () => {
     // stretched over it, and the mark beyond is still drawn.
     expect(Number(rect[1]) + Number(rect[2])).toBeLessThan(width);
     expect(drawn).toContain('>K</text>');
+  });
+
+  it('refers to a chart the page carries once, rather than embedding it', () => {
+    const symbol = renderCourseBackgroundSymbol(chart, 'chart-hyc');
+    const image = symbol.match(/<image href="data:image\/png;base64,([A-Za-z0-9+/=]+)" width="1317" height="1698"/);
+    expect(image).not.toBeNull();
+    expect(Buffer.from(image![1]!, 'base64')).toEqual(Buffer.from(chart.png));
+    expect(symbol).toContain('<symbol id="chart-hyc" viewBox="0 0 1317 1698" preserveAspectRatio="none">');
+
+    const embedded = renderCourseSvg(marks, course, { background: chart });
+    const referred = renderCourseSvg(marks, course, { background: chart, backgroundSymbol: 'chart-hyc' });
+    expect(referred).not.toContain('data:');
+    // The same box either way: only what fills it differs.
+    const box = (svg: string) => svg.match(/<(?:image|use) [^>]*?(x="[^"]+" y="[^"]+" width="[^"]+" height="[^"]+")/)![1];
+    expect(referred).toMatch(/<use href="#chart-hyc" x=/);
+    expect(box(referred)).toBe(box(embedded));
+    expect(referred).toContain('>© OpenStreetMap contributors · © OpenSeaMap contributors</text>');
+  });
+
+  it('refers to no chart the course never reaches', () => {
+    const elsewhere = [
+      { id: 'a', label: 'A', position: { lat: 51.79, lng: -8.29 } },
+      { id: 'b', label: 'B', position: { lat: 51.81, lng: -8.26 } },
+    ];
+    const drawn = renderCourseSvg(elsewhere, [{ mark: 'a' }, { mark: 'b' }], { background: chart, backgroundSymbol: 'chart-hyc' });
+    expect(drawn).not.toMatch(/<use|href=/);
   });
 
   it('leaves out a chart of water the course never reaches', () => {

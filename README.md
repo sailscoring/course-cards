@@ -84,7 +84,12 @@ Around that:
 - `renderCourseSvg(marks, course)` — the course as a picture: marks at
   their real relative positions, legs numbered with bearing and distance,
   north arrow, scale bar; one inert SVG element with no script, style, id or
-  external resource, so it can go inline anywhere.
+  external resource, so it can go inline anywhere. Given a data set's chart
+  as `background`, the course sits on the club's own water, the image
+  embedded in the drawing.
+- `renderCourseBackgroundSymbol(background, id)` — that chart as a symbol,
+  for a page with several drawings to carry once: each drawing given
+  `backgroundSymbol: id` refers to it instead of embedding its own copy.
 - `parseCatalogue` — a release's `index.json`, typed.
 
 The package is ESM, and also loadable from CommonJS: the `exports` map

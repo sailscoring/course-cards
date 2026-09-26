@@ -60,6 +60,12 @@ export interface RenderCourseOptions {
   /** The club's chart to draw on, where the marks come from a data set that
    *  captured one. */
   background?: CourseBackground;
+  /** Refer to `background` by the id of a symbol already on the page — one
+   *  `renderCourseBackgroundSymbol` wrote — rather than embedding the image
+   *  in this drawing. A page with a drawing per race then carries the chart
+   *  once, not once per race. `background` is still needed: it says where
+   *  the chart lies and whose it is. */
+  backgroundSymbol?: string;
 }
 
 // Web Mercator on the unit square.
@@ -110,6 +116,22 @@ function base64(bytes: Uint8Array): string {
   const b64 = chunks.join('');
   encoded.set(bytes, b64);
   return b64;
+}
+
+function chartDataUrl(background: CourseBackground): string {
+  return `data:image/png;base64,${base64(background.png)}`;
+}
+
+/**
+ * The chart as a symbol, for a page to carry once and every drawing on it
+ * to refer to by `backgroundSymbol: id`. The symbol spans the image's own
+ * pixels and stretches to whatever box a drawing places it in, as the
+ * embedded image does. It sits in an svg of no size that takes up no room,
+ * rather than one hidden with `display: none`, which some browsers take as
+ * leave to not paint what refers to it.
+ */
+export function renderCourseBackgroundSymbol(background: CourseBackground, id: string): string {
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute" aria-hidden="true"><defs><symbol id="${esc(id)}" viewBox="0 0 ${background.width} ${background.height}" preserveAspectRatio="none"><image href="${chartDataUrl(background)}" width="${background.width}" height="${background.height}" preserveAspectRatio="none"/></symbol></defs></svg>`;
 }
 
 /**
@@ -178,7 +200,10 @@ export function renderCourseSvg(marks: DrawnMark[], course: DrawnCourseMark[] = 
   let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" role="img" aria-label="${esc(options.title ?? (course.length ? 'Course drawing' : 'Marks drawing'))}">`;
   svg += `<rect x="0" y="0" width="${width}" height="${height}" fill="#f4f9fd"/>`;
   if (chart) {
-    svg += `<image href="data:image/png;base64,${base64(chart.chart.png)}" x="${f(chart.x)}" y="${f(chart.y)}" width="${f(chart.w)}" height="${f(chart.h)}" preserveAspectRatio="none"/>`;
+    const at = `x="${f(chart.x)}" y="${f(chart.y)}" width="${f(chart.w)}" height="${f(chart.h)}"`;
+    svg += options.backgroundSymbol
+      ? `<use href="#${esc(options.backgroundSymbol)}" ${at}/>`
+      : `<image href="${chartDataUrl(chart.chart)}" ${at} preserveAspectRatio="none"/>`;
   }
 
   // The minute grid, labelled along the left and bottom edges. Over a chart

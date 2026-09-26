@@ -30,7 +30,7 @@ export {
 } from './legs.js';
 export type { ResolvedCourseMark } from './legs.js';
 export { FormatError, parseCourseCardFile, parseMarksFile } from './parse.js';
-export { renderCourseSvg } from './render.js';
+export { renderCourseBackgroundSymbol, renderCourseSvg } from './render.js';
 export type { CourseBackground, DrawnCourseMark, DrawnMark, RenderCourseOptions } from './render.js';
 export { CatalogueError, parseCatalogue } from './catalogue.js';
 export type { Catalogue, CatalogueCard, CatalogueSet } from './catalogue.js';
