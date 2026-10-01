@@ -2,7 +2,7 @@
   "formatVersion": 2,
   "club": "HYC",
   "name": "Autumn League 2026 course card, offshore committee vessel starts",
-  "source": "https://hyc.ie/system/resources/2558/original/Offshore_Autumn_League_Course_Card_-_2026_Final_Draft_4.1_Comp.pdf",
+  "source": "https://hyc.ie/system/resources/2558/original/Offshore_Autumn_League_HYC_Course_Card_-_2026_Rev_1_1st_Oct_26.pdf",
   "marks": "marks.json",
   "startLine": {
     "id": "SL",
@@ -35,7 +35,7 @@
   "notes": [
     {
       "title": "Card heading",
-      "text": "Offshore Autumn League\nHYC COURSE CARD - 2026 Rev 0 (08/09/2026)"
+      "text": "Offshore Autumn League\nHYC COURSE CARD - 2026 Rev 1 (01/10/2026)"
     },
     {
       "title": "Wind direction",
@@ -43,7 +43,7 @@
     },
     {
       "title": "Card notes",
-      "text": "1. Marks coloured RED shall be rounded / passed to PORT. Those coloured GREEN and underlined shall be rounded / passed to STARBOARD\n2. The finishing line for Round The Cans Courses shall, unless a race is shortened, be between a vertical line on the front of the East Pier Finisher Hut & a black cherry buoy.\n3 This course card forms part of the Sailing Instructions."
+      "text": "1. The colour and style (underlined or not) of the mark reference letter displayed above indicates the required side that the mark is to be left. RED indicates leave to port, GREEN to starboard. Whether marks are to be rounded or passed is determined by the course required to sail from the mark preceding the mark in question to the one after it. Marks are to be left (rounded or passed) in the sequence listed. Where an objective assessment of the course design and listed mark sequence indicates a requirement to round a mark, rather than passing it (thereby reducing the number of legs sailed), it shall be deemed a rounding mark.\n2. The finishing line for Round The Cans Courses shall,unless a race is shortened, be between a vertical line on the front of the East Pier Finisher Hut & a black cherry buoy.\n3 This course card forms part of the Sailing Instructions."
     }
   ],
   "courses": [

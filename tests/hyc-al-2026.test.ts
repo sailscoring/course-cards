@@ -50,7 +50,7 @@ describe.each(Object.entries(cards))('the HYC Autumn League 2026 %s card', (name
   it('carries the card’s heading, wind rows and notes', () => {
     expect(card.name).toMatch(/^Autumn League 2026 course card, (off|in)shore committee vessel starts$/);
     expect(card.notes?.map((n) => n.title)).toEqual(['Card heading', 'Wind direction', 'Card notes']);
-    expect(card.notes![0]!.text).toContain('HYC COURSE CARD - 2026 Rev 0 (08/09/2026)');
+    expect(card.notes![0]!.text).toContain('HYC COURSE CARD - 2026 Rev 1 (01/10/2026)');
     // The card heads the wind column with the ±10° it holds each row good for.
     const [heading, winds] = card.notes![1]!.text.split('\n');
     expect(heading).toBe('Wind Direction +/- 10°');
@@ -124,7 +124,14 @@ describe.each(Object.entries(cards))('the HYC Autumn League 2026 %s card', (name
       },
       inshore: {
         A1: 'Z P W P W',
-        E4: 'Z V C K V W O C i',
+        // Rev 1 changed six cells, which it highlights: five marks go green,
+        // and M2 is a different course.
+        B1: 'Z P C v',
+        E3: 'Z V W o C D C i',
+        E4: 'Z V C K V W o C i',
+        K2: 'Z V P W h',
+        L1: 'Z V U C i',
+        M2: 'Z V H V H U W',
         N3: 'Z V H W o C',
         Q4: 'Z I D W D W C I W',
         R4: 'Z I D W D W C I W', // the 300° row repeats the 280° row

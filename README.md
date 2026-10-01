@@ -137,7 +137,7 @@ and how it was checked.
   [inshore](https://courses.sailscoring.ie/hyc/al-2025/inshore.html);
   [README](data/hyc/al-2025/README.md).
 - `data/hyc/al-2026/` — Howth Yacht Club's Autumn League 2026: the offshore
-  and inshore cards the club published on 9 September, 72 courses each,
+  and inshore cards as the club revised them on 1 October, 72 courses each,
   lettered A–T by the wind the row is laid out for. These are real-text
   PDFs, so the side of every mark is read from the colour the PDF sets for
   the letter — no OCR — and the letters themselves are read a second time,
@@ -146,7 +146,7 @@ and how it was checked.
   lines, north and north-west of Ireland's Eye, come from SI 6.1 and 6.2.
   Unlike the drafts these replace, the published cards print no distances,
   so there is nothing left to cross-check them against — what that cost, and
-  the single course that changed, are in the README.
+  what each revision changed, are in the README.
   [README](data/hyc/al-2026/README.md).
 - `data/hyc/brass-monkey-2025/` — Howth Yacht Club's Brass Monkey Winter
   Series 2025: the eight marks and 16 courses from the course card in the

@@ -1,21 +1,24 @@
 # HYC Autumn League 2026
 
 The offshore and inshore course cards for Howth Yacht Club's Autumn League
-2026, 12 September to 17 October, as the club published them on 9 September —
-"HYC COURSE CARD - 2026 Rev 0 (08/09/2026)" — with the marks they letter and
+2026, 12 September to 17 October, as the club revised them on 1 October —
+"HYC COURSE CARD - 2026 Rev 1 (01/10/2026)" — with the marks they letter and
 the start line and finish the sailing instructions define.
 
-The club's filenames still say "Final Draft 4.1", but these are the cards
-linked from the club's own event page as "Offshore Course Card" and "Inshore
-Course Card", and SI 6.1 C and 6.2 C make the course card part of the sailing
-instructions. This data set previously held the 6 September drafts, in Word
-and Excel, that these replace; what changed is in "Against the drafts" below.
+These are the cards linked from the club's own event page as "Offshore
+Course Card" and "Inshore Course Card", and SI 6.1 C and 6.2 C make the
+course card part of the sailing instructions. The club replaced Rev 0
+(08/09/2026, published 9 September under filenames that still said "Final
+Draft 4.1") in place: the same resource numbers on hyc.ie now serve Rev 1,
+and the old URLs no longer resolve. What Rev 1 changed is in "Rev 1" below.
+Before Rev 0 this data set held the 6 September drafts, in Word and Excel;
+what Rev 0 changed from those is in "Against the drafts".
 
 | File | Source | Made by |
 |---|---|---|
 | `marks.json` | `../al-2025/source/AL_Course_Card_Technical_Sheet.pdf`, `source/2026_AL_Sis.pdf` | `tools/extract_marks.py` |
-| `offshore.json` | `source/Offshore_Autumn_League_Course_Card_-_2026_Final_Draft_4.1_Comp.pdf`, `source/2026_AL_Sis.pdf` | `tools/extract_hyc_al_card.py`, `tools/extract_start_line.py`, `tools/extract_finish.py` |
-| `inshore.json` | `source/Inshore_Autumn_League_Course_Card_-_2026_Final_Draft_4.1_Comp.pdf`, `source/2026_AL_Sis.pdf`, `source/Autumn_League_SI_Amendment_01.pdf` | `tools/extract_hyc_al_card.py`, `tools/extract_start_line.py`, `tools/extract_finish.py` |
+| `offshore.json` | `source/Offshore_Autumn_League_HYC_Course_Card_-_2026_Rev_1_1st_Oct_26.pdf`, `source/2026_AL_Sis.pdf` | `tools/extract_hyc_al_card.py`, `tools/extract_start_line.py`, `tools/extract_finish.py` |
+| `inshore.json` | `source/Inshore_Autumn_League_HYC_Course_Card_-_2026_Rev_1st_Oct_2026.pdf`, `source/2026_AL_Sis.pdf`, `source/Autumn_League_SI_Amendment_01.pdf` | `tools/extract_hyc_al_card.py`, `tools/extract_start_line.py`, `tools/extract_finish.py` |
 | `source/*.md` | the sailing instructions beside them | `tools/pdf_markdown.py` |
 | `offshore.html`, `inshore.html`, `map/marks.svg` | the JSON above, `map/background.png` | `tools/render-cards.ts` |
 | `map/background.png`, `.json` | OpenStreetMap + OpenSeaMap tiles | `tools/fetch_map.py` |
@@ -36,8 +39,9 @@ instead (`073` = 070°, column 3), and these do not say how a course is to be
 signalled beyond SI 6.1 C's "letters and numerals displayed on boards".
 
 The side comes from the colour of each letter, as the card's own legend says:
-"Marks coloured RED shall be rounded / passed to PORT. Those coloured GREEN
-and underlined shall be rounded / passed to STARBOARD." These are real-text
+"The colour and style (underlined or not) of the mark reference letter
+displayed above indicates the required side that the mark is to be left. RED
+indicates leave to port, GREEN to starboard." These are real-text
 PDFs, so `extract_hyc_al_card.py` reads the colour the PDF sets for the
 glyphs — the document's own instruction, not a rendering of it — by way of
 `pdftohtml -xml`, which breaks a line wherever the fill colour changes. The
@@ -47,15 +51,19 @@ neither the card's red nor its green stops the build rather than being
 guessed at; none is.
 
 The table's rules are drawn rather than typed, so the grid comes from the
-card's own headings: a run belongs to the row whose wind direction is printed
-nearest it down the left, and to the column whose number is printed over it.
+table itself: a run belongs to the row whose wind direction is printed
+nearest it down the left, and to the column whose cells it starts at or
+follows. The cells are set flush left, so a column is an edge every row has a
+run starting at, and the number printed over it must fall inside it. The
+numbers alone will not do: they are centred, and Rev 1's inshore card makes
+its fourth column wider than the other three.
 That is geometry, so every build checks it against a second reading that uses
 none of it: `pdftotext -layout` sets each row of the table on a line of its
 own, and the letters of that line are the row's four courses run together. A
 letter dropped, doubled or read out of order stops the build. The two
 readings agree on all 144 courses of both cards. What the colour reading adds
 on top is the side, and the two cards between them give 126 of 415 offshore
-roundings to starboard and 8 of 468 inshore.
+roundings to starboard and 13 of 469 inshore.
 
 **The start line.** SI 6.1 B and 6.2 B define the offshore and inshore
 starting lines, and 6.1 A and 6.2 A the areas they are laid in; both are
@@ -184,7 +192,50 @@ over, not OCR — but the second point does rest on the drafts, and the
 sequences the drafts' arithmetic vouched for are, bar one course, exactly the
 sequences on these cards.
 
+## Rev 1
+
+The club highlights in yellow what Rev 1 changes, and the extraction finds
+exactly those cells and nothing else.
+
+**The offshore courses are unchanged**, all 72 of them, side for side.
+
+**Six inshore courses changed.** In five a mark that was red is now green:
+
+| Course | Rev 0 | Rev 1 |
+|---|---|---|
+| B1 | `Z P C V` | `Z P C v` |
+| E3 | `Z V W O C D C i` | `Z V W o C D C i` |
+| E4 | `Z V C K V W O C i` | `Z V C K V W o C i` |
+| K2 | `Z V P W H` | `Z V P W h` |
+| L1 | `Z V U C I` | `Z V U C i` |
+
+(lowercase is starboard.) The sixth, **M2**, is a different course: it was
+`Z V U W U W`, the same marks as M4 short of a lap, and is now
+`Z V H V H U W`.
+
+**Note 1, on both cards, is rewritten.** It was "Marks coloured RED shall be
+rounded / passed to PORT. Those coloured GREEN and underlined shall be
+rounded / passed to STARBOARD". It now reads, in full: "The colour and style
+(underlined or not) of the mark reference letter displayed above indicates
+the required side that the mark is to be left. RED indicates leave to port,
+GREEN to starboard. Whether marks are to be rounded or passed is determined
+by the course required to sail from the mark preceding the mark in question
+to the one after it. Marks are to be left (rounded or passed) in the
+sequence listed. Where an objective assessment of the course design and
+listed mark sequence indicates a requirement to round a mark, rather than
+passing it (thereby reducing the number of legs sailed), it shall be deemed
+a rounding mark."
+
+The side is still read from the colour alone, as before. What the new note
+adds is that a printed mark may be one a boat passes rather than rounds, and
+that this is decided by the geometry of the legs either side of it. The
+courses here do not say which: every printed mark is carried as a rounding,
+with no `passing` flag, exactly as under Rev 0. Only the run home, which the
+sailing instructions word as "passing", is marked as passed.
+
 ## Against the drafts
+
+This section compares Rev 0 with the drafts that came before it.
 
 **143 of the 144 courses are unchanged.** The one that is not is offshore
 **N2**, which the drafts printed as `Z E O I G` against 9.1 NM — a mile and
@@ -273,6 +324,7 @@ untouched — they are reference tables for the club's marks, not this card's.
   subsets are not disjoint: ten marks are common to both, and only C and W
   are the inshore card's alone, A, E and G the offshore card's. See "The
   charts" below.
-- Almost every mark on the inshore card is rounded to port: 8 of its 468
-  mark roundings are to starboard, all in the 080°, 200° and 240° rows. The
+- Almost every mark on the inshore card is rounded to port: 13 of its 469
+  mark roundings are to starboard, all in the 020°, 080°, 180°, 200° and
+  240° rows — five of them made green by Rev 1. The
   offshore card mixes the two throughout — 126 of 415 to starboard.

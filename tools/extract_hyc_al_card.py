@@ -14,7 +14,8 @@ three are the same card:
 
 Whichever it is, the side comes from the colour a character is drawn in —
 "Marks coloured RED shall be rounded / passed to PORT. Those in GREEN and
-underlined shall be rounded / passed to STARBOARD" — and that colour is read
+underlined shall be rounded / passed to STARBOARD", or in the 2026 Rev 1
+cards' words "RED indicates leave to port, GREEN to starboard" — and that colour is read
 from the document itself, never from a rendering of it: from the run (Word)
 or rich-text run (Excel) a character belongs to, or from the fill colour the
 PDF sets for it. The underline the legend also mentions is not usable: in
@@ -257,9 +258,12 @@ def pdf_card(path):
     """The same, from a card the club has published as a PDF.
 
     The table's rules are drawn, not in the text layer, so the grid comes
-    from the card's own headings: a run belongs to the row whose wind
-    direction is printed nearest it down the left of the table, and to the
-    column whose number is printed over it. Above the table is the card's
+    from the table itself: a run belongs to the row whose wind direction is
+    printed nearest it down the left of the table, and to the column whose
+    cells it starts at or follows. A column is where every row has a cell
+    start — the cells are set flush left — and the number printed over it
+    must fall inside it; the numbers are centred over columns that are not
+    all the same width, so they do not say where a column starts. Above the table is the card's
     heading, below it the card's notes, and left of the "Course" column the
     heading of the wind column — "Wind Direction +/- 10°", the tolerance
     included.
@@ -271,16 +275,27 @@ def pdf_card(path):
     header_top = runs[course[0]][0]
     numbers = [i for i, r in enumerate(runs)
                if flat(r[2]) in ('1', '2', '3', '4') and abs(r[0] - header_top) <= 6]
-    columns = sorted(runs[i][1] for i in numbers)
-    if len(columns) != 4:
-        sys.exit(f'{path}: {len(columns)} of the four course columns are numbered over the "Course" heading')
-    gutter = (columns[1] - columns[0]) / 2  # half a column: left of the first is the wind column
+    numbered = sorted(runs[i][1] for i in numbers)
+    if len(numbered) != 4:
+        sys.exit(f'{path}: {len(numbered)} of the four course columns are numbered over the "Course" heading')
 
     winds = sorted((r[0], flat(r[2])) for r in runs
-                   if r[1] < columns[0] - gutter and WIND_RE.fullmatch(flat(r[2])))
+                   if r[1] < numbered[0] and WIND_RE.fullmatch(flat(r[2])))
     if len(winds) < 2:
         sys.exit(f'{path}: {len(winds)} wind directions down the left of the table, expected the card\'s rows')
     pitch = min(b[0] - a[0] for a, b in zip(winds, winds[1:]))
+
+    # Every row has a run starting at each column's left edge: the wind and
+    # course-letter columns too, which is why the course columns are the
+    # last four such edges and not all of them.
+    row_lefts = [[r[1] for r in runs if r[2].strip() and abs(r[0] - top) <= pitch / 2] for top, _ in winds]
+    edges = [left for left in sorted(set(row_lefts[0]))
+             if all(any(abs(left - other) <= 2 for other in lefts) for lefts in row_lefts)]
+    columns = edges[-4:]
+    if len(columns) != 4 or not all(
+            columns[c] <= numbered[c] < (columns[c + 1] if c < 3 else float('inf')) for c in range(4)):
+        sys.exit(f'{path}: the cell edges every row shares, {edges}, are not four columns under the numbers at {numbered}')
+    gutter = 2  # how far a cell's first run may sit left of its column's edge
 
     header = set(course) | set(numbers)
     above, below = [], []

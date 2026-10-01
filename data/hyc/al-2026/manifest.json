@@ -48,12 +48,12 @@
     {
       "output": "offshore.json",
       "tool": "extract_hyc_al_card",
-      "source": "source/Offshore_Autumn_League_Course_Card_-_2026_Final_Draft_4.1_Comp.pdf",
-      "url": "https://hyc.ie/system/resources/2558/original/Offshore_Autumn_League_Course_Card_-_2026_Final_Draft_4.1_Comp.pdf",
+      "source": "source/Offshore_Autumn_League_HYC_Course_Card_-_2026_Rev_1_1st_Oct_26.pdf",
+      "url": "https://hyc.ie/system/resources/2558/original/Offshore_Autumn_League_HYC_Course_Card_-_2026_Rev_1_1st_Oct_26.pdf",
       "meta": {
         "club": "HYC",
         "name": "Autumn League 2026 course card, offshore committee vessel starts",
-        "source": "https://hyc.ie/system/resources/2558/original/Offshore_Autumn_League_Course_Card_-_2026_Final_Draft_4.1_Comp.pdf",
+        "source": "https://hyc.ie/system/resources/2558/original/Offshore_Autumn_League_HYC_Course_Card_-_2026_Rev_1_1st_Oct_26.pdf",
         "marks": "marks.json"
       },
       "startLine": {
@@ -105,12 +105,12 @@
     {
       "output": "inshore.json",
       "tool": "extract_hyc_al_card",
-      "source": "source/Inshore_Autumn_League_Course_Card_-_2026_Final_Draft_4.1_Comp.pdf",
-      "url": "https://hyc.ie/system/resources/2559/original/Inshore_Autumn_League_Course_Card_-_2026_Final_Draft_4.1_Comp.pdf",
+      "source": "source/Inshore_Autumn_League_HYC_Course_Card_-_2026_Rev_1st_Oct_2026.pdf",
+      "url": "https://hyc.ie/system/resources/2559/original/Inshore_Autumn_League_HYC_Course_Card_-_2026_Rev_1st_Oct_2026.pdf",
       "meta": {
         "club": "HYC",
         "name": "Autumn League 2026 course card, inshore committee vessel starts",
-        "source": "https://hyc.ie/system/resources/2559/original/Inshore_Autumn_League_Course_Card_-_2026_Final_Draft_4.1_Comp.pdf",
+        "source": "https://hyc.ie/system/resources/2559/original/Inshore_Autumn_League_HYC_Course_Card_-_2026_Rev_1st_Oct_2026.pdf",
         "marks": "marks.json"
       },
       "startLine": {
