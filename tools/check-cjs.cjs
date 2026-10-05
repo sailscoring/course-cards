@@ -35,6 +35,7 @@ const expected = [
   'parseCourseCardFile',
   'parseMarksFile',
   'parsePosition',
+  'parseRoutingFile',
   'printedMarks',
   'renderCourseBackgroundSymbol',
   'renderCourseSvg',

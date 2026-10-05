@@ -1,15 +1,21 @@
 export { FORMAT_VERSION } from './types.js';
 export type {
+  AssumedPosition,
   Course,
   CourseCardFile,
   CourseLeg,
   CourseMark,
+  DirectPair,
   Finish,
+  LegReview,
   Mark,
   MarksFile,
   Note,
+  Passage,
   Position,
   RacePositions,
+  RoutingFile,
+  RoutingWaypoint,
   Side,
   StartLine,
   Waypoint,
@@ -29,7 +35,7 @@ export {
   totalDistanceNm,
 } from './legs.js';
 export type { ResolvedCourseMark } from './legs.js';
-export { FormatError, parseCourseCardFile, parseMarksFile } from './parse.js';
+export { FormatError, parseCourseCardFile, parseMarksFile, parseRoutingFile } from './parse.js';
 export { renderCourseBackgroundSymbol, renderCourseSvg } from './render.js';
 export type { CourseBackground, DrawnCourseMark, DrawnMark, RenderCourseOptions } from './render.js';
 export { CatalogueError, parseCatalogue } from './catalogue.js';

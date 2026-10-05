@@ -6,6 +6,7 @@
 
 import {
   FORMAT_VERSION,
+  type AssumedPosition,
   type CourseCardFile,
   type CourseMark,
   type Finish,
@@ -13,6 +14,7 @@ import {
   type MarksFile,
   type Note,
   type Position,
+  type RoutingFile,
   type Side,
   type StartLine,
 } from './types.js';
@@ -171,5 +173,127 @@ export function parseCourseCardFile(data: unknown): CourseCardFile {
     ...finish,
     ...optionalNotes(obj, 'card'),
     courses,
+  };
+}
+
+function list(obj: Record<string, unknown>, key: string, path: string): unknown[] {
+  if (obj[key] == null) return [];
+  if (!Array.isArray(obj[key])) fail(`${path}.${key}`, 'expected an array');
+  return obj[key] as unknown[];
+}
+
+function record(raw: unknown, path: string): Record<string, unknown> {
+  if (typeof raw !== 'object' || raw === null) fail(path, 'expected an object');
+  return raw as Record<string, unknown>;
+}
+
+function id(value: unknown, path: string): string {
+  if (typeof value !== 'string' || !value) fail(path, 'expected an id');
+  return value;
+}
+
+/**
+ * A routing overlay, checked within itself: every passage and pair names
+ * assumed positions it declares, every `via` a waypoint or an assumed
+ * position, every `as` an assumed position with one of its own; no id is
+ * declared twice, and no pair is listed twice in either direction. Whether
+ * its marks are the marks file's is for the caller to check against the
+ * files it has.
+ */
+export function parseRoutingFile(data: unknown): RoutingFile {
+  const obj = record(data, 'routing');
+  const formatVersion = checkVersion(obj.formatVersion, 'routing.formatVersion');
+
+  const ids = new Set<string>();
+  const declare = (value: string, path: string) => {
+    if (ids.has(value)) fail(path, `duplicate id "${value}"`);
+    ids.add(value);
+  };
+
+  const assumed: AssumedPosition[] = list(obj, 'assumed', 'routing').map((raw, i) => {
+    const path = `routing.assumed[${i}]`;
+    const a = record(raw, path);
+    const mark = id(a.mark, `${path}.mark`);
+    const own = a.id == null ? mark : id(a.id, `${path}.id`);
+    declare(own, `${path}.id`);
+    if ((a.position == null) === (a.as == null)) fail(path, 'expected exactly one of position and as');
+    if (typeof a.toleranceM !== 'number' || !(a.toleranceM >= 0)) fail(`${path}.toleranceM`, 'expected metres, 0 or more');
+    return {
+      id: own,
+      mark,
+      ...(a.position != null ? { position: checkPosition(a.position, `${path}.position`) } : {}),
+      ...(a.as != null ? { as: id(a.as, `${path}.as`) } : {}),
+      toleranceM: a.toleranceM,
+      ...optionalString(a, 'note'),
+      ...optionalString(a, 'source'),
+    };
+  });
+  const placed = new Set(assumed.filter((a) => a.position).map((a) => a.id));
+  assumed.forEach((a, i) => {
+    if (a.as != null && !placed.has(a.as)) fail(`routing.assumed[${i}].as`, `"${a.as}" is not an assumed position with one of its own`);
+  });
+
+  const waypoints = list(obj, 'waypoints', 'routing').map((raw, i) => {
+    const path = `routing.waypoints[${i}]`;
+    const w = record(raw, path);
+    const own = id(w.id, `${path}.id`);
+    declare(own, `${path}.id`);
+    return {
+      id: own,
+      ...optionalString(w, 'name'),
+      position: checkPosition(w.position, `${path}.position`),
+      ...optionalString(w, 'note'),
+    };
+  });
+  const turning = new Set([...placed, ...waypoints.map((w) => w.id)]);
+
+  // A pair is named by assumed positions with a position of their own; one
+  // that stands in for another (`as`) takes that one's pairs, so naming it
+  // in a pair would be a pair nothing ever looks up.
+  const pairs = new Set<string>();
+  const pair = (raw: Record<string, unknown>, path: string) => {
+    const from = id(raw.from, `${path}.from`);
+    const to = id(raw.to, `${path}.to`);
+    for (const [key, value] of [['from', from], ['to', to]] as const) {
+      if (!placed.has(value)) fail(`${path}.${key}`, `"${value}" is not an assumed position with one of its own`);
+    }
+    if (from === to) fail(path, 'a pair needs two ends');
+    const key = [from, to].sort().join('\u0000');
+    if (pairs.has(key)) fail(path, `${from} – ${to} is listed twice`);
+    pairs.add(key);
+    return { from, to };
+  };
+
+  const passages = list(obj, 'passages', 'routing').map((raw, i) => {
+    const path = `routing.passages[${i}]`;
+    const p = record(raw, path);
+    const ends = pair(p, path);
+    if (!Array.isArray(p.via) || p.via.length === 0) fail(`${path}.via`, 'expected the points the passage turns at');
+    const via = p.via.map((v, j) => {
+      const point = id(v, `${path}.via[${j}]`);
+      if (!turning.has(point)) fail(`${path}.via[${j}]`, `"${point}" is neither a waypoint nor an assumed position`);
+      return point;
+    });
+    return { ...ends, via, ...optionalString(p, 'note') };
+  });
+  const direct = list(obj, 'direct', 'routing').map((raw, i) => {
+    const path = `routing.direct[${i}]`;
+    const d = record(raw, path);
+    return { ...pair(d, path), ...optionalString(d, 'note') };
+  });
+
+  return {
+    formatVersion,
+    ...optionalString(obj, 'club'),
+    ...optionalString(obj, 'name'),
+    ...optionalString(obj, 'source'),
+    ...optionalString(obj, 'contributor'),
+    ...optionalString(obj, 'method'),
+    ...optionalString(obj, 'marks'),
+    ...optionalNotes(obj, 'routing'),
+    assumed,
+    waypoints,
+    passages,
+    direct,
   };
 }
