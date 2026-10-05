@@ -26,6 +26,12 @@ Two file kinds, plain JSON, specified in [`docs/format.md`](docs/format.md):
 A card cannot know where the start line was on the day, nor where the marks
 laid per race went. Those are supplied to the library per race.
 
+A data set may add a third, optional file, a **routing overlay**: local
+knowledge of which legs are sailable as straight lines and how the fleet
+goes round the ones that are not, as routing waypoints and passages between
+mark pairs, from whoever knows the water and with its own provenance. Royal
+Cork's is the only one so far.
+
 ## The library
 
 ```ts
@@ -76,6 +82,17 @@ Around that:
   place — is as for a numbered course. `calledCourse(card, sequence)` is that
   sequence as a `Course`, for `renderCourseSvg`. Most clubs race this way,
   and the ones with cards call courses off them too.
+- `parseRoutingFile` and the last argument of `courseLegs` and
+  `calledCourseLegs` — a data set's routing overlay, where it has one (the
+  catalogue lists it). Given one, a leg the overlay routes round an
+  obstruction comes back as the legs actually sailed, through its routing
+  waypoints (`routing: true` on the waypoint), and every leg says how the
+  overlay speaks for it — `review: 'direct' | 'passage' | 'unreviewed'` —
+  which leg of the card it sails (`cardLeg`), and how far its ends were from
+  where the overlay assumed them (`offsetM`). A pair the overlay does not
+  list, or one whose marks have moved from where it tested them, is a
+  straight line marked `unreviewed`. Without an overlay the legs carry none
+  of this: no overlay makes no claim.
 - `legsFromWaypoints(waypoints)` — the leg arithmetic on its own, for a
   course built by hand from placed marks with no card behind it.
 - `parsePosition` / `formatPosition` — positions the way sailors write
@@ -94,7 +111,8 @@ Around that:
 - `renderCourseBackgroundSymbol(background, id)` — that chart as a symbol,
   for a page with several drawings to carry once: each drawing given
   `backgroundSymbol: id` refers to it instead of embedding its own copy.
-- `parseCatalogue` — a release's `index.json`, typed.
+- `parseCatalogue` — a release's `index.json`, typed, with each set's
+  routing overlay where it has one.
 
 The package is ESM, and also loadable from CommonJS: the `exports` map
 carries a `require` condition, and Node has been able to `require()` an ESM

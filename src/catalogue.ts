@@ -37,6 +37,17 @@ export interface CatalogueSet {
     url: string;
   };
   cards: CatalogueCard[];
+  /** The set's routing overlay, where it has one: local knowledge of which
+   *  legs are sailable and how the fleet goes round the rest, with its own
+   *  provenance — `courseLegs`' optional last argument. Absent from releases
+   *  before 0.12.0, and from every set nobody has written one for. */
+  routing?: {
+    file: string;
+    /** Who made it, and where it comes from. */
+    contributor?: string;
+    source?: string;
+    url: string;
+  };
   /** The set's chart, where it has one: the marks drawn as SVG, the chart
    *  image under them, and the tile layers it was fetched from. */
   map?: {
@@ -125,6 +136,18 @@ export function parseCatalogue(data: unknown): Catalogue {
         page: str(c, 'page', cardPath),
       };
     });
+    let routing: { routing?: CatalogueSet['routing'] } = {};
+    if (s.routing != null) {
+      const r = record(s.routing, `${path}.routing`);
+      routing = {
+        routing: {
+          file: str(r, 'file', `${path}.routing`),
+          ...optStr(r, 'contributor'),
+          ...optStr(r, 'source'),
+          url: str(r, 'url', `${path}.routing`),
+        },
+      };
+    }
     let map: { map?: CatalogueSet['map'] } = {};
     if (s.map != null) {
       const m = record(s.map, `${path}.map`);
@@ -170,6 +193,7 @@ export function parseCatalogue(data: unknown): Catalogue {
         url: str(marks, 'url', `${path}.marks`),
       },
       cards,
+      ...routing,
       ...map,
     };
   });

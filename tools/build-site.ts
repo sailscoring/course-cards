@@ -30,7 +30,7 @@ import { dirname, join, relative } from 'node:path';
 
 import { unzipSync, zipSync } from 'fflate';
 
-import { FORMAT_VERSION, parseCatalogue, parseCourseCardFile, parseMarksFile, type Catalogue } from '../src/index';
+import { FORMAT_VERSION, parseCatalogue, parseCourseCardFile, parseMarksFile, parseRoutingFile, type Catalogue } from '../src/index';
 
 const root = join(import.meta.dirname, '..');
 const site = join(root, 'site');
@@ -84,6 +84,7 @@ interface SetEntry {
   event: string;
   marks: { file: string; count: number; source?: string };
   cards: CardEntry[];
+  routing?: { file: string; contributor?: string; source?: string };
   map?: NonNullable<Catalogue['sets'][number]['map']>;
 }
 
@@ -134,6 +135,18 @@ for (const manifest of manifests(join(root, 'data'))) {
       ...(marks.source && /^https?:\/\//.test(marks.source) ? { source: marks.source } : {}),
     },
     cards,
+    ...(() => {
+      const routingArtifact = m.artifacts.find((a) => a.tool.endsWith('_routing'));
+      if (!routingArtifact) return {};
+      const routing = parseRoutingFile(JSON.parse(readFileSync(join(base, routingArtifact.output), 'utf-8')));
+      return {
+        routing: {
+          file: `${rel}/${routingArtifact.output}`,
+          ...(routing.contributor ? { contributor: routing.contributor } : {}),
+          ...(routing.source && /^https?:\/\//.test(routing.source) ? { source: routing.source } : {}),
+        },
+      };
+    })(),
     ...(m.map
       ? (() => {
           const sidecar = JSON.parse(
@@ -179,10 +192,11 @@ function catalogueFromData(): Catalogue {
     site: siteUrl,
     repository: repoUrl,
     zip: `${siteUrl}/${versionDir}/${zipName}`,
-    sets: sets.map((s) => ({
+    sets: sets.map(({ routing, ...s }) => ({
       ...s,
       marks: { ...s.marks, url: `${siteUrl}/${versionDir}/${s.marks.file}` },
       cards: s.cards.map((c) => ({ ...c, url: `${siteUrl}/${versionDir}/${c.json}`, page: `${siteUrl}/${versionDir}/${c.html}` })),
+      ...(routing ? { routing: { ...routing, url: `${siteUrl}/${versionDir}/${routing.file}` } } : {}),
     })),
   };
   return parseCatalogue(JSON.parse(JSON.stringify(catalogue)));

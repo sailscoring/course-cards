@@ -58,6 +58,19 @@ describe('parseCatalogue', () => {
     expect(catalogue.sets[0]!.cards[0]!.source).toBeUndefined();
   });
 
+  it('reads a set’s routing overlay, where it has one', () => {
+    const routing = {
+      file: 'rcyc/keelboat-2026/routing.json',
+      contributor: 'Pat Tanner',
+      source: 'https://github.com/Bateleur88/cork-harbour-orc',
+      url: `${site}/v0.12.0/rcyc/keelboat-2026/routing.json`,
+    };
+    const catalogue = parseCatalogue({ ...index, sets: [{ ...index.sets[0]!, routing }] });
+    expect(catalogue.sets[0]!.routing).toEqual(routing);
+    expect(parseCatalogue(index).sets[0]!.routing).toBeUndefined();
+    expect(() => parseCatalogue({ ...index, sets: [{ ...index.sets[0]!, routing: { file: 'x' } }] })).toThrow('catalogue.sets[0].routing.url');
+  });
+
   it('refuses what is not a catalogue, naming the field', () => {
     expect(() => parseCatalogue(null)).toThrow(CatalogueError);
     expect(() => parseCatalogue({ ...index, sets: 'none' })).toThrow('catalogue.sets: expected an array');
