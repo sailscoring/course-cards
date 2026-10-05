@@ -47,7 +47,7 @@
       "meta": {
         "club": "CY&BC",
         "name": "Racing marks 2026, lettered as the Cruiser Course Card's legend has them, the North Dublin Bay marks positioned by Dublin Port's Notice to Mariners 20/2026",
-        "source": "https://www.cybc.ie/uploads/2082651/download"
+        "source": "https://www.dublinport.ie/wp-content/uploads/2025/12/20-2026-Yacht-Racing-Marks.pdf"
       }
     },
     {
@@ -70,7 +70,10 @@
       "url": "https://www.cybc.ie/uploads/2177163/download",
       "aliases": {
         "why": "The instructions print the Outer mark as \"0\" (a zero) twice in course E2 and as \"OUT\" twice in course A2, where every other course and the legend have \"O\". Both are read as O; nothing else on the card is a zero or an OUT.",
-        "map": { "0": "O", "OUT": "O" }
+        "map": {
+          "0": "O",
+          "OUT": "O"
+        }
       },
       "meta": {
         "club": "CY&BC",
@@ -79,10 +82,17 @@
         "marks": "marks.json"
       },
       "notesSource": "source/EC-BKC-2026-2-SI_rev03.pdf",
-      "notesClauses": ["8.1", "12.2 START-FINISH LINE", "12.3"],
+      "notesClauses": [
+        "8.1",
+        "12.2 START-FINISH LINE",
+        "12.3"
+      ],
       "startLine": {
         "source": "source/EC-BKC-2026-2-SI_rev03.pdf",
-        "clauses": ["7.1", "7.2"],
+        "clauses": [
+          "7.1",
+          "7.2"
+        ],
         "why": "The card prints \"Start line\" at the head of every course and \"Finish Line\" at its foot; 7.1 and 7.2 define the line, and 8.1 says the finish is the same line unless the course is shortened, so every course ends at SL too.",
         "meta": {
           "id": "SL",
@@ -112,7 +122,10 @@
       {
         "check": "cards-marks",
         "marks": "marks.json",
-        "cards": ["cruiser.json", "ec-bkc.json"],
+        "cards": [
+          "cruiser.json",
+          "ec-bkc.json"
+        ],
         "why": "Every mark a course names must be one the legend letters."
       }
     ]
@@ -120,7 +133,10 @@
   "map": {
     "background": "map/background.png",
     "marks": "marks.json",
-    "layers": ["osm", "openseamap"],
+    "layers": [
+      "osm",
+      "openseamap"
+    ],
     "zoom": 14,
     "paddingMinutes": 0.6
   }

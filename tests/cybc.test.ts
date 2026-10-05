@@ -111,6 +111,11 @@ describe('the Clontarf 2026 marks file', () => {
     }
     expect(marks.marks.filter((m) => m.position)).toHaveLength(6);
   });
+
+  it('names Dublin Port’s notice as its source, the authority for every position it has', () => {
+    expect(marks.source).toBe('https://www.dublinport.ie/wp-content/uploads/2025/12/20-2026-Yacht-Racing-Marks.pdf');
+    expect(marks.marks.filter((m) => m.source)).toEqual([]);
+  });
 });
 
 describe('the Cruiser Course Card 2026', () => {

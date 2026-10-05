@@ -245,13 +245,29 @@ def comparable(text):
     return ' '.join(text.split())
 
 
+def kept_copy(artifact, url):
+    """The copy in `source/` of the document an artifact fetched from `url`:
+    its own source, or one it names beside it (a notice, a supplement)."""
+    for spec in [artifact, *(v for v in artifact.values() if isinstance(v, dict))]:
+        if spec.get('url') == url and spec.get('source'):
+            return spec['source']
+    return None
+
+
 def unquoted_notes(base, artifact, output):
     """The titles of a marks file's notes whose text its source document
-    does not print."""
-    notes = json.loads(output).get('notes', [])
+    does not print. The source is the file's own `source`, which need not be
+    the document the marks were read from: Clontarf's are lettered from the
+    club's card and positioned by Dublin Port's notice, which is the file's
+    source."""
+    out = json.loads(output)
+    notes = out.get('notes', [])
     if not notes:
         return []
-    printed = comparable(subprocess.run(['pdftotext', os.path.join(base, artifact['source']), '-'],
+    kept = kept_copy(artifact, out.get('source'))
+    if not kept:
+        return [f'{n["title"]} (no copy of {out.get("source")} to check it against)' for n in notes]
+    printed = comparable(subprocess.run(['pdftotext', os.path.join(base, kept), '-'],
                                         check=True, capture_output=True, text=True).stdout)
     return [n['title'] for n in notes if comparable(n['text']) not in printed]
 
@@ -311,7 +327,7 @@ def main():
                 os.unlink(meta.name)
             if 'courses' not in json.loads(fresh):
                 for title in unquoted_notes(base, artifact, fresh):
-                    print(f'{rel}: note "{title}" is not in {artifact["source"]}', file=sys.stderr)
+                    print(f'{rel}: note "{title}" is not in its source', file=sys.stderr)
                     failures += 1
             failures += not write(base, artifact['output'], fresh, args.check)
         if spec.get('checks'):

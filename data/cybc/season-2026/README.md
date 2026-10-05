@@ -45,7 +45,8 @@ April to October": Sutton, Drumleck, Outer, Inner, Bull Island and
 Causeway, each with a position to a hundredth of a minute and the same
 letter the card uses (`SUT`, `DR`, `O`, `IN`, `BI`, `CW`). Those positions
 are the marks file's, read by `tools/extract_ntm_marks.py` from the
-notice's table for this club. The other six — Churn, Hub, North Bank, Spit,
+notice's table for this club, and the notice is the marks file's `source`:
+the card letters the marks, and the notice says where they are. The other six — Churn, Hub, North Bank, Spit,
 South West and Vernon — the club's instructions call "Harbour Marks"; they
 lie inside the Bull Wall, north of the shipping channel, and nobody
 publishes a position for them. They carry a `placement` saying so and no
