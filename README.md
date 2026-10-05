@@ -206,15 +206,18 @@ and how it was checked.
   2026: the club's Keelboat Racing Course Card, forty numbered courses set
   out as rounds with cumulative distances under wind headings, read from
   the card's text layer, which also serves the Cork Harbour Combined League
-  with Cove and Monkstown Bay; and thirty marks, of which the four Port of
-  Cork laid race marks are positioned from the club's General Sailing
-  Instructions, twenty harbour navigation buoys from OpenStreetMap, which
-  holds the buoys but not their numbers — so the numbering is read off the
-  chart — and Cage from the club, which gave the position directly. Fitting
-  a start line to the card's own printed distances lands it on the club's
-  Grassy Walk line, which corroborates both. EF2 and EF4 are still unplaced,
-  and a course rounding one asks the caller for it. The start line is the
-  instructions' 26, and every course finishes on it.
+  with Cove and Monkstown Bay; and thirty marks, each naming where its
+  position comes from: three Port of Cork laid race marks from the club's
+  Autumn League Sailing Instructions, which disagree with its General
+  Sailing Instructions on two of them (the later document is taken, and the
+  difference checked), and East Mark from the general instructions;
+  nineteen harbour navigation buoys from eOceanic's list of marks, which
+  numbers them, cross-checked against OpenStreetMap; E4 and the race mark
+  EF4 from Pat Tanner's local knowledge; Cage and EF2 from the club, which
+  gave the positions directly. Dutchman, Curlane and White Bay are laid on
+  the day and have no position, so a course rounding one asks the caller
+  for it. The start line is the general instructions' 26, and every course
+  finishes on it.
   [README](data/rcyc/keelboat-2026/README.md).
 
 - `data/shsc/calves-week-2026/` — Schull Harbour Sailing Club's Calves Week

@@ -23,14 +23,14 @@ League's, as below. Those are the only positions the club publishes.
 | `map/background.png`, `.json` | OpenStreetMap + OpenSeaMap tiles | `tools/fetch_map.py` |
 
 `source/` keeps the card ("RCYC Course Card Art 2026", the club's
-Keelboats Notice Board) and the general instructions verbatim, with the
-URLs they were fetched from in the manifest. `manifest.json` records each
-artifact's source, the metadata that heads the output, and — at length —
-the twenty-six marks added to the four the instructions place, where the
-twenty traced from OpenStreetMap and the one the club gave came from, and
-why the other five have no position; `pnpm data` rebuilds everything and
-`pnpm data:check`
-verifies the committed files against a fresh run.
+Keelboats Notice Board), the general and Autumn League instructions, and
+eOceanic's list of marks verbatim, with the URLs they were fetched from in
+the manifest. `manifest.json` records each artifact's source, the metadata
+that heads the output, and — at length — the twenty-six marks added to the
+four the instructions place, where each position came from, and why the
+three laid marks have none; `pnpm data` rebuilds everything and
+`pnpm data:check` verifies the committed files against a fresh run and
+runs `tools/check_rcyc.py`.
 
 ## What the survey got wrong, and what the club has
 
@@ -45,8 +45,9 @@ Cork Harbour Combined League's own instructions (2025) say the same: its
 round-the-cans courses come from the Royal Cork card, which every boat
 should carry. So the one card here serves three clubs' league racing, as
 hoped — and the club with the most marks in `data/` was long the one with
-the fewest of them placed, until twenty of the harbour buoys were traced
-from OpenStreetMap and numbered against the chart.
+the fewest of them placed, until the harbour buoys were placed — first
+from OpenStreetMap, then from eOceanic's list and local knowledge (#13,
+#17).
 
 ## How the JSON is produced
 
@@ -218,6 +219,15 @@ Curlane ("a mark laid on the Curlane Bank") in the card's own words, and
 White Bay, which course 73 names and nothing describes. The manifest lists
 all twenty-six with the reasoning beside them.
 
+Pat Tanner's workbook has planning positions for all three — Dutchman
+51.7847, -8.283133; Curlane 51.8241, -8.287567; White Bay 51.80635,
+-8.254067 — and records them as approximations for laying the marks, which
+are laid afresh each race day: his race officer's page uses the RIB's GPS
+fix of the day's mark wherever there is one. They are told here and not
+carried as positions, because a position in the marks file is one a reader
+may compute with, and these would be taken for where the mark is. On race
+day the caller supplies the fix, as it supplies the line.
+
 The consequence has shifted but not closed: **thirty-five of the forty
 courses can now be computed with only the start line supplied**, which was
 the point of the exercise. Course 1, for instance, resolves Ringabella, W2,
@@ -265,22 +275,26 @@ notes, as printed.
 
 ## How it was checked
 
-There is nothing independent to check the four positions against: the
-Autumn League 2025 instructions print the same four, a year older, and the
-Cork Week instructions' laid marks sit near two of them but are not them.
-The marks tool refuses a card that names a mark neither the instructions
-nor the manifest supplies. Structural tests (`tests/rcyc.test.ts`) check
+The laid race marks are checked against the club's other statement of
+them: the general instructions' 22.3, which agrees on Dosco and differs on
+Ringabella and Harp, as above. The Cork Week instructions' laid marks sit
+near two of them but are not them. The marks tool refuses a card that names
+a mark neither the instructions nor the manifest supplies. Structural tests (`tests/rcyc.test.ts`) check
 the forty courses' order, a dozen of them against the printed card round by
 round, every course's start and finish at the line, the first note's
 content, the source of every position, that no two buoys share a place,
 that each series runs from the entrance inward, and that a course asks the
 caller only for the line and the marks left unplaced. `tools/check_rcyc.py`,
 run by `pnpm data:check`, holds the buoys to their OpenStreetMap traces and
-to the colours their numbers give them.
+to the colours their numbers give them, the club's Cage and EF2 to
+eOceanic's, and the laid race marks to 22.3, each difference that is known
+recorded in the manifest with its reason.
 
-The strongest check is the card's own arithmetic, described above: fitting
-a start line to the printed distances of 28 courses puts it on the Grassy
-Walk line, which corroborates Cage and the numbering together. It is not a
+The card's own arithmetic, described above, is a weaker check than it
+first looked: fitting a start line to the printed distances of 28 courses
+puts it near the Grassy Walk line, which says Cage and the numbering are
+not badly wrong, but the printed distances are estimates and each
+correction to the positions has made the fit slightly worse. It is not a
 test, because it fits a free parameter and would need an optimiser in the
 suite to assert; `tools/` has no script for it either. Re-derive it from
 `marks.json` and the card's `distanceNm` if a position is ever disputed.
@@ -293,9 +307,9 @@ suite to assert; `tools/` has no script for it either. Re-derive it from
 - Nineteen buoy positions are eOceanic's, whose own source is not stated;
   E4's is Pat Tanner's, from a photograph and two plotter readings, and so is
   EF4's, from an RCYC reference his workbook does not name; Cage and EF2
-  are the club's own figures given in correspondence. None is backed by an official document, and a Port of
-  Cork notice or list, or the club adding positions to its instructions,
-  would replace them with a citation. OpenStreetMap's data is ODbL, which
+  are the club's own figures given in correspondence. None is backed by an
+  official document, and a Port of Cork notice or list, or the club adding
+  positions to its instructions, would replace them with a citation. OpenStreetMap's data is ODbL, which
   the MIT licence on this repository does not carry — worth settling for
   the cross-check's traces, since these are positions taken as data, not
   tiles shown with attribution; eOceanic states no licence for its list.
