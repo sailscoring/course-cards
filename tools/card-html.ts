@@ -207,16 +207,33 @@ function swatchOf(color: string | undefined): string {
   return '#888';
 }
 
+/** The club's marks, and what the marks file's source says about them. A
+ *  file whose marks come from more than one authority gets a column naming
+ *  each mark's own; a mark with none there is the file's source's. */
 function marksTable(marks: MarksFile): string {
-  let html = '<table><thead><tr><th></th><th>Name</th><th>Shape</th><th>Colour</th><th>Position</th></tr></thead><tbody>';
+  const sourced = marks.marks.some((m) => m.source);
+  let html =
+    '<table><thead><tr><th></th><th>Name</th><th>Shape</th><th>Colour</th><th>Position</th>' +
+    (sourced ? '<th>Source</th>' : '') +
+    '</tr></thead><tbody>';
   for (const m of marks.marks) {
     const swatch = m.color ? `<span class="swatch" style="background:${swatchOf(m.color)}"></span>` : '';
     html +=
       `<tr><th>${esc(m.id)}</th><td>${esc(m.name ?? '')}</td><td>${esc(m.shape ?? '')}</td>` +
       `<td>${swatch}${esc(m.color ?? '')}</td>` +
-      `<td>${m.position ? formatPosition(m.position) : `<em>${esc(m.placement ?? '')}</em>`}</td></tr>`;
+      `<td>${m.position ? formatPosition(m.position) : `<em>${esc(m.placement ?? '')}</em>`}</td>` +
+      (sourced ? `<td>${esc(m.source ?? '')}</td>` : '') +
+      '</tr>';
   }
-  return html + '</tbody></table>';
+  html += '</tbody></table>';
+  if (sourced) {
+    const file = marks.source ? `<a href="${esc(marks.source)}">the marks file's source</a>` : "the marks file's source";
+    html += `<p class="meta">A mark with no source of its own is from ${file}.</p>`;
+  }
+  for (const n of marks.notes ?? []) {
+    html += `<p class="meta"><strong>${esc(n.title)}.</strong> ${n.text.split('\n').map(esc).join('<br>')}</p>`;
+  }
+  return html;
 }
 
 /** The ending as a sequence: the marks the run in passes, then the line. */
