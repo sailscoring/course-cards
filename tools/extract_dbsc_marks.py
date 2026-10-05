@@ -150,7 +150,7 @@ def supplement(path, ids):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('pdf')
-    ap.add_argument('--meta', help='JSON file whose keys (club, name, source…) head the output')
+    ap.add_argument('--meta', help='JSON file whose keys (club, name, source, notes…) head the output')
     ap.add_argument('--notes', action='store_true', help="print the sheet's caveats as card notes instead")
     ap.add_argument('--supplement', help="the club's machine-readable marks CSV")
     ap.add_argument('--supplement-ids', default='', help='comma-separated ids to take from the CSV')

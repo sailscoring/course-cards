@@ -259,7 +259,7 @@ def amendments(pdf):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('pdf')
-    ap.add_argument('--meta', help='JSON file whose keys (club, name, source) head the output')
+    ap.add_argument('--meta', help='JSON file whose keys (club, name, source, notes) head the output')
     ap.add_argument('--amend', action='append', default=[], help='an SI amendment re-placing marks in the table')
     ap.add_argument('--add', help='JSON list of marks to append that the table does not carry')
     args = ap.parse_args()

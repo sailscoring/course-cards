@@ -134,7 +134,7 @@ def added(path, marks):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('pdf')
-    ap.add_argument('--meta', help='JSON file whose keys (club, name, source…) head the output')
+    ap.add_argument('--meta', help='JSON file whose keys (club, name, source, notes…) head the output')
     ap.add_argument('--add', help='JSON list of marks to append that the sheet does not list')
     args = ap.parse_args()
     meta = json.load(open(args.meta)) if args.meta else {}

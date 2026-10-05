@@ -14,6 +14,11 @@ is what the tools read from the PDFs. A manifest's `checks` names a tool
 that then cross-checks the outputs against the club's other publications, in
 both modes.
 
+A marks file's `notes` are the one part of an output not read off its
+source: they are given in the artifact's `meta`, quoted from the source
+document. Every note's text must be found in that document, whitespace and
+typographic quotes aside, so a note is always what the club printed.
+
     python3 tools/regenerate.py [--check] [manifest.json ...]
 """
 
@@ -114,7 +119,9 @@ def finish_file(base, artifact):
 def added_marks_file(base, artifact):
     """Marks the manifest declares because the club's sheet does not letter
     them — see tools/extract_marks.py `--add`. The manifest carries a `why`
-    beside them; the tool is given only the marks."""
+    beside them; the tool is given only the marks, and copies each as it is,
+    so a mark whose position is not the file's source's names its own in
+    `source`."""
     with tempfile.NamedTemporaryFile('w', suffix='.json', delete=False) as fh:
         json.dump(artifact['addMarks']['marks'], fh)
     return fh.name
@@ -227,6 +234,25 @@ def extract(base, artifact, meta_path):
     return subprocess.run(cmd, check=True, capture_output=True, text=True).stdout
 
 
+def comparable(text):
+    """Text with what a PDF's text layer varies in levelled: whitespace,
+    curly quotes, dashes."""
+    for curly, plain in (('‘', "'"), ('’', "'"), ('“', '"'), ('”', '"'), ('–', '-'), ('—', '-')):
+        text = text.replace(curly, plain)
+    return ' '.join(text.split())
+
+
+def unquoted_notes(base, artifact, output):
+    """The titles of a marks file's notes whose text its source document
+    does not print."""
+    notes = json.loads(output).get('notes', [])
+    if not notes:
+        return []
+    printed = comparable(subprocess.run(['pdftotext', os.path.join(base, artifact['source']), '-'],
+                                        check=True, capture_output=True, text=True).stdout)
+    return [n['title'] for n in notes if comparable(n['text']) not in printed]
+
+
 def cross_check(base, manifest):
     """A data set's `checks`: the club's other publications against the outputs."""
     tool = manifest['checks']['tool']
@@ -280,6 +306,10 @@ def main():
                 continue
             finally:
                 os.unlink(meta.name)
+            if 'courses' not in json.loads(fresh):
+                for title in unquoted_notes(base, artifact, fresh):
+                    print(f'{rel}: note "{title}" is not in {artifact["source"]}', file=sys.stderr)
+                    failures += 1
             failures += not write(base, artifact['output'], fresh, args.check)
         if spec.get('checks'):
             failures += not cross_check(base, spec)
