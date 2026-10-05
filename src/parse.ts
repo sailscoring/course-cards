@@ -72,6 +72,7 @@ function checkMark(raw: unknown, path: string, seen?: Set<string>): Mark {
     ...optionalString(m, 'color'),
     ...(m.position != null ? { position: checkPosition(m.position, `${path}.position`) } : {}),
     ...optionalString(m, 'placement'),
+    ...optionalString(m, 'source'),
   };
 }
 
@@ -119,12 +120,9 @@ export function parseCourseCardFile(data: unknown): CourseCardFile {
   // with no courses: its start line, finish and notes over its marks.
   if (!Array.isArray(obj.courses)) fail('card.courses', 'expected a list of courses');
 
-  // The start line is a mark, plus the instruction that defines it.
-  let startLine: { startLine?: StartLine } = {};
-  if (obj.startLine != null) {
-    const raw = obj.startLine as Record<string, unknown>;
-    startLine = { startLine: { ...checkMark(raw, 'card.startLine'), ...optionalString(raw, 'source') } };
-  }
+  // The start line is a mark, its source the instruction that defines it.
+  const startLine: { startLine?: StartLine } =
+    obj.startLine != null ? { startLine: checkMark(obj.startLine, 'card.startLine') } : {};
 
   // The finish is the same thing at the other end, plus the marks the run in
   // to it passes.
@@ -132,7 +130,7 @@ export function parseCourseCardFile(data: unknown): CourseCardFile {
   if (obj.finish != null) {
     const raw = obj.finish as Record<string, unknown>;
     const via = raw.via == null ? {} : { via: checkCourseMarks(raw.via, 'card.finish.via') };
-    finish = { finish: { ...checkMark(raw, 'card.finish'), ...optionalString(raw, 'source'), ...via } };
+    finish = { finish: { ...checkMark(raw, 'card.finish'), ...via } };
   }
 
   const ids = new Set<string>();

@@ -1,5 +1,5 @@
 /**
- * The course-cards data format, version 1. See docs/format.md for the
+ * The course-cards data format, version 2. See docs/format.md for the
  * narrative specification; these types are its normative shape.
  */
 
@@ -26,6 +26,14 @@ export interface Mark {
   /** Where a per-race mark is laid, in the club's words: "Upwind of Start
    *  Line", "Between Island Mark and Howth Sound". */
   placement?: string;
+  /** The authority for this mark, where it is not the file's own `source`:
+   *  a document and clause, a published set of positions, or a named
+   *  person's local knowledge — "RCYC General Sailing Instructions 2026,
+   *  22.3", "OpenStreetMap node 1593411492 (CIL00240)". Absent, the mark is
+   *  the file's `source`'s. A navigation buoy is where the chart puts it and
+   *  a club's laid mark is where the club last laid it; this is how a reader
+   *  tells them apart. */
+  source?: string;
 }
 
 export interface MarksFile {
@@ -33,7 +41,8 @@ export interface MarksFile {
   /** Who maintains these marks (club or class), free text. */
   club?: string;
   name?: string;
-  /** Where the data came from — the club's published document. */
+  /** The document the file was made from, and the authority for every mark
+   *  that names no `source` of its own. */
   source?: string;
   marks: Mark[];
 }
@@ -56,12 +65,10 @@ export interface CourseMark {
  *  instructions define it — the card names the marks, the instructions say
  *  where the race starts. It is a mark like any other: a position where the
  *  line is fixed, a `placement` in the club's own words where it is laid on
- *  the day, and its id at the head of every course. */
-export interface StartLine extends Mark {
-  /** The document and clause the line is defined by: "DBSC Sailing
-   *  Instructions H – Fixed Marks, Hut, 4.1 and 4.2". */
-  source?: string;
-}
+ *  the day, and its id at the head of every course. Its `source` is the
+ *  document and clause the line is defined by: "DBSC Sailing Instructions
+ *  H – Fixed Marks, Hut, 4.1 and 4.2". */
+export type StartLine = Mark;
 
 /** The ending every course on a card runs to, where the club's sailing
  *  instructions add one the card itself does not print — HYC's 2026 Autumn

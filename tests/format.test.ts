@@ -148,6 +148,19 @@ describe('the parsers', () => {
     expect(() => parseCourseCardFile({ formatVersion: 2 })).toThrow(FormatError);
   });
 
+  it('read a mark’s own source, and leave a mark without one to the file’s', () => {
+    const file = parseMarksFile({
+      formatVersion: 2,
+      source: 'https://example.org/si.pdf',
+      marks: [
+        { id: 'A', position: { lat: 51.7, lng: -8.5 } },
+        { id: 'Cork Buoy', position: { lat: 51.71599, lng: -8.26017 }, source: 'OpenStreetMap node 1593411492 (CIL00240)' },
+      ],
+    });
+    expect(file.marks[0]).toEqual({ id: 'A', position: { lat: 51.7, lng: -8.5 } });
+    expect(file.marks[1]!.source).toBe('OpenStreetMap node 1593411492 (CIL00240)');
+  });
+
   it('read a card’s start line as the mark it is', () => {
     const card = parseCourseCardFile({
       formatVersion: 2,

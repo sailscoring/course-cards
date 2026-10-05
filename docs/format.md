@@ -44,7 +44,31 @@ sheet, a table of letter, name, shape, colour and position.
   race-day fact that whoever computes the legs must supply. HYC's Zephyr
   (the windward mark) and Finish are such marks; a club whose windward mark
   is a fixed mark simply has a position for it.
-- `source` — the document the file was made from.
+- `source` (on the file) — the document the file was made from, and the
+  authority for every mark that names no `source` of its own. A URL, where
+  the document is published.
+- `source` (on a mark) — the authority for that mark, where it is not the
+  file's: a document and clause, a published set of positions, or a named
+  person's local knowledge, in words. Absent, the mark is the file's
+  `source`'s. One file can hold marks from several authorities — Kinsale's
+  is the club's table of approximate positions with the Commissioners of
+  Irish Lights' Cork buoy added from OpenStreetMap — and a reader may well
+  treat them differently: a navigation buoy is where the chart puts it, a
+  club's laid mark is where the club last laid it.
+
+  ```json
+  {
+    "id": "Cork Buoy",
+    "name": "Cork",
+    "shape": "safe water buoy",
+    "color": "red and white",
+    "position": { "lat": 51.71599, "lng": -8.26017 },
+    "source": "OpenStreetMap node 1593411492 (CIL00240)"
+  }
+  ```
+
+  It is the same field as the start line's `source` below, for the same
+  reason.
 
 ## Course card file
 
@@ -121,7 +145,7 @@ The card a club prints: the courses, each an ordered sequence of marks.
   but not the line it begins at: that is in the club's **sailing
   instructions**, so it is read from them and carried here. It is a mark in
   every respect — the same `id`, `name`, `shape`, `color`, `position` and
-  `placement` — plus a `source` saying which instruction defines it. Its id
+  `placement` — and its `source` says which instruction defines it. Its id
   resolves ahead of the marks file, so a club whose start line is one of its
   own marks can say so. A line laid on the day has a `placement` in the
   club's own words and no `position`, exactly like HYC's Zephyr; a fixed one
@@ -213,7 +237,9 @@ carrying its start line, its finish and its notes, over its marks file.
 `formatVersion` bumps when a change would make an older reader mis-read a
 file — new optional fields ride along without a bump. `finish` is such a
 field: the ending it describes is in every course's `marks` too, so a reader
-that has never heard of it still sails the whole course.
+that has never heard of it still sails the whole course. So is `source` on a
+mark: a reader that ignores it takes every mark to be the file's, which is
+what it did before.
 
 - **Version 1** — the initial format. Courses began at the first mark the
   card printed, and the start line was supplied per race, outside the files.
