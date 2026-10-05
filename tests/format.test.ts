@@ -161,6 +161,19 @@ describe('the parsers', () => {
     expect(file.marks[1]!.source).toBe('OpenStreetMap node 1593411492 (CIL00240)');
   });
 
+  it('read what a marks file’s source says about its marks, and refuse a note without its text', () => {
+    const text = 'Mark positions may vary slightly. All figures are approximate.';
+    const file = parseMarksFile({
+      formatVersion: 2,
+      notes: [{ title: 'Positions', text }],
+      marks: [{ id: 'A', position: { lat: 53.3, lng: -6.1 } }],
+    });
+    expect(file.notes).toEqual([{ title: 'Positions', text }]);
+    expect(() =>
+      parseMarksFile({ formatVersion: 2, notes: [{ title: 'Positions' }], marks: [{ id: 'A' }] }),
+    ).toThrow(/marks\.notes\[0\]/);
+  });
+
   it('read a card’s start line as the mark it is', () => {
     const card = parseCourseCardFile({
       formatVersion: 2,

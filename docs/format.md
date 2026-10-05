@@ -69,6 +69,33 @@ sheet, a table of letter, name, shape, colour and position.
 
   It is the same field as the start line's `source` below, for the same
   reason.
+- `notes` — what the file's `source` says about its marks, as printed, in
+  the card's shape: each a `text` whose paragraphs are separated by
+  newlines, and a `title` — the heading it is printed under, or a short one
+  of our own where it has none. DBSC's marks sheet heads its table "Mark
+  positions may vary slightly. All figures are approximate."; that is a
+  note:
+
+  ```json
+  "notes": [
+    { "title": "Positions", "text": "Mark positions may vary slightly. All figures are approximate." }
+  ]
+  ```
+
+  A note is always the words of the file's `source`, never of a mark's own,
+  so it speaks for the marks that are the file's and for no others.
+
+  The format has no field that says a position is approximate, or how
+  approximate. Most clubs do say so, and their words are carried here; a
+  reader that must act on it reads the note. A field a program can branch
+  on will be added, beside the words it rests on, when a reader needs one.
+  What it will not carry is a figure no source states. The tolerances the
+  data sets' cross-checks are held to are not such figures: each compares
+  one statement of a position with another — the club's sheet with the
+  harbour authority's notice, the club's position for a buoy with the
+  chart's, the club's printed bearings with its own positions — and none
+  says where a mark is. A note's absence means the source says nothing,
+  not that its positions are exact.
 
 ## Course card file
 
@@ -239,7 +266,7 @@ file — new optional fields ride along without a bump. `finish` is such a
 field: the ending it describes is in every course's `marks` too, so a reader
 that has never heard of it still sails the whole course. So is `source` on a
 mark: a reader that ignores it takes every mark to be the file's, which is
-what it did before.
+what it did before. And so are a marks file's `notes`.
 
 - **Version 1** — the initial format. Courses began at the first mark the
   card printed, and the start line was supplied per race, outside the files.

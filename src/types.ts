@@ -44,6 +44,10 @@ export interface MarksFile {
   /** The document the file was made from, and the authority for every mark
    *  that names no `source` of its own. */
   source?: string;
+  /** What the file's `source` says about its marks, as printed: "Mark
+   *  positions may vary slightly. All figures are approximate." Always the
+   *  words of the file's `source`, never of a mark's own. */
+  notes?: Note[];
   marks: Mark[];
 }
 
