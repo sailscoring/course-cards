@@ -52,7 +52,11 @@ from OpenStreetMap and numbered against the chart.
 yellow cones permanently laid and may be in these approximate locations",
 then Dosco (Corkbeg), Ringabella, Harp and East Mark (Formerly Mark B) with
 positions in degrees and decimal minutes. Those four are read from the
-text layer and are the only marks with positions.
+text layer, and they are the only marks the instructions place: the
+instructions are the marks file's `source`, and these four name no other.
+22.3's own caveat, that they "may be in these approximate locations", is
+the file's one note — a note speaks for the file's source, so for these
+four and no others.
 
 The card's courses name twenty-six more. Fourteen are the harbour's
 numbered channel buoys (No.3 to No.20), eight are the lettered buoys of
@@ -77,7 +81,9 @@ OpenSeaMap rendering of it, which draws the cones unlabelled. So the
 positions are open data and the numbering is not: which cone is No.7 was
 read off the chart, buoy by buoy, by this data set's maintainer, against
 a plot of all forty-six. That is a human reading, not a citation, and it
-is the one thing here that no document backs.
+is the one thing here that no document backs. Each of the twenty names
+`OpenStreetMap` as its `source`; a mark's source speaks for its position,
+so the numbering is not in it, and is told here instead.
 
 Three checks hold across all twenty, and they are what makes the reading
 worth trusting. Every mark is a distinct OpenStreetMap node — no node
@@ -97,8 +103,9 @@ C1 is in no publication, and it is not in OpenStreetMap either — the
 nearest node to it is 850 m away — so it could not be read off the chart
 with the others. The club supplied its position directly: 51°48.834'N
 8°16.968'W, the green conical the instructions describe at 26.1. That is
-correspondence, not a document, and it is cited to nothing; if the club
-ever prints it, the citation replaces the courtesy.
+correspondence, not a document, and Cage's `source` says so — "Royal Cork
+Yacht Club correspondence"; if the club ever prints it, the citation
+replaces the correspondence.
 
 It is worth having, because it is the Grassy Walk line's outer distance
 mark, and placing it made a check possible that tests everything at once.

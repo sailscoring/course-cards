@@ -49,6 +49,14 @@ describe('the Royal Cork 2026 marks file', () => {
     expect(marks.marks.filter((m) => m.position).slice(0, 4).map((m) => m.id)).toEqual(['Dosco', 'Ringabella', 'Harp', 'East Mark']);
   });
 
+  it('names the General Sailing Instructions as its source, and 22.3 says the four are approximate', () => {
+    expect(marks.source).toBe('https://www.royalcork.com/wp-content/uploads/2026/03/General-Sailing-Instructions-for-Royal-Cork-Yacht-Club-Keelboat-Racing-2026.pdf');
+    for (const id of ['Dosco', 'Ringabella', 'Harp', 'East Mark']) expect(byId.get(id)!.source, id).toBeUndefined();
+    expect(marks.notes).toEqual([
+      { title: 'Positions', text: 'Port of Cork Laid Race Marks are yellow cones permanently laid and may be in these approximate locations.' },
+    ]);
+  });
+
   it('positions twenty harbour navigation buoys traced from OpenStreetMap', () => {
     expect(marks.marks).toHaveLength(30);
     expect(byId.get('No.3')!.position).toEqual({ lat: 51.801736, lng: -8.259799 });
@@ -58,6 +66,8 @@ describe('the Royal Cork 2026 marks file', () => {
     // A placed mark carries no placement: that field is for marks laid per race.
     for (const id of ['No.3', 'No.20', 'E1', 'W4']) expect(byId.get(id)!.placement, id).toBeUndefined();
     expect(marks.marks.filter((m) => m.position)).toHaveLength(25);
+    const traced = marks.marks.filter((m) => m.source === 'OpenStreetMap').map((m) => m.id);
+    expect(traced).toEqual(['No.3', 'No.5', 'No.6', 'No.7', 'No.8', 'No.9', 'No.10', 'No.11', 'No.12', 'No.13', 'No.14', 'No.16', 'No.18', 'No.20', 'E1', 'E2', 'E4', 'W1', 'W2', 'W4']);
   });
 
   it('places Cage from the position the club gave, not from OpenStreetMap', () => {
@@ -66,6 +76,7 @@ describe('the Royal Cork 2026 marks file', () => {
     expect(byId.get('Cage')).toMatchObject({
       name: 'Cage (C1)', shape: 'conical', color: 'green',
       position: { lat: 51.8139, lng: -8.2828 },
+      source: 'Royal Cork Yacht Club correspondence',
     });
     expect(byId.get('Cage')!.placement).toBeUndefined();
   });
@@ -78,6 +89,8 @@ describe('the Royal Cork 2026 marks file', () => {
     expect(byId.get('Dutchman')!.placement).toMatch(/approx\. 2 cables SE of the Dutchman Rock/);
     expect(byId.get('Curlane')!.placement).toBe('“Curlane” will be a mark laid on the Curlane Bank.');
     expect(byId.get('White Bay')!.position).toBeUndefined();
+    // A source speaks for a position, and these have none.
+    for (const id of ['EF2', 'EF4', 'Dutchman', 'Curlane', 'White Bay']) expect(byId.get(id)!.source, id).toBeUndefined();
     const named = new Set(card.courses.flatMap((c) => c.marks.map((m) => m.mark)));
     for (const id of named) if (id !== 'SL') expect(byId.has(id), id).toBe(true);
   });

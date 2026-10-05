@@ -3,6 +3,12 @@
   "club": "RCYC",
   "name": "Keelboat racing marks 2026: the Port of Cork laid race marks the General Sailing Instructions position, the harbour navigation buoys traced from OpenStreetMap, Cage as the club gave it, and every other mark the course card names",
   "source": "https://www.royalcork.com/wp-content/uploads/2026/03/General-Sailing-Instructions-for-Royal-Cork-Yacht-Club-Keelboat-Racing-2026.pdf",
+  "notes": [
+    {
+      "title": "Positions",
+      "text": "Port of Cork Laid Race Marks are yellow cones permanently laid and may be in these approximate locations."
+    }
+  ],
   "marks": [
     {
       "id": "Dosco",
@@ -50,7 +56,8 @@
       "position": {
         "lat": 51.801736,
         "lng": -8.259799
-      }
+      },
+      "source": "OpenStreetMap"
     },
     {
       "id": "No.5",
@@ -58,7 +65,8 @@
       "position": {
         "lat": 51.816964,
         "lng": -8.270356
-      }
+      },
+      "source": "OpenStreetMap"
     },
     {
       "id": "No.6",
@@ -66,7 +74,8 @@
       "position": {
         "lat": 51.804616,
         "lng": -8.265475
-      }
+      },
+      "source": "OpenStreetMap"
     },
     {
       "id": "No.7",
@@ -74,7 +83,8 @@
       "position": {
         "lat": 51.826951,
         "lng": -8.267406
-      }
+      },
+      "source": "OpenStreetMap"
     },
     {
       "id": "No.8",
@@ -82,7 +92,8 @@
       "position": {
         "lat": 51.82087,
         "lng": -8.277416
-      }
+      },
+      "source": "OpenStreetMap"
     },
     {
       "id": "No.9",
@@ -90,7 +101,8 @@
       "position": {
         "lat": 51.840383,
         "lng": -8.256752
-      }
+      },
+      "source": "OpenStreetMap"
     },
     {
       "id": "No.10",
@@ -98,7 +110,8 @@
       "position": {
         "lat": 51.829146,
         "lng": -8.275828
-      }
+      },
+      "source": "OpenStreetMap"
     },
     {
       "id": "No.11",
@@ -106,7 +119,8 @@
       "position": {
         "lat": 51.844012,
         "lng": -8.258683
-      }
+      },
+      "source": "OpenStreetMap"
     },
     {
       "id": "No.12",
@@ -114,7 +128,8 @@
       "position": {
         "lat": 51.83262,
         "lng": -8.269627
-      }
+      },
+      "source": "OpenStreetMap"
     },
     {
       "id": "No.13",
@@ -122,7 +137,8 @@
       "position": {
         "lat": 51.849553,
         "lng": -8.265228
-      }
+      },
+      "source": "OpenStreetMap"
     },
     {
       "id": "No.14",
@@ -130,7 +146,8 @@
       "position": {
         "lat": 51.835477,
         "lng": -8.267138
-      }
+      },
+      "source": "OpenStreetMap"
     },
     {
       "id": "No.16",
@@ -138,7 +155,8 @@
       "position": {
         "lat": 51.844794,
         "lng": -8.264219
-      }
+      },
+      "source": "OpenStreetMap"
     },
     {
       "id": "No.18",
@@ -146,7 +164,8 @@
       "position": {
         "lat": 51.84893,
         "lng": -8.271322
-      }
+      },
+      "source": "OpenStreetMap"
     },
     {
       "id": "No.20",
@@ -154,7 +173,8 @@
       "position": {
         "lat": 51.847303,
         "lng": -8.287576
-      }
+      },
+      "source": "OpenStreetMap"
     },
     {
       "id": "E1",
@@ -162,7 +182,8 @@
       "position": {
         "lat": 51.794378,
         "lng": -8.25878
-      }
+      },
+      "source": "OpenStreetMap"
     },
     {
       "id": "E2",
@@ -170,7 +191,8 @@
       "position": {
         "lat": 51.792806,
         "lng": -8.261462
-      }
+      },
+      "source": "OpenStreetMap"
     },
     {
       "id": "E4",
@@ -178,7 +200,8 @@
       "position": {
         "lat": 51.798718,
         "lng": -8.26246
-      }
+      },
+      "source": "OpenStreetMap"
     },
     {
       "id": "W1",
@@ -186,7 +209,8 @@
       "position": {
         "lat": 51.794504,
         "lng": -8.26762
-      }
+      },
+      "source": "OpenStreetMap"
     },
     {
       "id": "W2",
@@ -194,7 +218,8 @@
       "position": {
         "lat": 51.794604,
         "lng": -8.272566
-      }
+      },
+      "source": "OpenStreetMap"
     },
     {
       "id": "W4",
@@ -202,7 +227,8 @@
       "position": {
         "lat": 51.800244,
         "lng": -8.26526
-      }
+      },
+      "source": "OpenStreetMap"
     },
     {
       "id": "EF2",
@@ -222,7 +248,8 @@
       "position": {
         "lat": 51.8139,
         "lng": -8.2828
-      }
+      },
+      "source": "Royal Cork Yacht Club correspondence"
     },
     {
       "id": "Dutchman",
