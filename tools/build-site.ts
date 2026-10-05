@@ -398,7 +398,19 @@ const setHtml = catalogue.sets
             <a href="${esc(versionDir + '/' + s.marks.file)}">JSON v${esc(version)}</a>${
               s.marks.source ? ` · <a href="${esc(s.marks.source)}">source</a>` : ''
             }${s.map ? ` · <a href="${esc(s.map.svg)}">map</a> · <a href="${esc(s.map.background)}">chart background</a>` : ''}</div>
-        </li>
+        </li>${
+          s.routing
+            ? `
+        <li class="card">
+          <div class="name">Routing</div>
+          <div class="sub">passages round what the straight lines cross${s.routing.contributor ? `, by ${esc(s.routing.contributor)}` : ''} ·
+            <a href="${esc(s.routing.file)}">JSON</a> ·
+            <a href="${esc(versionDir + '/' + s.routing.file)}">JSON v${esc(version)}</a>${
+              s.routing.source ? ` · <a href="${esc(s.routing.source)}">source</a>` : ''
+            }</div>
+        </li>`
+            : ''
+        }
       </ul>
       <p class="sub">Provenance and checks: <a href="${esc(s.path)}/README.md">${esc(s.path)}/README.md</a> · <a href="${esc(s.path)}/manifest.json">manifest</a></p>
     </section>`;
