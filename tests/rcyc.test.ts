@@ -3,7 +3,7 @@ import { join } from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { courseLegs, parseCourseCardFile, parseMarksFile, printedMarks } from '../src/index';
+import { courseLegs, parseCourseCardFile, parseMarksFile, parseRoutingFile, printedMarks } from '../src/index';
 
 function load(rel: string): unknown {
   return JSON.parse(readFileSync(join(__dirname, '..', 'data', 'rcyc', 'keelboat-2026', rel), 'utf-8'));
@@ -12,6 +12,7 @@ function load(rel: string): unknown {
 const marks = parseMarksFile(load('marks.json'));
 const card = parseCourseCardFile(load('keelboat.json'));
 const byId = new Map(marks.marks.map((m) => [m.id, m]));
+const routing = parseRoutingFile(load('routing.json'));
 
 // The card's courses in its reading order — left column then right, page 2 then page 3.
 const ORDER = '1 2 3 4 5 6 7 71 74 8 9 10 11 75 76 77 12 13 14 78 15 16 17 18 19 79 80 20 21 22 23 81 82 83 72 24 25 73 26 27'.split(' ');
@@ -219,5 +220,62 @@ describe('the Keelboat Racing Course Card 2026', () => {
     expect(() => courseLegs(card, marks, '75', { marks: { SL } })).toThrow(/no position for mark "Curlane" \(“Curlane” will be a mark laid/);
     const legs = courseLegs(card, marks, '2', { marks: { SL, Dutchman: { lat: 51.7847, lng: -8.283133 } } });
     expect(legs.map((l) => l.to.mark)).toContain('Dutchman');
+  });
+});
+
+describe('the Cork Harbour routing overlay', () => {
+  // Pat Tanner's Grassy Mid, where the overlay assumes a Grassy Walk start.
+  const GRASSY = { lat: 51.811908, lng: -8.283267 };
+  const shape = (id: string, SL = GRASSY) =>
+    courseLegs(card, marks, id, { marks: { SL } }, routing).map((l) => `${l.from.mark}>${l.to.mark} ${l.review}`);
+
+  it('is Pat Tanner’s workbook: eight waypoints, 45 passages and 79 direct pairs', () => {
+    expect(routing.contributor).toBe('Pat Tanner');
+    expect(routing.waypoints.map((w) => w.id)).toEqual([
+      'RW_Fort_Davis', 'RW_Fort_Davis_South', 'RW_Rams_Head', 'RW_Refinery_North',
+      'RW_Roches_Point', 'RW_Temblebreedy_Pier', 'RW_West_of_Refinery', 'RW_clear_spit_bank',
+    ]);
+    expect(routing.passages).toHaveLength(45);
+    expect(routing.direct).toHaveLength(79);
+  });
+
+  it('assumes the start line at the Grassy Walk, or standing in for Dosco or No.8', () => {
+    const lines = routing.assumed.filter((a) => a.mark === 'SL');
+    expect(lines.map((a) => [a.id, a.as ?? a.position, a.toleranceM])).toEqual([
+      ['SL@grassy-walk', GRASSY, 500],
+      ['SL@dosco', 'Dosco', 500],
+      ['SL@no8', 'No.8', 500],
+    ]);
+  });
+
+  it('assumes every mark where the marks file has it, Cage apart', () => {
+    for (const a of routing.assumed) {
+      const mark = byId.get(a.mark);
+      if (!a.position || !mark?.position) continue;
+      const metres = Math.hypot((a.position.lat - mark.position.lat) * 111320, (a.position.lng - mark.position.lng) * 111320 * Math.cos(0.904));
+      if (a.mark === 'Cage') expect(metres, a.mark).toBeGreaterThan(a.toleranceM);
+      else expect(metres, a.mark).toBeLessThanOrEqual(a.toleranceM);
+    }
+  });
+
+  it('routes course 1 from the Grassy Walk out past Rams Head to Ringabella', () => {
+    expect(shape('1').slice(0, 5)).toEqual([
+      'SL>RW_Temblebreedy_Pier passage',
+      'RW_Temblebreedy_Pier>RW_Rams_Head passage',
+      'RW_Rams_Head>W2 passage',
+      'W2>Ringabella passage',
+      'Ringabella>W2 direct',
+    ]);
+  });
+
+  it('says nothing of a leg at Cage, which the workbook tested 39 m from the club’s position', () => {
+    expect(shape('1').filter((l) => l.includes('Cage'))).toEqual([
+      'W2>Cage unreviewed', 'Cage>No.7 unreviewed', 'No.7>Cage unreviewed', 'Cage>Dosco unreviewed',
+    ]);
+  });
+
+  it('routes a committee-boat start near Dosco as Dosco: to Ringabella by W2', () => {
+    const offDosco = { lat: 51.8225, lng: -8.2615 };
+    expect(shape('1', offDosco).slice(0, 2)).toEqual(['SL>W2 passage', 'W2>Ringabella passage']);
   });
 });

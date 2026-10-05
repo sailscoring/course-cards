@@ -240,6 +240,57 @@
           "source": "General Sailing Instructions for Royal Cork Yacht Club Keelboat Racing 2026, 26"
         }
       }
+    },
+    {
+      "output": "routing.json",
+      "tool": "extract_orc_routing",
+      "source": "source/RCYC_Cork_Harbour_ORC_MASTER_v3_19_CAGE_CORROBORATED.xlsx",
+      "url": "https://github.com/Bateleur88/cork-harbour-orc/raw/50dbdb28af7daade1ed3af37134a3724ba06b30f/RCYC_Cork_Harbour_ORC_MASTER_v3_19_CAGE_CORROBORATED.xlsx",
+      "marks": "marks.json",
+      "meta": {
+        "club": "RCYC",
+        "name": "Cork Harbour passages for the 2026 keelboat card",
+        "source": "https://github.com/Bateleur88/cork-harbour-orc",
+        "contributor": "Pat Tanner",
+        "method": "Local knowledge, from Pat Tanner's master workbook v3.19 (SHA-256 ff0ae3ee…a735220). Every straight line between marks and waypoints was tested against INFOMAR's 2 m bathymetry (Contains Irish Public Sector Data (Geological Survey Ireland & Marine Institute) licensed under CC BY 4.0), sampled every 5 m: a line passes with at least 1.5 m below chart datum throughout, a modelling rule rather than a declaration of navigational safety. A line that fails is routed through waypoints he authored; three are routed only to keep clear of the Refinery Jetty, which the sailing instructions exclude.",
+        "marks": "marks.json"
+      },
+      "names": {
+        "Grassy Mid": "SL@grassy-walk"
+      },
+      "assumed": {
+        "lines": [
+          "SL"
+        ],
+        "tolerances": {
+          "default": 20,
+          "SL@grassy-walk": 500,
+          "Dutchman": 200,
+          "White Bay": 200
+        },
+        "notes": {
+          "SL@grassy-walk": "The workbook's Grassy Mid, the point its routes from the Grassy Walk line start and finish at: the midpoint of the line's shore end and Cage. 500 m is where Pat Tanner's race officer page warns that a recorded line is away from it.",
+          "Dutchman": "The workbook's planning position for a mark laid afresh each race day; the day's fix is where it is.",
+          "White Bay": "The workbook's planning position for a mark laid afresh each race day; the day's fix is where it is."
+        },
+        "standIns": [
+          {
+            "id": "SL@dosco",
+            "mark": "SL",
+            "as": "Dosco",
+            "toleranceM": 500,
+            "note": "The workbook's Dosco start and finish: a committee-boat line in the area of Dosco, routed as Dosco."
+          },
+          {
+            "id": "SL@no8",
+            "mark": "SL",
+            "as": "No.8",
+            "toleranceM": 500,
+            "note": "The workbook's No.8 start and finish: a committee-boat line in the area of No.8, routed as No.8."
+          }
+        ]
+      },
+      "why": "Pat Tanner's workbook is the Cork Harbour local knowledge #16 asked for: the card's mark pairs, each tested against INFOMAR bathymetry and either found sailable as a straight line or routed through waypoints he authored. His repository is MIT-licensed, which is taken to cover the waypoints and passages. The overlay is generated from the workbook as it stands, kept verbatim; the marks it relies on are assumed where the workbook has them, which is where this data set has them too, except Cage (39 m off: the workbook tested eOceanic's C1, the marks file carries the club's position) and Dosco (10.5 m, within tolerance). Curlane is left out: its ten pairs fail the 1.5 m test and are sailable only near high water, a condition of the courses (#18), not a passage."
     }
   ],
   "map": {

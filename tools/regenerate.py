@@ -24,6 +24,7 @@ typographic quotes aside, so a note is always what the club printed.
 
 import argparse
 import json
+import math
 import os
 import subprocess
 import sys
@@ -216,6 +217,13 @@ def extract(base, artifact, meta_path):
             cmd += ['--buoys', os.path.join(base, b['source']), '--buoy-rows', fh.name, '--buoy-citation', b['citation']]
     elif tool == 'extract_rcyc_card':
         cmd = [sys.executable, os.path.join(TOOLS, 'extract_rcyc_card.py'), 'card', source, '--meta', meta_path]
+    elif tool == 'extract_orc_routing':
+        with tempfile.NamedTemporaryFile('w', suffix='.json', delete=False) as names:
+            json.dump(artifact.get('names', {}), names)
+        with tempfile.NamedTemporaryFile('w', suffix='.json', delete=False) as assumed:
+            json.dump(artifact['assumed'], assumed)
+        cmd = [sys.executable, os.path.join(TOOLS, 'extract_orc_routing.py'), source, '--meta', meta_path,
+               '--marks', os.path.join(base, artifact['marks']), '--names', names.name, '--assumed', assumed.name]
     elif tool == 'extract_shsc_marks':
         cmd = [sys.executable, os.path.join(TOOLS, 'extract_shsc.py'), 'marks', source, '--meta', meta_path,
                '--chartlet', os.path.join(base, artifact['chartlet'])]
@@ -294,6 +302,27 @@ def cross_check(base, manifest):
     return result.returncode == 0
 
 
+def stale_routing(base, output):
+    """A routing overlay's marks that the marks file has moved further from
+    than the overlay's tolerance: the library leaves every pair touching one
+    unreviewed. Reported, never a failure — an overlay nobody maintains must
+    not block a new revision of the marks — so whoever keeps it knows what to
+    check again."""
+    routing = json.loads(output)
+    marks = {m['id']: m for m in json.load(open(os.path.join(base, routing['marks'])))['marks']}
+    stale = []
+    for a in routing['assumed']:
+        mark = marks.get(a['mark'])
+        if a.get('position') and mark and mark.get('position'):
+            p, q = a['position'], mark['position']
+            φ1, φ2 = math.radians(p['lat']), math.radians(q['lat'])
+            h = math.sin((φ2 - φ1) / 2) ** 2 + math.cos(φ1) * math.cos(φ2) * math.sin(math.radians(q['lng'] - p['lng']) / 2) ** 2
+            metres = 2 * 6371008.8 * math.asin(math.sqrt(h))
+            if metres > a['toleranceM']:
+                stale.append(f'{a["id"] if "id" in a else a["mark"]} {metres:.0f} m (tolerance {a["toleranceM"]} m)')
+    return stale
+
+
 def write(base, output, fresh, check):
     """Rewrite an output, or in `--check` report whether it is already what a
     fresh run produces."""
@@ -342,6 +371,9 @@ def main():
                 for title in unquoted_notes(base, artifact, fresh):
                     print(f'{rel}: note "{title}" is not in its source', file=sys.stderr)
                     failures += 1
+            if artifact['tool'].endswith('_routing'):
+                for line in stale_routing(base, fresh):
+                    print(f'{rel}: stale, its pairs unreviewed until checked again: {line}')
             failures += not write(base, artifact['output'], fresh, args.check)
         if spec.get('checks'):
             failures += not cross_check(base, spec)

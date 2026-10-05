@@ -18,6 +18,7 @@ League's, as below. Those are the only positions the club publishes.
 |---|---|---|
 | `marks.json` | `source/Royal-Cork-Yacht-Club-Keelboat-Autumn-League-2026-….pdf`, 36, for three laid marks; `source/General-Sailing-Instructions-…-2026.pdf`, 22.3, for East Mark; `source/eoceanic-ireland.html`, eOceanic's list of Irish marks, for nineteen harbour buoys; Pat Tanner's workbook for E4 and EF4; the club, for Cage and EF2; the card, for every mark its courses name | `tools/extract_rcyc_card.py marks` |
 | `keelboat.json` | `source/RCYC-Course-Card-Art-2026.pdf`, pages 2–4; the instructions' 26 for the start line | `tools/extract_rcyc_card.py card`, `… notes`, `tools/extract_start_line.py` |
+| `routing.json` | `source/RCYC_Cork_Harbour_ORC_MASTER_v3_19_CAGE_CORROBORATED.xlsx`, Pat Tanner's workbook | `tools/extract_orc_routing.py` |
 | `source/*.md` | the three documents | `tools/pdf_markdown.py` |
 | `keelboat.html`, `map/marks.svg` | the JSON above, `map/background.png` | `tools/render-cards.ts` |
 | `map/background.png`, `.json` | OpenStreetMap + OpenSeaMap tiles | `tools/fetch_map.py` |
@@ -272,6 +273,52 @@ line, either of which is also the finish. It is carried as the card's
 `startLine` with no position, and every course begins and ends there.
 The card's own page 4 says the same at more length and is carried as three
 notes, as printed.
+
+## The routing overlay
+
+Many of the card's legs are not sailable as straight lines: Cork Harbour's
+banks, Spike Island and the shore between the Grassy Walk and the entrance
+lie across them (#16). `routing.json` is the local knowledge that says which
+are and how the fleet goes round the rest, and it is **Pat Tanner's**: his
+master workbook, kept verbatim in `source/` (v3.19, from
+https://github.com/Bateleur88/cork-harbour-orc, SHA-256
+`ff0ae3ee…a735220`), from which `tools/extract_orc_routing.py` generates
+the overlay. His repository is MIT-licensed, which is taken to cover the
+waypoints and passages.
+
+He tested every straight line the card sails against INFOMAR's 2 m
+bathymetry, sampling every 5 m, and passed a line with at least 1.5 m below
+chart datum throughout — a modelling rule, he is careful to say, not a
+declaration of navigational safety. Where a line failed he authored a
+passage through waypoints of his own; three more pass the depth test but are
+routed to keep 150 m off the Refinery Jetty, which the instructions exclude.
+The overlay carries **eight waypoints, 45 passages and 79 pairs found
+direct**, each pair once in either direction (the workbook lists them by
+direction; the tool merges each with its reverse, and refuses a pair routed
+differently each way). One workbook passage is left out, Grassy Mid to
+RW_Rams_Head, because it ends at a waypoint and so is no leg of a card.
+Curlane is left out altogether: its ten pairs fail the depth test and are
+sailable only near high water, which is a condition of the courses (#18),
+not a route.
+
+**Where it assumes the marks are.** Each verdict holds for the positions it
+was tested at, so the overlay assumes each mark where the workbook has it,
+within 20 m, and a mark the marks file has moved further is stale: the
+library leaves every pair touching it unreviewed, and `pnpm data:check`
+reports it without failing. The workbook's positions are this data set's
+for every mark it uses except Dosco, 10.5 m off and within tolerance, and
+**Cage, 39 m off** — the workbook tested eOceanic's C1, the marks file
+carries the club's position — so Cage's legs are unreviewed here.
+
+The start line has three assumed positions, after the workbook's three
+starting and finishing options: **the Grassy Walk**, at the workbook's
+Grassy Mid (the midpoint of the line's shore end and Cage), within 500 m —
+where Pat's own race officer page warns that a recorded line is away from
+the point its routes assume; and a committee-boat line within 500 m of
+**Dosco** or of **No.8**, routed as that mark. The instructions say only
+that a committee vessel may lay a line (Autumn League 44); the areas are the
+workbook's. Dutchman and White Bay, laid afresh each race day, are assumed
+at the workbook's planning positions within 200 m.
 
 ## How it was checked
 
