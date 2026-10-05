@@ -110,6 +110,10 @@ describe('the Sovereign’s Cup 2025 marks file', () => {
     }
   });
 
+  it('quotes the table’s heading, which says its positions are approximate', () => {
+    expect(marks.notes).toEqual([{ title: 'Positions', text: 'KINSALE YACHT CLUB - RACING MARKS -APPROXIMATE POSITIONS' }]);
+  });
+
   it('places M where amendment 1 puts it, not on K’s latitude as the instructions print it', () => {
     const byId = new Map(marks.marks.map((m) => [m.id, m]));
     expect(byId.get('M')!.position).toEqual({ lat: 51.668333, lng: -8.520833 });

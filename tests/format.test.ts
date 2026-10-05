@@ -31,8 +31,8 @@ describe('the HYC Autumn League 2025 marks file', () => {
     });
   });
 
-  it('carries no notes — those are the cards’', () => {
-    expect((marks as { notes?: unknown }).notes).toBeUndefined();
+  it('carries what the sheet says of its positions, and leaves the sheet’s passages to the cards', () => {
+    expect(marks.notes).toEqual([{ title: 'Positions', text: 'Racing Marks (Approx)' }]);
   });
 
   it('positions are in Howth Sound, to the sheet’s hundredth of a minute', () => {

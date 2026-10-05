@@ -3,6 +3,12 @@
   "club": "SHSC",
   "name": "Calves Week 2026 racing marks, from the club's marks, distances and bearings sheet, lettered by its chartlet, and the Fastnet Rock",
   "source": "Schull Harbour Sailing Club, \"Calves Week, Marks, Distances and Bearings\", version 1, 9 July 2026, supplied to the project and not published",
+  "notes": [
+    {
+      "title": "Positions",
+      "text": "Mark Positions may vary slightly. All figures are approximate"
+    }
+  ],
   "marks": [
     {
       "id": "W",

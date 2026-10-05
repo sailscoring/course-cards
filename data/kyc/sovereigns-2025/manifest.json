@@ -78,7 +78,13 @@
       "meta": {
         "club": "KYC",
         "name": "Sovereign's Cup 2025 racing marks, from the sailing instructions with amendment 1, and the navigation marks the courses name",
-        "source": "https://www.kyc.ie/wp-content/uploads/2025/06/SOVS_2025_SIS_v6.pdf"
+        "source": "https://www.kyc.ie/wp-content/uploads/2025/06/SOVS_2025_SIS_v6.pdf",
+        "notes": [
+          {
+            "title": "Positions",
+            "text": "KINSALE YACHT CLUB - RACING MARKS -APPROXIMATE POSITIONS"
+          }
+        ]
       }
     },
     {

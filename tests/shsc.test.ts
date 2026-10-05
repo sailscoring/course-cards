@@ -32,6 +32,10 @@ describe('the Calves Week 2026 marks file', () => {
     expect(byId.get('8')).toMatchObject({ name: 'Crookhaven', position: { lat: 51.479, lng: -9.691167 } });
   });
 
+  it('quotes the sheet on its positions, as printed', () => {
+    expect(marks.notes).toEqual([{ title: 'Positions', text: 'Mark Positions may vary slightly. All figures are approximate' }]);
+  });
+
   it('positions are in Long Island Bay, and the Fastnet Rock south-west of it', () => {
     for (const m of marks.marks) {
       if (!m.position || m.id === 'Fastnet') continue;

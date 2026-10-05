@@ -33,6 +33,10 @@ describe('the DBSC 2026 marks file', () => {
     expect(marks.marks.find((m) => m.id === '3')).toMatchObject({ name: 'Green Start' });
   });
 
+  it('quotes the sheet on its positions', () => {
+    expect(marks.notes).toEqual([{ title: 'Positions', text: 'Mark positions may vary slightly. All figures are approximate.' }]);
+  });
+
   it('names the machine-readable list as the source of the three marks the sheet does not print', () => {
     const sourced = marks.marks.filter((m) => m.source);
     expect(sourced.map((m) => m.id)).toEqual(['2', '3', 'Z']);
