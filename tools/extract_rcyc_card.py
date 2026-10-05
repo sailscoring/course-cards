@@ -18,9 +18,9 @@ the card's notes and its starting and finishing lines.
 The club's **General Sailing Instructions** (22.3) give positions for the
 Port of Cork's permanently laid race marks — Dosco, Ringabella, Harp, East
 Mark — and for nothing else the courses name: the numbered channel buoys,
-the E, W and EF buoys and Cage are Port of Cork navigation marks, charted
-but positioned in no club or port document, and Dutchman, Curlane and
-White Bay are laid where the card says. `marks` mode reads the four
+the E, W and EF2 buoys and Cage are Port of Cork navigation marks, charted
+but positioned in no club or port document, EF4 is a race mark, and
+Dutchman, Curlane and White Bay are laid where the card says. `marks` mode reads the four
 positions from the instructions and takes the rest from `--add`, refusing
 a card that names a mark neither supplies.
 

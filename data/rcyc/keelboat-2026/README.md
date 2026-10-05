@@ -14,7 +14,7 @@ start and finish lines (26).
 
 | File | Source | Made by |
 |---|---|---|
-| `marks.json` | `source/General-Sailing-Instructions-…-2026.pdf`, 22.3, for the four laid marks; `source/eoceanic-ireland.html`, eOceanic's list of Irish marks, for nineteen harbour buoys; Pat Tanner's workbook for E4; the club, for Cage and EF2; the card, for every mark its courses name | `tools/extract_rcyc_card.py marks` |
+| `marks.json` | `source/General-Sailing-Instructions-…-2026.pdf`, 22.3, for the four laid marks; `source/eoceanic-ireland.html`, eOceanic's list of Irish marks, for nineteen harbour buoys; Pat Tanner's workbook for E4 and EF4; the club, for Cage and EF2; the card, for every mark its courses name | `tools/extract_rcyc_card.py marks` |
 | `keelboat.json` | `source/RCYC-Course-Card-Art-2026.pdf`, pages 2–4; the instructions' 26 for the start line | `tools/extract_rcyc_card.py card`, `… notes`, `tools/extract_start_line.py` |
 | `source/*.md` | the two documents | `tools/pdf_markdown.py` |
 | `keelboat.html`, `map/marks.svg` | the JSON above, `map/background.png` | `tools/render-cards.ts` |
@@ -59,8 +59,8 @@ the file's one note — a note speaks for the file's source, so for these
 four and no others.
 
 The card's courses name twenty-six more. Fourteen are the harbour's
-numbered channel buoys (No.3 to No.20), eight are the lettered buoys of
-the entrance and East Ferry channels (E1, E2, E4, W1, W2, W4, EF2, EF4) and
+numbered channel buoys (No.3 to No.20), seven are the lettered buoys of
+the entrance and East Ferry channels (E1, E2, E4, W1, W2, W4, EF2) and
 one is Cage, buoy C1, the green conical the Grassy Walk line finishes at.
 They are Port of Cork navigation marks, on Admiralty chart 1777, and **no
 official document publishes a position for any of them**: not the club's
@@ -163,20 +163,32 @@ unidentifiable because OpenStreetMap's three East Ferry nodes, tagged
 for the EF buoys, and they are not: the nearest is 571 m from the club's
 EF2 (#14).
 
-Four marks are still unplaced, each with a `placement` and no position.
-**EF4** was not identified. The other three are laid marks:
+**EF4 is a race mark, not a navigation buoy**, and it is placed on Pat
+Tanner's word. His workbook records it as a permanently moored race mark,
+unlit, at 51° 50.720' N 8° 14.740' W, from "a published RCYC reference"
+it does not name, and no RCYC publication found gives it; so its `source`
+names the workbook and says the reference is unnamed. If the club's
+document turns up, it replaces the workbook. It is not EF1, which the club
+also gave a position for (#14): EF1 is the lit starboard-hand buoy of the
+East Ferry channel, 1.6 km to the east, and the card never names it.
+eOceanic, which lists the channel's lit buoys, has nothing within 500 m of
+EF4.
+
+Three marks are still unplaced, each with a `placement` and no position,
+and all three are laid marks:
 Dutchman ("approx. 2 cables SE of the Dutchman Rock/Fennels Bay") and
 Curlane ("a mark laid on the Curlane Bank") in the card's own words, and
 White Bay, which course 73 names and nothing describes. The manifest lists
 all twenty-six with the reasoning beside them.
 
-The consequence has shifted but not closed: **thirty-four of the forty
+The consequence has shifted but not closed: **thirty-five of the forty
 courses can now be computed with only the start line supplied**, which was
 the point of the exercise. Course 1, for instance, resolves Ringabella, W2,
-Cage, No.7 and Dosco from this file and asks only for SL. The six that
-cannot are course 71 at EF4, the four at Curlane (72, 75, 83) or Dutchman
-(2), and course 73 at White Bay — each asks the caller for that mark, as
-every course asks for the line.
+Cage, No.7 and Dosco from this file and asks only for SL. The five that
+cannot are the four at Curlane (72, 75, 83) or Dutchman (2), and course 73
+at White Bay — each asks the caller for that mark, as every course asks for
+the line, and rightly: they are laid on the day, and only then is there a
+position for them.
 
 **Card.** Pages 2 and 3 of the card are two columns of courses; the tool
 reads each column of each page top to bottom from `pdftotext -bbox` word
@@ -242,11 +254,13 @@ suite to assert; `tools/` has no script for it either. Re-derive it from
   2008 (the chart on the club's website is "Revised 2008"); the 2025
   edition is also on the club's site.
 - Nineteen buoy positions are eOceanic's, whose own source is not stated;
-  E4's is Pat Tanner's, from a photograph and two plotter readings; Cage and
-  EF2 are the club's own figures given in correspondence. None is backed by an official document, and a Port of
+  E4's is Pat Tanner's, from a photograph and two plotter readings, and so is
+  EF4's, from an RCYC reference his workbook does not name; Cage and EF2
+  are the club's own figures given in correspondence. None is backed by an official document, and a Port of
   Cork notice or list, or the club adding positions to its instructions,
   would replace them with a citation. OpenStreetMap's data is ODbL, which
   the MIT licence on this repository does not carry — worth settling for
   the cross-check's traces, since these are positions taken as data, not
   tiles shown with attribution; eOceanic states no licence for its list.
-- EF4 is the one buoy still open.
+- EF4's position rests on an RCYC reference nobody has named; finding it
+  would give the mark a document.

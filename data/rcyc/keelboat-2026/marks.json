@@ -241,8 +241,12 @@
     },
     {
       "id": "EF4",
-      "name": "Harbour navigation buoy EF4",
-      "placement": "A Port of Cork navigation buoy, charted (Admiralty 1777) and maintained by the port; the club publishes no position for it, and none was found in any port publication. Its position is a race-day fact until one is."
+      "name": "EF4, a race mark",
+      "position": {
+        "lat": 51.845333,
+        "lng": -8.245667
+      },
+      "source": "Pat Tanner, Cork Harbour workbook v3.19 (github.com/Bateleur88/cork-harbour-orc), which cites an RCYC reference it does not name"
     },
     {
       "id": "Cage",
