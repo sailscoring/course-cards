@@ -1,8 +1,8 @@
 # The course-cards format, version 2
 
-Two JSON file kinds. Every file carries `formatVersion` (an integer); a
-reader must refuse a version newer than it understands and accept anything
-older. Positions are decimal degrees, WGS84, west and south negative.
+Two JSON file kinds, and a third that a data set may add: the routing
+overlay. Every file carries `formatVersion` (an integer); a reader must
+refuse a version newer than it understands and accept anything older. Positions are decimal degrees, WGS84, west and south negative.
 
 ## Marks file
 
@@ -264,6 +264,95 @@ numbered course is. Nothing is stored, so the format does not change; a
 club with no numbered courses at all publishes a card with `courses: []`,
 carrying its start line, its finish and its notes, over its marks file.
 
+## Routing overlay (optional)
+
+A leg is the straight line between two marks, and in pilotage waters that
+line can cross land or a bank: no boat sails it, and its distance is short.
+Which legs are sailable, and how the fleet goes round the ones that are not,
+is local knowledge that no card prints. A routing overlay is that knowledge
+for one data set, from whoever has it — a sailor who races there, the club —
+and validated by them: a `routing.json` beside the marks file. It is a layer
+of its own, with its own provenance, and it changes nothing in the card or
+the marks file. A card's new revision is published without it, and an
+overlay nobody maintains blocks nothing: the legs it no longer speaks for go
+back to being straight lines, marked unreviewed.
+
+```json
+{
+  "formatVersion": 2,
+  "club": "RCYC",
+  "name": "Cork Harbour passages for the 2026 keelboat card",
+  "source": "https://github.com/Bateleur88/cork-harbour-orc",
+  "contributor": "Pat Tanner",
+  "method": "Local knowledge; each straight line between marks and waypoints tested against INFOMAR 2 m bathymetry, at least 1.5 m below chart datum",
+  "marks": "marks.json",
+  "assumed": [
+    { "mark": "W2", "position": { "lat": 51.794867, "lng": -8.2723 }, "toleranceM": 20 },
+    { "mark": "Cage", "position": { "lat": 51.8139, "lng": -8.2828 }, "toleranceM": 20 },
+    { "id": "SL@grassy-walk", "mark": "SL", "position": { "lat": 51.811908, "lng": -8.283267 }, "toleranceM": 500 },
+    { "id": "SL@dosco", "mark": "SL", "as": "Dosco", "toleranceM": 500 }
+  ],
+  "waypoints": [
+    { "id": "RW_Rams_Head", "position": { "lat": 51.809117, "lng": -8.271883 } }
+  ],
+  "passages": [
+    { "from": "W2", "to": "Cage", "via": ["RW_Rams_Head"] }
+  ],
+  "direct": [
+    { "from": "Cage", "to": "No.7" }
+  ]
+}
+```
+
+- `source`, `contributor`, `method` — where the overlay comes from, who
+  made it, and how its verdicts were reached. `notes` as in the other files.
+- `marks` — the marks file it was made against, by name.
+- `waypoints` — the routing waypoints: points a passage turns at that are
+  not marks, with an `id`, a `position`, and optionally a `name` and a
+  `note`. No boat rounds one; it says where the water is.
+- `passages` — a leg the straight line will not do, as the waypoints it
+  goes through: `from` and `to` are marks, `via` is the ordered list of
+  waypoints, or marks, in between. Each has an optional `note` saying why —
+  a bank, or an exclusion zone in the sailing instructions, which no depth
+  test would find.
+- `direct` — the pairs the contributor checked and found sailable as a
+  straight line. It is what tells a leg that was looked at from one that
+  never was.
+
+  A pair is listed once, as a passage or as direct, and matches in either
+  direction: a passage sailed the other way goes through its waypoints in
+  reverse. A pair the overlay does not list is unreviewed — typically one a
+  later revision of the card introduced.
+- `assumed` — the position the overlay's verdicts assume for each mark they
+  rely on, and how far the mark may be from it before they no longer hold.
+  A verdict on a narrow channel does not survive a mark moving: every
+  passage and direct pair that touches a mark whose position — the marks
+  file's, or the race's — is further than `toleranceM` from its assumed
+  position is invalid, and its legs come back unreviewed. So the overlay
+  goes stale mark by mark when the marks file moves on, and says nothing
+  wrong in the meantime.
+
+  A mark with no fixed position — the start line, a mark laid on the day —
+  gets an assumed position the same way, and may get several, each with an
+  `id` of its own: `SL@grassy-walk` is the start line where the overlay's
+  routes from the Grassy Walk assume it, and passages and pairs name it as
+  `SL@grassy-walk`. `as` says the mark stands in for another one instead:
+  `SL@dosco`, the start line within 500 m of Dosco, takes Dosco's assumed
+  position and Dosco's passages and pairs. For each end of a leg the
+  library uses the nearest assumed position within tolerance. An `id`
+  defaults to the mark's; `note` and `source` say where a position came
+  from, where it is not the overlay's.
+
+Given an overlay, the library splits each leg of a course that a passage
+covers into the legs actually sailed, through its waypoints, and says of
+every leg whether it is `direct`, part of a `passage`, or `unreviewed`; and
+how far its ends were from the positions assumed for them, which is how far
+the review reaches — a start line 300 m from the Grassy Walk's assumed
+position is routed the Grassy Walk's way, but nobody checked the water
+between the line and the first waypoint from where the line actually was.
+Without an overlay the legs are as they always were, with no review status
+at all: no overlay makes no claim, either way.
+
 ## Versioning
 
 `formatVersion` bumps when a change would make an older reader mis-read a
@@ -271,7 +360,10 @@ file — new optional fields ride along without a bump. `finish` is such a
 field: the ending it describes is in every course's `marks` too, so a reader
 that has never heard of it still sails the whole course. So is `source` on a
 mark: a reader that ignores it takes every mark to be the file's, which is
-what it did before. And so are a marks file's `notes`.
+what it did before. And so are a marks file's `notes`. The routing overlay
+is a file of its own beside the others, which a reader that has never heard
+of it does not open; the legs it splits are new fields on a leg, and a leg
+without them is what it always was.
 
 - **Version 1** — the initial format. Courses began at the first mark the
   card printed, and the start line was supplied per race, outside the files.
