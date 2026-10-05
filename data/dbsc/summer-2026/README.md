@@ -48,7 +48,9 @@ the Turning mark, which is a navigation buoy); the sheet gives no shapes.
 Three marks the club lists are not rows of the sheet — the black and green
 start marks at the West Pier hut (`2`, `3`), which course card 3 uses, and
 Zebra (`Z`), which the chart notes "shows position only and may not be
-laid" and no 2026 course uses — and are appended from the club's marks CSV.
+laid" and no 2026 course uses — and are appended from the club's marks CSV,
+each naming the CSV as its `source`, since the sheet is not where its
+position comes from.
 The sheet does have a column for `3` (bearings and distances *to* it),
 which is checked against the CSV position below.
 

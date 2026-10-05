@@ -163,7 +163,8 @@ def extract(base, artifact, meta_path):
         cmd = [sys.executable, os.path.join(TOOLS, 'extract_dbsc_marks.py'), source, '--meta', meta_path]
         if artifact.get('supplement'):
             cmd += ['--supplement', os.path.join(base, artifact['supplement']['source']),
-                    '--supplement-ids', ','.join(artifact['supplement']['ids'])]
+                    '--supplement-ids', ','.join(artifact['supplement']['ids']),
+                    '--supplement-citation', artifact['supplement']['citation']]
     elif tool == 'extract_card':
         cmd = [sys.executable, os.path.join(TOOLS, 'extract_card.py'), 'build', source, '--meta', meta_path,
                '--templates', os.path.join(TOOLS, 'templates', artifact['templates'])]

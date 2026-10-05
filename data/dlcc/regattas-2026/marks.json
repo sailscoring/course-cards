@@ -217,7 +217,8 @@
       "position": {
         "lat": 53.306867,
         "lng": -6.134433
-      }
+      },
+      "source": "DBSC Marks 2026, machine-readable list (DBSC_Marks_2026.csv), which the club says is not an official document"
     },
     {
       "id": "3",
@@ -225,7 +226,8 @@
       "position": {
         "lat": 53.306933,
         "lng": -6.136333
-      }
+      },
+      "source": "DBSC Marks 2026, machine-readable list (DBSC_Marks_2026.csv), which the club says is not an official document"
     },
     {
       "id": "Z",
@@ -233,7 +235,8 @@
       "position": {
         "lat": 53.312333,
         "lng": -6.102667
-      }
+      },
+      "source": "DBSC Marks 2026, machine-readable list (DBSC_Marks_2026.csv), which the club says is not an official document"
     }
   ]
 }

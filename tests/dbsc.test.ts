@@ -33,6 +33,12 @@ describe('the DBSC 2026 marks file', () => {
     expect(marks.marks.find((m) => m.id === '3')).toMatchObject({ name: 'Green Start' });
   });
 
+  it('names the machine-readable list as the source of the three marks the sheet does not print', () => {
+    const sourced = marks.marks.filter((m) => m.source);
+    expect(sourced.map((m) => m.id)).toEqual(['2', '3', 'Z']);
+    for (const m of sourced) expect(m.source, m.id).toContain('DBSC_Marks_2026.csv');
+  });
+
   it('positions are in Dublin Bay, from the sheet’s minutes', () => {
     for (const m of marks.marks) {
       expect(m.position!.lat, m.id).toBeGreaterThan(53.28);

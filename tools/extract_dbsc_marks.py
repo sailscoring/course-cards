@@ -13,8 +13,10 @@ are relative to ("Lat N 53°+", "Long W 6°+").
 
 Marks the club publishes only in its machine-readable marks list (the start
 marks at the West Pier hut, Zebra) can be appended from that CSV with
-`--supplement <csv> --supplement-ids 2,3,Z`; the sheet's own marks are never
-taken from the CSV. `table(pdf)` returns the printed bearing/distance table
+`--supplement <csv> --supplement-ids 2,3,Z --supplement-citation <words>`;
+the sheet's own marks are never taken from the CSV, and each mark taken from
+it names the citation as its `source`, since the sheet is not where its
+position comes from. `table(pdf)` returns the printed bearing/distance table
 for cross-checking the positions (tools/check_dbsc.py).
 """
 
@@ -128,8 +130,9 @@ def notes(ws):
     return [{'title': 'Marks, bearings and distances', 'text': text}]
 
 
-def supplement(path, ids):
-    """Marks from the club's machine-readable marks list, by id."""
+def supplement(path, ids, citation):
+    """Marks from the club's machine-readable marks list, by id, each
+    citing it."""
     rows = {r['Letter']: r for r in csv.DictReader(open(path, newline=''))}
     out = []
     for id_ in ids:
@@ -143,6 +146,7 @@ def supplement(path, ids):
                 'lat': round(int(r['Lat deg']) + float(r['Lat min']) / 60, 6),
                 'lng': round(int(r['Long deg']) - float(r['Long min']) / 60, 6),
             },
+            'source': citation,
         })
     return out
 
@@ -154,6 +158,7 @@ def main():
     ap.add_argument('--notes', action='store_true', help="print the sheet's caveats as card notes instead")
     ap.add_argument('--supplement', help="the club's machine-readable marks CSV")
     ap.add_argument('--supplement-ids', default='', help='comma-separated ids to take from the CSV')
+    ap.add_argument('--supplement-citation', help="the CSV in words, as the supplemented marks' source")
     args = ap.parse_args()
     ws = words(args.pdf)
     if args.notes:
@@ -165,13 +170,13 @@ def main():
     if not marks:
         sys.exit('no marks found')
     if args.supplement_ids:
-        if not args.supplement:
-            sys.exit('--supplement-ids needs --supplement')
+        if not args.supplement or not args.supplement_citation:
+            sys.exit('--supplement-ids needs --supplement and --supplement-citation')
         ids = args.supplement_ids.split(',')
         for m in marks:
             if m['id'] in ids:
                 sys.exit(f'{m["id"]} is on the sheet; take it from there')
-        marks += supplement(args.supplement, ids)
+        marks += supplement(args.supplement, ids, args.supplement_citation)
     out = {'formatVersion': FORMAT_VERSION, **meta, 'marks': marks}
     json.dump(out, sys.stdout, indent=2, ensure_ascii=False)
     sys.stdout.write('\n')
