@@ -7,12 +7,19 @@
  * radio button per course and a CSS `:has()` rule — inline CSS and an
  * inline SVG map, so the page can be published anywhere as a file.
  *
+ * Bearings are computed from positions, so they are true. Given the date
+ * the card is sailed on, the page also works out the magnetic variation
+ * there from the World Magnetic Model and offers every bearing in magnetic,
+ * the default, which is what a sailor reads off a compass: each cell carries
+ * both figures, and a radio pair and a `:has()` rule show one.
+ *
  * Part of the artifact pipeline (see render-cards.ts), not of the published
  * library, which it consumes like any other client.
  */
 
 import { bearingDeg, distanceNm, formatPosition, printedMarks } from '../src/index';
 import type { Course, CourseCardFile, CourseMark, Finish, Mark, MarksFile, Note, Position, StartLine } from '../src/index';
+import { declinationDeg, WMM_NAME } from './wmm';
 
 export interface RenderOptions {
   /** Page title; defaults to the card's name. */
@@ -21,6 +28,76 @@ export interface RenderOptions {
   background?: MapBackground;
   /** Crop the chart to this card rather than draw the whole marks file. */
   area?: ChartArea;
+  /** The date the card is sailed on, `YYYY-MM-DD`, to offer its bearings in
+   *  magnetic with the variation for that date at its marks. Without it
+   *  they are true only. */
+  variationDate?: string;
+}
+
+/** The variation a page applies: worked out once, at the middle of the
+ *  marks, and rounded to the tenth of a degree it prints, so the figure on
+ *  the page is the one applied. Degrees east, west negative. */
+interface Variation {
+  deg: number;
+  at: Position;
+  date: string;
+}
+
+function variationFor(marks: Mark[], date: string): Variation | undefined {
+  const placed = marks.flatMap((m) => (m.position ? [m.position] : []));
+  if (!placed.length) return undefined;
+  const at = {
+    lat: placed.reduce((s, p) => s + p.lat, 0) / placed.length,
+    lng: placed.reduce((s, p) => s + p.lng, 0) / placed.length,
+  };
+  return { deg: Math.round(declinationDeg(at, date) * 10) / 10, at, date };
+}
+
+const pad3 = (deg: number): string => String(Math.round(deg) % 360).padStart(3, '0');
+
+/** A true bearing as a page shows it: true alone, or — given a variation —
+ *  magnetic and true, worked from the unrounded true bearing, for the
+ *  page's control to show one of. */
+function bearingCell(trueDeg: number, v: Variation | undefined): string {
+  if (!v) return pad3(trueDeg);
+  const magnetic = (((trueDeg - v.deg) % 360) + 360) % 360;
+  return `<span class="brg-m">${pad3(magnetic)}</span><span class="brg-t">${pad3(trueDeg)}</span>`;
+}
+
+/** What a page's bearings are in: "true", or whichever the control shows. */
+function bearingRef(v: Variation | undefined): string {
+  return v ? '<span class="brg-m">magnetic</span><span class="brg-t">true</span>' : 'true';
+}
+
+/** The page's bearings in the reference its control picks, magnetic until
+ *  true is. */
+const BEARING_CSS = `
+  .bearings { margin: 0 0 1rem; }
+  .bearings label { margin-right: .5em; cursor: pointer; font-weight: 600; }
+  .bearings .variation { color: #555; font-size: 12px; }
+  .brg-t { display: none; }
+  body:has(#bearings-true:checked) .brg-t { display: inline; }
+  body:has(#bearings-true:checked) .brg-m { display: none; }`;
+
+/** The control that switches every bearing on the page, magnetic first, and
+ *  the variation it applies, where and when. */
+function bearingControl(v: Variation): string {
+  const abs = Math.abs(v.deg).toFixed(1);
+  const side = v.deg < 0 ? 'W' : 'E';
+  const when = new Date(`${v.date}T00:00:00Z`).toLocaleDateString('en-GB', {
+    timeZone: 'UTC',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+  const rule = v.deg === 0 ? 'magnetic and true are the same' : `magnetic is true ${v.deg < 0 ? 'plus' : 'minus'} ${abs}°`;
+  return (
+    '<p class="bearings">Bearings in ' +
+    '<label><input type="radio" name="bearings" id="bearings-magnetic" checked> magnetic</label> ' +
+    '<label><input type="radio" name="bearings" id="bearings-true"> true</label>. ' +
+    `<span class="variation">Variation ${abs}° ${side} at ${formatPosition(v.at)} on ${when}, from the World Magnetic Model (${esc(WMM_NAME)}): ${rule}. ` +
+    'Bearings are computed from the marks\' positions, so are true; magnetic is worked from the unrounded true bearing.</span></p>'
+  );
 }
 
 /** What a card's chart must cover, where the data set asks for one cropped
@@ -443,9 +520,9 @@ function courseOverlay(course: Course, byId: Map<string, Mark>, c: Chart): strin
 }
 
 /** The legs of a course as a table, hidden until the course is picked:
- *  number, ends, true bearing and distance — blank for a leg the card
+ *  number, ends, bearing and distance — blank for a leg the card
  *  cannot place — and the total of the placed legs. */
-function legTable(course: Course, byId: Map<string, Mark>): string {
+function legTable(course: Course, byId: Map<string, Mark>, v: Variation | undefined): string {
   const ends = courseLegEnds(course, byId);
   let total = 0;
   let unplaced = false;
@@ -458,7 +535,7 @@ function legTable(course: Course, byId: Map<string, Mark>): string {
       total += d;
       rows +=
         `<tr><th>${i + 1}</th><td>${esc(a.id)}</td><td>${esc(b.id)}</td>` +
-        `<td>${String(Math.round(bearingDeg(a.position, b.position)) % 360).padStart(3, '0')}</td><td>${d.toFixed(2)}</td></tr>`;
+        `<td>${bearingCell(bearingDeg(a.position, b.position), v)}</td><td>${d.toFixed(2)}</td></tr>`;
     } else {
       unplaced = true;
       rows += `<tr class="unplaced"><th>${i + 1}</th><td>${esc(a.id)}</td><td>${esc(b.id)}</td><td>—</td><td>—</td></tr>`;
@@ -466,9 +543,9 @@ function legTable(course: Course, byId: Map<string, Mark>): string {
   }
   return (
     `<div class="legs" id="legs-${courseKey(course)}"><h3>Course ${esc(course.id)}${
-      course.windDirectionDeg != null ? ` <span class="nm">wind ${String(course.windDirectionDeg).padStart(3, '0')}°</span>` : ''
+      course.windDirectionDeg != null ? ` <span class="nm">wind ${bearingCell(course.windDirectionDeg, v)}°</span>` : ''
     }</h3>` +
-    `<table class="numbers"><thead><tr><th>Leg</th><th>From</th><th>To</th><th>° true</th><th>NM</th></tr></thead>` +
+    `<table class="numbers"><thead><tr><th>Leg</th><th>From</th><th>To</th><th>° ${bearingRef(v)}</th><th>NM</th></tr></thead>` +
     `<tbody>${rows}</tbody><tfoot><tr><td colspan="4">Legs between placed marks</td><td>${total.toFixed(2)}</td></tr>` +
     (course.distanceNm != null ? `<tr><td colspan="4">Length printed on the card</td><td>${course.distanceNm.toFixed(2)}</td></tr>` : '') +
     '</tfoot></table>' +
@@ -585,6 +662,7 @@ export function renderCardHtml(card: CourseCardFile, marks: MarksFile, options: 
     ? [...marks.marks.filter((m) => !ends.some((e) => e.id === m.id)), ...ends]
     : marks.marks;
   const byId = new Map(withEnds.map((m) => [m.id, m]));
+  const v = options.variationDate ? variationFor(marks.marks, options.variationDate) : undefined;
   const area = options.area;
   const onChart = area
     ? withEnds.filter((m) => area.keep?.includes(m.id) || card.courses.some((c) => c.marks.some((cm) => cm.mark === m.id)))
@@ -611,18 +689,19 @@ export function renderCardHtml(card: CourseCardFile, marks: MarksFile, options: 
     : `<h2>Courses</h2><div class="courses-layout"><div>${courseTable(card)}</div>` +
       (chartSvg
         ? `<aside class="course-view"><figure class="map">${chartSvg}<figcaption>${caption}</figcaption></figure>` +
-          `<p class="pick">Select a course to draw it on the chart.</p>${card.courses.map((c) => legTable(c, byId)).join('')}</aside>`
+          `<p class="pick">Select a course to draw it on the chart.</p>${card.courses.map((c) => legTable(c, byId, v)).join('')}</aside>`
         : '') +
       `</div>`;
   return (
     `<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">` +
-    `<title>${esc(title)}</title><style>${CSS}${called ? '' : pickRules(card.courses)}\n</style></head><body>\n` +
+    `<title>${esc(title)}</title><style>${CSS}${v ? BEARING_CSS + '\n' : ''}${called ? '' : pickRules(card.courses)}\n</style></head><body>\n` +
     `<h1>${esc(title)}</h1><p class="meta">${meta}</p>\n` +
+    (v ? bearingControl(v) + '\n' : '') +
     `${courses}\n` +
     (card.startLine ? startLineSection(card.startLine) + '\n' : '') +
     (card.finish ? finishSection(card.finish, called) + '\n' : '') +
     `<h2>Marks</h2>${marksTable(marks)}\n` +
-    `<h2>Bearings between marks (° true)</h2>${pairTable(marks.marks, (a, b) => String(Math.round(bearingDeg(a, b)) % 360).padStart(3, '0'))}\n` +
+    `<h2>Bearings between marks (° ${bearingRef(v)})</h2>${pairTable(marks.marks, (a, b) => bearingCell(bearingDeg(a, b), v))}\n` +
     `<h2>Distances between marks (NM)</h2>${pairTable(marks.marks, (a, b) => distanceNm(a, b).toFixed(2))}\n` +
     notes(allNotes) +
     `</body></html>\n`

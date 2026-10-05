@@ -123,11 +123,16 @@ hand instead, the manifest marks it `transcribed`, and the pipeline keeps it
 and reads the card's start line, finish and notes from it. The same pipeline renders each card
 as a self-contained HTML page: the course table as printed, the marks over
 an OpenStreetMap + OpenSeaMap chart — pick a course and it is drawn there,
-leg by leg, with each leg's true bearing and distance — bearings and
-distances between marks, and the notes. A club's marks file covers every
+leg by leg, with each leg's bearing and distance — bearings and
+distances between marks, and the notes. Bearings are shown in magnetic by
+default, with true a click away: the manifest gives the date the card is
+sailed on, and the page applies the variation the World Magnetic Model
+(WMM2025, `tools/wmm.ts`) gives for that date at the middle of the marks,
+printing the figure, place and date beside the control. The data and the
+library stay true. A club's marks file covers every
 card it publishes, so a manifest may crop a card's chart to that card: the
 marks its own courses sail to, and whatever its own instructions keep in. No scripts: the picker is a radio
-button per course and a CSS rule. Every data set has a README saying how,
+button per course and a CSS rule, and so is the true/magnetic control. Every data set has a README saying how,
 and how it was checked.
 
 - `data/hyc/al-2025/` — Howth Yacht Club's Autumn League 2025: the marks

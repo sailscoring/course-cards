@@ -104,5 +104,9 @@
     ],
     "zoom": 14,
     "paddingMinutes": 0.6
+  },
+  "variation": {
+    "date": "2025-12-01",
+    "why": "Mid-series: the races on the card run from 9 November into December 2025. Card pages work out the magnetic variation for this date at the middle of the marks from the World Magnetic Model; the variation changes by about a tenth of a degree a year here, so any day of the series gives the same figure."
   }
 }

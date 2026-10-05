@@ -161,6 +161,27 @@ describe('renderCardHtml', () => {
     expect((html.match(/<td><\/td>/g) ?? []).length).toBe(2 * 21);
   });
 
+  it('offers every bearing in magnetic as well as true given the date it is sailed', () => {
+    const page = renderCardHtml(inshore, marks, { variationDate: '2025-10-01' });
+    // the control, magnetic picked, and the variation it applies
+    expect(page).toContain('<input type="radio" name="bearings" id="bearings-magnetic" checked> magnetic');
+    expect(page).toContain('<input type="radio" name="bearings" id="bearings-true"> true');
+    expect(page).toMatch(/Variation 1\.3° W at 53° 25\.\d\d′ N 006° 03\.\d\d′ W on 1 October 2025, from the World Magnetic Model \(WMM-2025\): magnetic is true plus 1\.3°/);
+    // both figures in each cell, magnetic worked from the unrounded true
+    // bearing: P→C is 168.4° true, so 169.7° magnetic, 170 — not 168 + 1
+    const table = page.slice(page.indexOf('<div class="legs" id="legs-015">'), page.indexOf('<div class="legs" id="legs-021">'));
+    expect(table).toContain('<tr><th>3</th><td>P</td><td>C</td><td><span class="brg-m">170</span><span class="brg-t">168</span></td><td>1.04</td></tr>');
+    expect(table).toContain('<th>° <span class="brg-m">magnetic</span><span class="brg-t">true</span></th>');
+    expect(table).toContain('wind <span class="brg-m">011</span><span class="brg-t">010</span>°');
+    expect(page).toContain('<h2>Bearings between marks (° <span class="brg-m">magnetic</span><span class="brg-t">true</span>)</h2>');
+    // the control shows one figure: true hidden unless picked
+    expect(page).toContain('.brg-t { display: none; }');
+    expect(page).toContain('body:has(#bearings-true:checked) .brg-m { display: none; }');
+    // without a date, true only and no control
+    expect(html).not.toContain('name="bearings"');
+    expect(html).not.toContain('brg-m');
+  });
+
   it('carries the club’s notes', () => {
     expect(html).toContain('<h2>Navigation Marks and Obstructions</h2>');
     expect(html).toContain('<h2>Course Selection</h2>');

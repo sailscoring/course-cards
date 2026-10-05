@@ -139,5 +139,9 @@
     ],
     "zoom": 14,
     "paddingMinutes": 0.6
+  },
+  "variation": {
+    "date": "2026-07-01",
+    "why": "Mid-season: the card is for the 2026 season. Card pages work out the magnetic variation for this date at the middle of the marks from the World Magnetic Model; the variation changes by about a tenth of a degree a year here, so any day of the series gives the same figure."
   }
 }

@@ -18,10 +18,12 @@ files against a fresh run.
 
 The HTML pages are the cards as a web page: the course table as printed,
 the marks over a chart on which a picked course is drawn with its legs
-numbered and tabulated (true bearing and distance, computed from the
+numbered and tabulated (bearing and distance, computed from the
 positions; a leg touching the start line, Z or F, which the card cannot
-place, is listed without them), true bearings and distances between
-every pair of marks, and the sheet's notes.
+place, is listed without them), bearings and distances between
+every pair of marks, and the sheet's notes. Bearings are in magnetic,
+with the variation for 1 October 2025 from the World Magnetic Model, or
+true at the page's control.
 
 **Chart.** The map background is OpenStreetMap with the OpenSeaMap seamark
 overlay (the real buoys and lights), fetched once at zoom 14 for the marks'

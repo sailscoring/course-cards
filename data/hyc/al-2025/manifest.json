@@ -93,5 +93,9 @@
     ],
     "zoom": 14,
     "paddingMinutes": 0.6
+  },
+  "variation": {
+    "date": "2025-10-01",
+    "why": "Mid-series: the league is sailed from 13 September to 11 October 2025. Card pages work out the magnetic variation for this date at the middle of the marks from the World Magnetic Model; the variation changes by about a tenth of a degree a year here, so any day of the series gives the same figure."
   }
 }

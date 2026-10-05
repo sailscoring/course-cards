@@ -5,6 +5,8 @@
  * its marks on its own. A card whose manifest entry has a `chart` block is
  * drawn on a chart cropped to that card — the marks its own courses use,
  * plus whatever the block keeps in — rather than on the whole marks file.
+ * A manifest's `variation.date` is the date its cards are sailed on, for the
+ * pages to offer their bearings in magnetic as well as true.
  * `--check` verifies the committed files instead. The last step of the
  * artifact pipeline, after tools/regenerate.py.
  *
@@ -66,9 +68,10 @@ function emit(out: string, content: string): void {
 
 for (const manifest of manifests(join(root, 'data'))) {
   const base = dirname(manifest);
-  const { artifacts, map } = JSON.parse(readFileSync(manifest, 'utf-8')) as {
+  const { artifacts, map, variation } = JSON.parse(readFileSync(manifest, 'utf-8')) as {
     artifacts: Array<{ output: string; tool: string; meta?: { marks?: string }; chart?: ChartSpec }>;
     map?: { background: string };
+    variation?: { date: string; why: string };
   };
   let background: MapBackground | undefined;
   if (map) {
@@ -84,7 +87,7 @@ for (const manifest of manifests(join(root, 'data'))) {
     const marks = parseMarksFile(JSON.parse(readFileSync(join(base, marksName), 'utf-8')));
     emit(
       join(base, artifact.output.replace(/\.json$/, '.html')),
-      renderCardHtml(card, marks, { background, area: chartArea(artifact.chart) }),
+      renderCardHtml(card, marks, { background, area: chartArea(artifact.chart), variationDate: variation?.date }),
     );
   }
   if (map) {
