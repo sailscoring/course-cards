@@ -45,12 +45,16 @@ sheet, a table of letter, name, shape, colour and position.
   (the windward mark) and Finish are such marks; a club whose windward mark
   is a fixed mark simply has a position for it.
 - `source` (on the file) — the document the file was made from, and the
-  authority for every mark that names no `source` of its own. A URL, where
-  the document is published.
-- `source` (on a mark) — the authority for that mark, where it is not the
-  file's: a document and clause, a published set of positions, or a named
-  person's local knowledge, in words. Absent, the mark is the file's
-  `source`'s. One file can hold marks from several authorities — Kinsale's
+  authority for the position of every mark that names no `source` of its
+  own. A URL, where the document is published.
+- `source` (on a mark) — the authority for that mark's position, where it
+  is not the file's: a document and clause, a published set of positions,
+  or a named person's local knowledge, in words. Absent, the position is
+  the file's `source`'s. It speaks for the position only: a mark's name,
+  shape and colour may come from elsewhere — HYC's Brass Monkey marks take
+  theirs from the Autumn League sheet — without the mark naming it, because
+  a reader acts on where a mark is, not on what it looks like. One file can
+  hold positions from several authorities — Kinsale's
   is the club's table of approximate positions with the Commissioners of
   Irish Lights' Cork buoy added from OpenStreetMap — and a reader may well
   treat them differently: a navigation buoy is where the chart puts it, a
@@ -68,7 +72,8 @@ sheet, a table of letter, name, shape, colour and position.
   ```
 
   It is the same field as the start line's `source` below, for the same
-  reason.
+  reason; there it names the instruction that defines the line, which is
+  also where any position the line has comes from.
 - `notes` — what the file's `source` says about its marks, as printed, in
   the card's shape: each a `text` whose paragraphs are separated by
   newlines, and a `title` — the heading it is printed under, or a short one

@@ -26,13 +26,14 @@ export interface Mark {
   /** Where a per-race mark is laid, in the club's words: "Upwind of Start
    *  Line", "Between Island Mark and Howth Sound". */
   placement?: string;
-  /** The authority for this mark, where it is not the file's own `source`:
-   *  a document and clause, a published set of positions, or a named
-   *  person's local knowledge — "RCYC General Sailing Instructions 2026,
-   *  22.3", "OpenStreetMap node 1593411492 (CIL00240)". Absent, the mark is
-   *  the file's `source`'s. A navigation buoy is where the chart puts it and
-   *  a club's laid mark is where the club last laid it; this is how a reader
-   *  tells them apart. */
+  /** The authority for this mark's position, where it is not the file's own
+   *  `source`: a document and clause, a published set of positions, or a
+   *  named person's local knowledge — "RCYC General Sailing Instructions
+   *  2026, 22.3", "OpenStreetMap node 1593411492 (CIL00240)". Absent, the
+   *  position is the file's `source`'s. The position only: a name, shape or
+   *  colour taken from elsewhere is not recorded. A navigation buoy is where
+   *  the chart puts it and a club's laid mark is where the club last laid
+   *  it; this is how a reader tells them apart. */
   source?: string;
 }
 
@@ -41,8 +42,8 @@ export interface MarksFile {
   /** Who maintains these marks (club or class), free text. */
   club?: string;
   name?: string;
-  /** The document the file was made from, and the authority for every mark
-   *  that names no `source` of its own. */
+  /** The document the file was made from, and the authority for the
+   *  position of every mark that names no `source` of its own. */
   source?: string;
   /** What the file's `source` says about its marks, as printed: "Mark
    *  positions may vary slightly. All figures are approximate." Always the

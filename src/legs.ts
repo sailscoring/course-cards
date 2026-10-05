@@ -17,9 +17,9 @@ export interface ResolvedCourseMark {
   entry: CourseMark;
   mark: Mark;
   placed: boolean;
-  /** The authority for the mark: its own `source`, else the file it comes
-   *  from — the card for the start line and the finish, the marks file for
-   *  the rest. Absent where neither names one. */
+  /** The authority for the mark's position: its own `source`, else the file
+   *  it comes from — the card for the start line and the finish, the marks
+   *  file for the rest. Absent where neither names one. */
   source?: string;
 }
 
