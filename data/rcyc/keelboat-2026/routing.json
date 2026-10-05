@@ -10,10 +10,12 @@
     {
       "mark": "Cage",
       "position": {
-        "lat": 51.813633,
-        "lng": -8.283167
+        "lat": 51.8139,
+        "lng": -8.2828
       },
-      "toleranceM": 20
+      "toleranceM": 20,
+      "note": "The club's position, which the marks file carries; the workbook tested eOceanic's C1, 39 m away. All eleven of the overlay's lines with an end at Cage were tested again here, with the workbook's own method and grids, and pass.",
+      "source": "Retested by course-cards on 5 October 2026 with tools/check_depth.py: Pat Tanner's sampling (cork-harbour-orc scripts/geo.py) against INFOMAR GEO12_04, KRY12_05 and CB12_01"
     },
     {
       "mark": "Dosco",

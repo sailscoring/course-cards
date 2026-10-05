@@ -307,8 +307,34 @@ within 20 m, and a mark the marks file has moved further is stale: the
 library leaves every pair touching it unreviewed, and `pnpm data:check`
 reports it without failing. The workbook's positions are this data set's
 for every mark it uses except Dosco, 10.5 m off and within tolerance, and
-**Cage, 39 m off** — the workbook tested eOceanic's C1, the marks file
-carries the club's position — so Cage's legs are unreviewed here.
+**Cage, 39 m off**: the workbook tested eOceanic's C1, and the marks file
+carries the club's position. Rather than move the mark to suit the overlay,
+Cage's lines were **tested again at the club's position**, with the
+workbook's own method — `tools/check_depth.py` runs Pat's sampling code
+(`scripts/geo.py` from his repository) against the same three INFOMAR grids,
+GEO12_04, KRY12_05 and CB12_01, and first reproduced his validation case
+exactly: Dosco to RW_Fort_Davis, 641.3 m, 130 of 130 samples, minimum
+2.875 m. All eleven pass, every sample covered, so Cage is assumed at the
+club's position:
+
+| Line | Length | Samples | Minimum below chart datum |
+|---|---:|---:|---:|
+| Cage – Dosco | 1,517.9 m | 305/305 | 1.968 m |
+| Cage – No.5 | 946.1 m | 191/191 | 2.009 m |
+| Cage – No.6 | 1,520.1 m | 306/306 | 2.526 m |
+| Cage – No.7 | 1,802.7 m | 362/362 | 1.819 m |
+| Cage – No.8 | 896.2 m | 181/181 | 1.761 m |
+| Cage – No.10 | 1,797.6 m | 361/361 | 1.692 m |
+| Cage – No.11 | 3,739.9 m | 749/749 | 1.756 m |
+| Cage – No.12 | 2,278.5 m | 457/457 | 1.749 m |
+| Cage – RW_Rams_Head | 921.7 m | 186/186 | 2.526 m |
+| Cage – RW_West_of_Refinery | 2,596.2 m | 521/521 | 1.796 m |
+| Cage – White Bay | 2,151.6 m | 432/432 | 2.514 m |
+
+Cage – No.6, which the workbook passed with a 29.9 m unsurveyed run near
+its Cage, is fully covered from the club's. The grids are 1.8 GB and are
+not in this repository; `tools/check_depth.py`'s header says how to fetch
+them and rerun it.
 
 The start line has three assumed positions, after the workbook's three
 starting and finishing options: **the Grassy Walk**, at the workbook's

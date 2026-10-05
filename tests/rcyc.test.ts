@@ -248,14 +248,20 @@ describe('the Cork Harbour routing overlay', () => {
     ]);
   });
 
-  it('assumes every mark where the marks file has it, Cage apart', () => {
+  it('assumes every mark where the marks file has it, within its tolerance', () => {
     for (const a of routing.assumed) {
       const mark = byId.get(a.mark);
       if (!a.position || !mark?.position) continue;
       const metres = Math.hypot((a.position.lat - mark.position.lat) * 111320, (a.position.lng - mark.position.lng) * 111320 * Math.cos(0.904));
-      if (a.mark === 'Cage') expect(metres, a.mark).toBeGreaterThan(a.toleranceM);
-      else expect(metres, a.mark).toBeLessThanOrEqual(a.toleranceM);
+      expect(metres, a.mark).toBeLessThanOrEqual(a.toleranceM);
     }
+  });
+
+  it('assumes Cage at the club’s position, where its lines were tested again', () => {
+    expect(routing.assumed.find((a) => a.mark === 'Cage')).toMatchObject({
+      position: byId.get('Cage')!.position,
+      source: expect.stringMatching(/^Retested by course-cards on 5 October 2026/),
+    });
   });
 
   it('routes course 1 from the Grassy Walk out past Rams Head to Ringabella', () => {
@@ -268,9 +274,10 @@ describe('the Cork Harbour routing overlay', () => {
     ]);
   });
 
-  it('says nothing of a leg at Cage, which the workbook tested 39 m from the club’s position', () => {
-    expect(shape('1').filter((l) => l.includes('Cage'))).toEqual([
-      'W2>Cage unreviewed', 'Cage>No.7 unreviewed', 'No.7>Cage unreviewed', 'Cage>Dosco unreviewed',
+  it('routes W2 to Cage by Rams Head, and Cage’s other legs direct', () => {
+    expect(shape('1').filter((l) => l.includes('Cage') || l.startsWith('W2>RW'))).toEqual([
+      'W2>RW_Rams_Head passage', 'RW_Rams_Head>Cage passage',
+      'Cage>No.7 direct', 'No.7>Cage direct', 'Cage>Dosco direct',
     ]);
   });
 

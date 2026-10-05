@@ -288,9 +288,19 @@
             "toleranceM": 500,
             "note": "The workbook's No.8 start and finish: a committee-boat line in the area of No.8, routed as No.8."
           }
-        ]
+        ],
+        "positions": {
+          "Cage": {
+            "position": {
+              "lat": 51.8139,
+              "lng": -8.2828
+            },
+            "note": "The club's position, which the marks file carries; the workbook tested eOceanic's C1, 39 m away. All eleven of the overlay's lines with an end at Cage were tested again here, with the workbook's own method and grids, and pass.",
+            "source": "Retested by course-cards on 5 October 2026 with tools/check_depth.py: Pat Tanner's sampling (cork-harbour-orc scripts/geo.py) against INFOMAR GEO12_04, KRY12_05 and CB12_01"
+          }
+        }
       },
-      "why": "Pat Tanner's workbook is the Cork Harbour local knowledge #16 asked for: the card's mark pairs, each tested against INFOMAR bathymetry and either found sailable as a straight line or routed through waypoints he authored. His repository is MIT-licensed, which is taken to cover the waypoints and passages. The overlay is generated from the workbook as it stands, kept verbatim; the marks it relies on are assumed where the workbook has them, which is where this data set has them too, except Cage (39 m off: the workbook tested eOceanic's C1, the marks file carries the club's position) and Dosco (10.5 m, within tolerance). Curlane is left out: its ten pairs fail the 1.5 m test and are sailable only near high water, a condition of the courses (#18), not a passage."
+      "why": "Pat Tanner's workbook is the Cork Harbour local knowledge #16 asked for: the card's mark pairs, each tested against INFOMAR bathymetry and either found sailable as a straight line or routed through waypoints he authored. His repository is MIT-licensed, which is taken to cover the waypoints and passages. The overlay is generated from the workbook as it stands, kept verbatim; the marks it relies on are assumed where the workbook has them, which is where this data set has them too, except Dosco (10.5 m, within tolerance) and Cage, 39 m off: the workbook tested eOceanic's C1, and the marks file carries the club's position. Cage's eleven lines were tested again at the club's position, with the workbook's method, and Cage is assumed there. Curlane is left out: its ten pairs fail the 1.5 m test and are sailable only near high water, a condition of the courses (#18), not a passage."
     }
   ],
   "map": {
