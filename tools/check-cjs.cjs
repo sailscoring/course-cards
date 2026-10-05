@@ -57,6 +57,6 @@ const svg = lib.renderCourseSvg(
   [{ id: 'line', label: 'Start', position: start }, { id: 'Z', label: 'Z', position: mark }],
   [{ mark: 'line' }, { mark: 'Z', side: 'port' }],
 );
-assert.ok(svg.startsWith('<svg ') && svg.includes('190° 0.54 NM'));
+assert.ok(svg.startsWith('<svg ') && svg.includes('190°T 0.54 NM'));
 
 console.log('require() from CommonJS: ok');
