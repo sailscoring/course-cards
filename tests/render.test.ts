@@ -3,7 +3,7 @@ import { join } from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { parseCourseCardFile, parseMarksFile } from '../src/index';
+import { parseCourseCardFile, parseMarksFile, parseRoutingFile } from '../src/index';
 import { renderCardHtml, renderMarksMapSvg, type MapBackground } from '../tools/card-html';
 
 function load(rel: string): unknown {
@@ -227,5 +227,44 @@ describe('renderMarksMapSvg', () => {
     expect(svg).toMatch(/<svg width="640" height="\d+" xmlns=/);
     expect((svg.match(/<circle /g) ?? []).length).toBe(21);
     expect(svg).not.toContain('class="course"');
+  });
+});
+
+describe('renderCardHtml with a routing overlay', () => {
+  const rcyc = (rel: string): unknown =>
+    JSON.parse(readFileSync(join(__dirname, '..', 'data', 'rcyc', 'keelboat-2026', rel), 'utf-8'));
+  const card = parseCourseCardFile(rcyc('keelboat.json'));
+  const marks = parseMarksFile(rcyc('marks.json'));
+  const routing = parseRoutingFile(rcyc('routing.json'));
+  const page = renderCardHtml(card, marks, { routing });
+  const legs14 = page.slice(page.indexOf('id="legs-14"'), page.indexOf('</div>', page.indexOf('id="legs-14"')));
+  const course14 = page.slice(page.indexOf('id="course-14"'), page.indexOf('</g>', page.indexOf('id="course-14"')));
+
+  it('tables a routed leg as its passage, lettered, and says how the overlay speaks for each', () => {
+    // Course 14 opens Ringabella to Cage, which goes by W2 and Rams Head.
+    const rows = [...legs14.matchAll(/<tr[^>]*><th>(\w+)<\/th><td>([^<]+)<\/td><td>([^<]+)<\/td>.*?<td class="review">(\w+|—)<\/td><\/tr>/g)].map(
+      (m) => `${m[1]} ${m[2]}>${m[3]} ${m[4]}`,
+    );
+    expect(rows.slice(0, 4)).toEqual([
+      '1 SL>Ringabella —',
+      '2a Ringabella>W2 passage',
+      '2b W2>RW_Rams_Head passage',
+      '2c RW_Rams_Head>Cage passage',
+    ]);
+  });
+
+  it('draws the passage through its waypoint, a diamond named on hover', () => {
+    expect(course14).toMatch(/<path class="wp" d="[^"]+"[^>]*><title>RW_Rams_Head<\/title><\/path>/);
+    expect(course14).toMatch(/<text class="ln"[^>]*>2b<\/text>/);
+  });
+
+  it('says on the chart whose passages they are', () => {
+    expect(page).toContain("Legs are routed by Pat Tanner's passages (routing.json)");
+  });
+
+  it('is as it was without the overlay: no route column, no lettered legs', () => {
+    const plain = renderCardHtml(card, marks);
+    expect(plain).not.toContain('<th>Route</th>');
+    expect(plain).not.toMatch(/<th>2a<\/th>/);
   });
 });

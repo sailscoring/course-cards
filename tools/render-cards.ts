@@ -17,7 +17,7 @@
 import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative } from 'node:path';
 
-import { parseCourseCardFile, parseMarksFile } from '../src/index';
+import { parseCourseCardFile, parseMarksFile, parseRoutingFile } from '../src/index';
 import { renderCardHtml, renderMarksMapSvg, type ChartArea, type MapBackground } from './card-html';
 
 const root = join(import.meta.dirname, '..');
@@ -79,6 +79,10 @@ for (const manifest of manifests(join(root, 'data'))) {
     const sidecar = JSON.parse(readFileSync(png.replace(/\.png$/, '.json'), 'utf-8')) as Omit<MapBackground, 'png'>;
     background = { ...sidecar, png: readFileSync(png) };
   }
+  const routingArtifact = artifacts.find((a) => a.tool.endsWith('_routing'));
+  const routing = routingArtifact
+    ? parseRoutingFile(JSON.parse(readFileSync(join(base, routingArtifact.output), 'utf-8')))
+    : undefined;
   for (const artifact of artifacts) {
     if (!artifact.tool.endsWith('_card')) continue;
     const marksName = artifact.meta?.marks;
@@ -87,7 +91,7 @@ for (const manifest of manifests(join(root, 'data'))) {
     const marks = parseMarksFile(JSON.parse(readFileSync(join(base, marksName), 'utf-8')));
     emit(
       join(base, artifact.output.replace(/\.json$/, '.html')),
-      renderCardHtml(card, marks, { background, area: chartArea(artifact.chart), variationDate: variation?.date }),
+      renderCardHtml(card, marks, { background, area: chartArea(artifact.chart), variationDate: variation?.date, routing }),
     );
   }
   if (map) {

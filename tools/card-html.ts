@@ -17,8 +17,21 @@
  * library, which it consumes like any other client.
  */
 
-import { bearingDeg, distanceNm, formatPosition, printedMarks } from '../src/index';
-import type { Course, CourseCardFile, CourseMark, Finish, Mark, MarksFile, Note, Position, StartLine } from '../src/index';
+import { bearingDeg, distanceNm, formatPosition, legsFromWaypoints, printedMarks, routedLegsFromWaypoints } from '../src/index';
+import type {
+  Course,
+  CourseCardFile,
+  CourseLeg,
+  CourseMark,
+  Finish,
+  Mark,
+  MarksFile,
+  Note,
+  Position,
+  RoutingFile,
+  StartLine,
+  Waypoint,
+} from '../src/index';
 import { declinationDeg, WMM_NAME } from './wmm';
 
 export interface RenderOptions {
@@ -32,6 +45,10 @@ export interface RenderOptions {
    *  magnetic with the variation for that date at its marks. Without it
    *  they are true only. */
   variationDate?: string;
+  /** The data set's routing overlay: a leg it routes is drawn and tabled
+   *  through its passage's waypoints, and a leg it does not speak for is
+   *  marked so. */
+  routing?: RoutingFile;
 }
 
 /** The variation a page applies: worked out once, at the middle of the
@@ -160,6 +177,10 @@ const CSS = `
   .pick { color: #555; font-size: 12px; }
   body:has(.courses input:checked) .pick { display: none; }
   .leg { fill: none; stroke: #0b57d0; }
+  .leg.unreviewed { stroke-dasharray: 6 4; }
+  .wp { fill: #fff; stroke: #0b57d0; }
+  .legs .unreviewed td { color: #555; }
+  .legs .review { font-family: system-ui, sans-serif; text-align: left; }
   .ah { fill: #0b57d0; }
   .ln { fill: #0b57d0; stroke: #fff; paint-order: stroke; font-weight: 700; text-anchor: middle; }
   .rp { fill: none; stroke: #c81e1e; }
@@ -481,22 +502,56 @@ function courseLegEnds(course: Course, byId: Map<string, Mark>): LegEnd[] {
   return course.marks.map((cm) => ({ id: cm.mark, position: byId.get(cm.mark)?.position, side: cm.side, passing: cm.passing }));
 }
 
+/** One leg as the page shows it: a leg of the card between placed marks,
+ *  or, with a routing overlay, one part of it — numbered `3a`, `3b`… — when
+ *  the overlay routes the card's leg through a passage. `leg` is undefined
+ *  for a leg the card cannot place. */
+interface ShownLeg {
+  number: string;
+  from: string;
+  to: string;
+  leg?: CourseLeg;
+}
+
+function shownLegs(course: Course, byId: Map<string, Mark>, routing: RoutingFile | undefined): ShownLeg[] {
+  const ends = courseLegEnds(course, byId);
+  const point = (id: string, position: Position): Waypoint => ({ mark: id, label: id, position });
+  const turnAt = [...byId.values()].flatMap((m) => (m.position ? [point(m.id, m.position)] : []));
+  const shown: ShownLeg[] = [];
+  for (let i = 0; i < ends.length - 1; i++) {
+    const a = ends[i]!;
+    const b = ends[i + 1]!;
+    if (!a.position || !b.position) {
+      shown.push({ number: `${i + 1}`, from: a.id, to: b.id });
+      continue;
+    }
+    const pair = [point(a.id, a.position), point(b.id, b.position)];
+    const legs = routing ? routedLegsFromWaypoints(pair, routing, turnAt) : legsFromWaypoints(pair);
+    legs.forEach((leg, j) =>
+      shown.push({ number: legs.length > 1 ? `${i + 1}${String.fromCharCode(97 + j)}` : `${i + 1}`, from: leg.from.mark, to: leg.to.mark, leg }),
+    );
+  }
+  return shown;
+}
+
 /** A course drawn on the chart, hidden until picked: its placeable legs as
  *  numbered arrows, a repeated leg in its own lane beside the first, and a
  *  ring on each mark for the side it is left on. Legs from the start line
  *  or touching a mark laid per race are not drawn — the card cannot place
  *  them. */
-function courseOverlay(course: Course, byId: Map<string, Mark>, c: Chart): string {
+function courseOverlay(course: Course, byId: Map<string, Mark>, c: Chart, routing?: RoutingFile): string {
   const { u, x, y } = c;
   const f = (n: number): string => n.toFixed(1);
   const ends = courseLegEnds(course, byId);
   let g = `<g class="course" id="course-${courseKey(course)}">`;
   const traversals = new Map<string, number>();
-  for (let i = 0; i < ends.length - 1; i++) {
-    const a = ends[i]!;
-    const b = ends[i + 1]!;
-    if (!a.position || !b.position) continue;
-    const key = [a.id, b.id].sort().join('\0');
+  const turns = new Map<string, Position>();
+  for (const { number, leg } of shownLegs(course, byId, routing)) {
+    if (!leg) continue;
+    const a = leg.from;
+    const b = leg.to;
+    for (const w of [a, b]) if (w.routing) turns.set(w.mark, w.position);
+    const key = [a.mark, b.mark].sort().join('\0');
     const n = traversals.get(key) ?? 0;
     traversals.set(key, n + 1);
     const ax = x(a.position.lng);
@@ -507,14 +562,17 @@ function courseOverlay(course: Course, byId: Map<string, Mark>, c: Chart): strin
     const ux = dx / len;
     const uy = dy / len;
     // a lane to the right of travel: the first pass just off the mark-to-mark
-    // line, each repeat further out; both ends stop short of the mark's ring
+    // line, each repeat further out; an end stops short of a mark's ring, and
+    // runs right up to a routing waypoint, which has none
     const off = (3 + 7 * n) * u;
-    const trim = 12 * u;
-    const x1 = ax - uy * off + ux * trim;
-    const y1 = ay + ux * off + uy * trim;
-    const x2 = ax + dx - uy * off - ux * trim;
-    const y2 = ay + dy + ux * off - uy * trim;
-    g += `<path class="leg" d="M${f(x1)} ${f(y1)}L${f(x2)} ${f(y2)}" stroke-width="${f(2.5 * u)}"/>`;
+    const trim1 = a.routing ? 0 : 12 * u;
+    const trim2 = b.routing ? 0 : 12 * u;
+    const x1 = ax - uy * off + ux * trim1;
+    const y1 = ay + ux * off + uy * trim1;
+    const x2 = ax + dx - uy * off - ux * trim2;
+    const y2 = ay + dy + ux * off - uy * trim2;
+    const cls = leg.review === 'unreviewed' ? 'leg unreviewed' : 'leg';
+    g += `<path class="${cls}" d="M${f(x1)} ${f(y1)}L${f(x2)} ${f(y2)}" stroke-width="${f(2.5 * u)}"/>`;
     const mxp = (x1 + x2) / 2;
     const myp = (y1 + y2) / 2;
     const deg = (Math.atan2(dy, dx) * 180) / Math.PI;
@@ -522,7 +580,12 @@ function courseOverlay(course: Course, byId: Map<string, Mark>, c: Chart): strin
     // the leg number beyond the lane, staggered along a repeated leg
     const nx = mxp - uy * 8 * u + ux * 14 * u * n;
     const ny = myp + ux * 8 * u + uy * 14 * u * n;
-    g += `<text class="ln" x="${f(nx)}" y="${f(ny + 4 * u)}" font-size="${f(11 * u)}" stroke-width="${f(3 * u)}">${i + 1}</text>`;
+    g += `<text class="ln" x="${f(nx)}" y="${f(ny + 4 * u)}" font-size="${f(11 * u)}" stroke-width="${f(3 * u)}">${number}</text>`;
+  }
+  for (const [id, p] of turns) {
+    const cx = x(p.lng);
+    const cy = y(p.lat);
+    g += `<path class="wp" d="M${f(cx)} ${f(cy - 5 * u)}L${f(cx + 5 * u)} ${f(cy)}L${f(cx)} ${f(cy + 5 * u)}L${f(cx - 5 * u)} ${f(cy)}z" stroke-width="${f(1.5 * u)}"><title>${esc(id)}</title></path>`;
   }
   for (const e of ends) {
     if (!e.position) continue;
@@ -536,34 +599,38 @@ function courseOverlay(course: Course, byId: Map<string, Mark>, c: Chart): strin
 /** The legs of a course as a table, hidden until the course is picked:
  *  number, ends, bearing and distance — blank for a leg the card
  *  cannot place — and the total of the placed legs. */
-function legTable(course: Course, byId: Map<string, Mark>, v: Variation | undefined): string {
-  const ends = courseLegEnds(course, byId);
+function legTable(course: Course, byId: Map<string, Mark>, v: Variation | undefined, routing?: RoutingFile): string {
   let total = 0;
   let unplaced = false;
+  let unreviewed = false;
   let rows = '';
-  for (let i = 0; i < ends.length - 1; i++) {
-    const a = ends[i]!;
-    const b = ends[i + 1]!;
-    if (a.position && b.position) {
-      const d = distanceNm(a.position, b.position);
-      total += d;
+  const review = (leg?: CourseLeg): string => (routing ? `<td class="review">${leg?.review ?? '—'}</td>` : '');
+  for (const { number, from, to, leg } of shownLegs(course, byId, routing)) {
+    if (leg) {
+      total += leg.distanceNm;
+      unreviewed ||= leg.review === 'unreviewed';
       rows +=
-        `<tr><th>${i + 1}</th><td>${esc(a.id)}</td><td>${esc(b.id)}</td>` +
-        `<td>${bearingCell(bearingDeg(a.position, b.position), v)}</td><td>${d.toFixed(2)}</td></tr>`;
+        `<tr${leg.review === 'unreviewed' ? ' class="unreviewed"' : ''}><th>${number}</th><td>${esc(from)}</td><td>${esc(to)}</td>` +
+        `<td>${bearingCell(leg.bearingDeg, v)}</td><td>${leg.distanceNm.toFixed(2)}</td>${review(leg)}</tr>`;
     } else {
       unplaced = true;
-      rows += `<tr class="unplaced"><th>${i + 1}</th><td>${esc(a.id)}</td><td>${esc(b.id)}</td><td>—</td><td>—</td></tr>`;
+      rows += `<tr class="unplaced"><th>${number}</th><td>${esc(from)}</td><td>${esc(to)}</td><td>—</td><td>—</td>${review()}</tr>`;
     }
   }
   return (
     `<div class="legs" id="legs-${courseKey(course)}"><h3>Course ${esc(course.id)}${
       course.windDirectionDeg != null ? ` <span class="nm">wind ${bearingCell(course.windDirectionDeg, v)}°</span>` : ''
     }</h3>` +
-    `<table class="numbers"><thead><tr><th>Leg</th><th>From</th><th>To</th><th>° ${bearingRef(v)}</th><th>NM</th></tr></thead>` +
-    `<tbody>${rows}</tbody><tfoot><tr><td colspan="4">Legs between placed marks</td><td>${total.toFixed(2)}</td></tr>` +
-    (course.distanceNm != null ? `<tr><td colspan="4">Length printed on the card</td><td>${course.distanceNm.toFixed(2)}</td></tr>` : '') +
+    `<table class="numbers"><thead><tr><th>Leg</th><th>From</th><th>To</th><th>° ${bearingRef(v)}</th><th>NM</th>${routing ? '<th>Route</th>' : ''}</tr></thead>` +
+    `<tbody>${rows}</tbody><tfoot><tr><td colspan="4">Legs between placed marks</td><td>${total.toFixed(2)}</td>${routing ? '<td></td>' : ''}</tr>` +
+    (course.distanceNm != null
+      ? `<tr><td colspan="4">Length printed on the card</td><td>${course.distanceNm.toFixed(2)}</td>${routing ? '<td></td>' : ''}</tr>`
+      : '') +
     '</tfoot></table>' +
     (unplaced ? '<p>A leg to or from a mark laid per race — the start line among them — has no position on the card.</p>' : '') +
+    (unreviewed
+      ? '<p>An unreviewed leg, dashed on the chart, is one the routing overlay does not speak for: a straight line nobody has checked is sailable.</p>'
+      : '') +
     '</div>'
   );
 }
@@ -580,7 +647,7 @@ function pickRules(courses: Course[]): string {
  *  bar. Marks laid per race are not on it. With `courses`, each course's
  *  overlay is included, hidden until picked. With a `frame`, the chart is
  *  cropped to that ground instead of showing the background whole. */
-function map(marks: Mark[], background?: MapBackground, courses: Course[] = [], frame?: Frame): string {
+function map(marks: Mark[], background?: MapBackground, courses: Course[] = [], frame?: Frame, routing?: RoutingFile): string {
   const fixed = marks.filter((m): m is Mark & { position: Position } => !!m.position);
   if (fixed.length < 2) return '';
   const c = chart(fixed, background, frame);
@@ -615,7 +682,7 @@ function map(marks: Mark[], background?: MapBackground, courses: Course[] = [], 
   svg += `<text x="${width - 14 * u}" y="${18 * u}" ${font(12)} text-anchor="middle" fill="#222">N</text>`;
   svg += `<path d="M ${width - 14 * u} ${22 * u} l ${4 * u} ${12 * u} l ${-4 * u} ${-3 * u} l ${-4 * u} ${3 * u} z" fill="#222"/>`;
   const byId = new Map(marks.map((m) => [m.id, m]));
-  svg += courses.map((course) => courseOverlay(course, byId, c)).join('');
+  svg += courses.map((course) => courseOverlay(course, byId, c, routing)).join('');
   for (const m of fixed) {
     const cx = x(m.position.lng).toFixed(1);
     const cy = y(m.position.lat).toFixed(1);
@@ -687,11 +754,15 @@ export function renderCardHtml(card: CourseCardFile, marks: MarksFile, options: 
         paddingMinutes: area.paddingMinutes ?? 0.3,
       }
     : undefined;
-  const chartSvg = map(onChart, options.background, card.courses, frame);
+  const routing = options.routing;
+  const chartSvg = map(onChart, options.background, card.courses, frame, routing);
   const caption =
     (options.background ? `Chart: ${esc(options.background.attribution)}. ` : '') +
     (area ? `${esc(area.note ?? 'Only the marks this card uses are shown.')} ` : '') +
-    'Marks laid per race are not shown.';
+    'Marks laid per race are not shown.' +
+    (routing
+      ? ` Legs are routed by ${esc(routing.contributor ?? 'the routing overlay')}'s passages (routing.json), through waypoints drawn as diamonds; a dashed leg is one the overlay does not speak for.`
+      : '');
   // A card with no courses is a club whose race officer calls the course on
   // the day: it carries the start line, the finish, the notes and the marks,
   // and the page says so in place of a table it has nothing to put in.
@@ -703,7 +774,7 @@ export function renderCardHtml(card: CourseCardFile, marks: MarksFile, options: 
     : `<h2>Courses</h2><div class="courses-layout"><div>${courseTable(card)}</div>` +
       (chartSvg
         ? `<aside class="course-view"><figure class="map">${chartSvg}<figcaption>${caption}</figcaption></figure>` +
-          `<p class="pick">Select a course to draw it on the chart.</p>${card.courses.map((c) => legTable(c, byId, v)).join('')}</aside>`
+          `<p class="pick">Select a course to draw it on the chart.</p>${card.courses.map((c) => legTable(c, byId, v, routing)).join('')}</aside>`
         : '') +
       `</div>`;
   return (
