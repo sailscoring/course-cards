@@ -3,8 +3,20 @@
  * sailed: each one a distance and a true bearing.
  */
 
-import { bearingDeg, distanceNm } from './geo.js';
-import type { Course, CourseCardFile, CourseLeg, CourseMark, Mark, MarksFile, RacePositions, Waypoint } from './types.js';
+import { METRES_PER_NM, bearingDeg, distanceNm } from './geo.js';
+import type {
+  AssumedPosition,
+  Course,
+  CourseCardFile,
+  CourseLeg,
+  CourseMark,
+  Mark,
+  MarksFile,
+  Position,
+  RacePositions,
+  RoutingFile,
+  Waypoint,
+} from './types.js';
 
 export class CourseError extends Error {}
 
@@ -139,6 +151,99 @@ function place(resolved: ResolvedCourseMark[], race: RacePositions, what: string
   });
 }
 
+/** The marks file's mark, or the card's start line or finish, where it was
+ *  for the race — or nothing, where it is unknown or has no position. What
+ *  a passage that turns at a mark needs. */
+function markWaypoint(card: CourseCardFile, marks: MarksFile, race: RacePositions, id: string): Waypoint | undefined {
+  try {
+    return place(resolve(card, marks, [{ mark: id }], 'routing'), race, 'routing')[0];
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * A course's legs as a routing overlay sails them. For each leg of the
+ * course, each end is matched to the nearest position the overlay assumed
+ * for that mark, within its tolerance; then the pair, in either direction,
+ * is a passage — sailed through its waypoints, reversed if listed the other
+ * way — or direct, or not listed. An end with no assumed position in
+ * tolerance, a pair not listed, or a passage turning at a mark that has
+ * moved from where it was assumed, leaves the leg a straight line,
+ * `unreviewed`.
+ */
+function routedLegs(points: Waypoint[], routing: RoutingFile, markAt: (id: string) => Waypoint | undefined): CourseLeg[] {
+  const byId = new Map(routing.assumed.map((a) => [a.id, a]));
+  const assumedAt = (a: AssumedPosition): Position => a.position ?? byId.get(a.as!)!.position!;
+  const waypoints = new Map(routing.waypoints.map((w) => [w.id, w]));
+  const pairs = new Map<string, { kind: 'direct' | 'passage'; via: string[] }>();
+  for (const d of routing.direct) {
+    pairs.set(`${d.from}\u0000${d.to}`, { kind: 'direct', via: [] });
+    pairs.set(`${d.to}\u0000${d.from}`, { kind: 'direct', via: [] });
+  }
+  for (const p of routing.passages) {
+    pairs.set(`${p.from}\u0000${p.to}`, { kind: 'passage', via: p.via });
+    pairs.set(`${p.to}\u0000${p.from}`, { kind: 'passage', via: [...p.via].reverse() });
+  }
+
+  /** The nearest assumed position for a mark, within its tolerance: the id
+   *  its pairs are listed under, and how far the mark was from it. */
+  const match = (w: Waypoint): { key: string; offsetM: number } | undefined => {
+    let best: { key: string; offsetM: number } | undefined;
+    for (const a of routing.assumed) {
+      if (a.mark !== w.mark) continue;
+      const offsetM = distanceNm(w.position, assumedAt(a)) * METRES_PER_NM;
+      if (offsetM <= a.toleranceM && (!best || offsetM < best.offsetM)) best = { key: a.as ?? a.id, offsetM };
+    }
+    return best;
+  };
+
+  /** A point a passage turns at: a routing waypoint, or a mark where it was
+   *  for the race — which must be within tolerance of where it was
+   *  assumed, or the passage no longer holds. */
+  const turn = (id: string): { point: Waypoint; offsetM: number } | undefined => {
+    const w = waypoints.get(id);
+    if (w) {
+      const point: Waypoint = { mark: w.id, label: w.name ?? w.id, position: w.position, routing: true };
+      if (routing.source) point.source = routing.source;
+      return { point, offsetM: 0 };
+    }
+    const a = byId.get(id)!;
+    const point = markAt(a.mark);
+    if (!point) return undefined;
+    const offsetM = distanceNm(point.position, assumedAt(a)) * METRES_PER_NM;
+    return offsetM <= a.toleranceM ? { point, offsetM } : undefined;
+  };
+
+  const legs: CourseLeg[] = [];
+  const push = (from: Waypoint, to: Waypoint, review: CourseLeg['review'], cardLeg: number, offsetM: number) => {
+    const [leg] = legsFromWaypoints([from, to]);
+    const offset = Math.round(offsetM * 10) / 10;
+    legs.push({ ...leg!, review, cardLeg, ...(offset > 0 ? { offsetM: offset } : {}) });
+  };
+  for (let i = 0; i < points.length - 1; i++) {
+    const from = points[i]!;
+    const to = points[i + 1]!;
+    const a = match(from);
+    const b = match(to);
+    const listed = a && b ? pairs.get(`${a.key}\u0000${b.key}`) : undefined;
+    const turns = listed?.via.map(turn);
+    if (!listed || !turns || turns.some((t) => !t)) {
+      push(from, to, 'unreviewed', i, 0);
+      continue;
+    }
+    if (listed.kind === 'direct') {
+      push(from, to, 'direct', i, Math.max(a!.offsetM, b!.offsetM));
+      continue;
+    }
+    const route = [{ point: from, offsetM: a!.offsetM }, ...(turns as { point: Waypoint; offsetM: number }[]), { point: to, offsetM: b!.offsetM }];
+    for (let j = 0; j < route.length - 1; j++) {
+      push(route[j]!.point, route[j + 1]!.point, 'passage', i, Math.max(route[j]!.offsetM, route[j + 1]!.offsetM));
+    }
+  }
+  return legs;
+}
+
 /**
  * The legs of a course: each of the course's marks in order, the first of
  * which is the card's start line. Positions come from the marks file, or
@@ -147,29 +252,43 @@ function place(resolved: ResolvedCourseMark[], race: RacePositions, what: string
  * with no position from either source is an error naming it and quoting
  * where the club says it goes, so the caller knows what to ask the race
  * officer for.
+ *
+ * Given a routing overlay, a leg it routes round an obstruction is split
+ * into the legs actually sailed, through the passage's waypoints, and every
+ * leg says how the overlay speaks for it — `direct`, `passage` or
+ * `unreviewed` — which leg of the card it sails, and how far its ends were
+ * from where the overlay assumed them. Without one, the legs are straight
+ * lines with none of that: no overlay makes no claim.
  */
 export function courseLegs(
   card: CourseCardFile,
   marks: MarksFile,
   courseId: string,
   race: RacePositions,
+  routing?: RoutingFile,
 ): CourseLeg[] {
-  return legsFromWaypoints(place(courseMarks(card, marks, courseId), race, `course ${courseId}`));
+  const points = place(courseMarks(card, marks, courseId), race, `course ${courseId}`);
+  if (!routing) return legsFromWaypoints(points);
+  return routedLegs(points, routing, (id) => markWaypoint(card, marks, race, id));
 }
 
 /**
  * The legs of a course called on the day: `calledCourseMarks` placed and
  * walked exactly as `courseLegs` places and walks a numbered course, from
- * the card's start line to wherever the sequence ends. What a scorer needs
- * for a race whose course was never on a card.
+ * the card's start line to wherever the sequence ends, and routed the same
+ * way given an overlay. What a scorer needs for a race whose course was
+ * never on a card.
  */
 export function calledCourseLegs(
   card: CourseCardFile,
   marks: MarksFile,
   sequence: CourseMark[],
   race: RacePositions,
+  routing?: RoutingFile,
 ): CourseLeg[] {
-  return legsFromWaypoints(place(calledCourseMarks(card, marks, sequence), race, 'called course'));
+  const points = place(calledCourseMarks(card, marks, sequence), race, 'called course');
+  if (!routing) return legsFromWaypoints(points);
+  return routedLegs(points, routing, (id) => markWaypoint(card, marks, race, id));
 }
 
 export function totalDistanceNm(legs: CourseLeg[]): number {
