@@ -9,14 +9,16 @@ and the Port of Cork's laid race marks, each set out as rounds with the
 cumulative distance at the end of each, under a heading for the wind it
 suits. The club's **General Sailing Instructions** make the card part of
 the instructions (22.1), give positions for the four Port of Cork laid
-marks (22.3) — the only positions the club publishes — and define the
-start and finish lines (26).
+marks (22.3) and define the start and finish lines (26). The club's
+**Autumn League Sailing Instructions** (September 2026) position three of
+those four marks again (36), differently; the marks file takes the Autumn
+League's, as below. Those are the only positions the club publishes.
 
 | File | Source | Made by |
 |---|---|---|
-| `marks.json` | `source/General-Sailing-Instructions-…-2026.pdf`, 22.3, for the four laid marks; `source/eoceanic-ireland.html`, eOceanic's list of Irish marks, for nineteen harbour buoys; Pat Tanner's workbook for E4 and EF4; the club, for Cage and EF2; the card, for every mark its courses name | `tools/extract_rcyc_card.py marks` |
+| `marks.json` | `source/Royal-Cork-Yacht-Club-Keelboat-Autumn-League-2026-….pdf`, 36, for three laid marks; `source/General-Sailing-Instructions-…-2026.pdf`, 22.3, for East Mark; `source/eoceanic-ireland.html`, eOceanic's list of Irish marks, for nineteen harbour buoys; Pat Tanner's workbook for E4 and EF4; the club, for Cage and EF2; the card, for every mark its courses name | `tools/extract_rcyc_card.py marks` |
 | `keelboat.json` | `source/RCYC-Course-Card-Art-2026.pdf`, pages 2–4; the instructions' 26 for the start line | `tools/extract_rcyc_card.py card`, `… notes`, `tools/extract_start_line.py` |
-| `source/*.md` | the two documents | `tools/pdf_markdown.py` |
+| `source/*.md` | the three documents | `tools/pdf_markdown.py` |
 | `keelboat.html`, `map/marks.svg` | the JSON above, `map/background.png` | `tools/render-cards.ts` |
 | `map/background.png`, `.json` | OpenStreetMap + OpenSeaMap tiles | `tools/fetch_map.py` |
 
@@ -48,15 +50,45 @@ from OpenStreetMap and numbered against the chart.
 
 ## How the JSON is produced
 
-**Marks.** 22.3 of the instructions: "Port of Cork Laid Race Marks are
-yellow cones permanently laid and may be in these approximate locations",
-then Dosco (Corkbeg), Ringabella, Harp and East Mark (Formerly Mark B) with
-positions in degrees and decimal minutes. Those four are read from the
-text layer, and they are the only marks the instructions place: the
-instructions are the marks file's `source`, and these four name no other.
-22.3's own caveat, that they "may be in these approximate locations", is
-the file's one note — a note speaks for the file's source, so for these
-four and no others.
+**Marks.** Two of the club's 2026 documents position the Port of Cork's
+permanently laid race marks. The general instructions' 22.3 (March):
+"Port of Cork Laid Race Marks are yellow cones permanently laid and may be
+in these approximate locations", then Dosco (Corkbeg), Ringabella, Harp and
+East Mark (Formerly Mark B). The Autumn League instructions' 36
+(September): the same sentence without "cones", then Harp, Ringabella and
+Dosco. They do not agree:
+
+| Mark | General SIs 22.3 | Autumn League SIs 36 | Apart |
+|---|---|---|---:|
+| Ringabella | 51º 46.24’ N 8º 17.52’ W | 51º 46.39’ N 8º 17.78’ W | 408 m |
+| Harp | 51º 47.19’ N 8º 14.21’ W | 51º 47.20’ N 8º 14.28’ W | 82 m |
+| Dosco | 51º 49.26’ N 8º 15.81’ W | 51º 49.25’ N 8º 15.83’ W | 29 m |
+| East Mark | 51º 46.31’ N 8º 14.18’ W | not listed | — |
+
+Both print to a hundredth of a minute, about 18 m, so Dosco agrees as
+closely as the two can; Ringabella and Harp do not, and a 408 m difference
+for a permanently moored mark is not rounding — one document is wrong, or
+the mark was moved and only one was updated. **The marks file takes the
+Autumn League's**, the later of two current club documents, as Pat Tanner's
+Cork Harbour workbook does. That is a rule, not a confirmation: his
+workbook records the question as open, and the club has not been asked to
+settle it. If it says 22.3 is right, the file's source goes back.
+
+So the Autumn League instructions are the marks file's `source`, and Harp,
+Ringabella and Dosco are read from 36, where each name is printed above
+its position. East Mark, which 36 does not list and the card never names
+but which 22.2 lets the race officer call, is taken from 22.3 and names it
+as its own `source`. 36's caveat, that the marks "may be in these
+approximate locations", is the file's one note; a note speaks for the
+file's source, so for the three marks 36 places. 22.3 says the same of East
+Mark, and that is told here, since a note cannot carry it.
+`tools/check_rcyc.py` compares 22.3 with the marks file, with Ringabella
+and Harp recorded as known differences: if the club corrects either
+document so that they agree, the check fails, and the record goes.
+
+For #16 this matters directly: Pat Tanner's passages to Ringabella and
+Harp were depth-tested against the Autumn League positions, which the
+marks file now carries.
 
 The card's courses name twenty-six more. Fourteen are the harbour's
 numbered channel buoys (No.3 to No.20), seven are the lettered buoys of
@@ -135,20 +167,25 @@ It is worth having, because it is the Grassy Walk line's outer distance
 mark, and placing it made a check possible that tests everything at once.
 Solve for the start line position that best fits the card's own printed
 distances — 28 courses, nothing fed in but the mark positions and the
-printed totals — and the answer lands at 51°48.623'N 8°17.702'W: 929 m from
-Cage, 684 m from the club's pier at Crosshaven, between them on the 1500 m
-line, 321 m from its midpoint. The fit recovered a point on the Grassy Walk
-line without being told the line exists. A wrong Cage would have dragged it
-off; so would a mis-numbered buoy. Median error 0.54 nm on courses of six to
-twelve miles. On the OpenStreetMap traces the fit was 133 m to the north,
-with a median error of 0.46 nm: the eOceanic positions fit the printed
-distances no better, and the printed distances, as below, are estimates.
+printed totals — and the answer lands at 51°48.675'N 8°17.767'W: 963 m from
+Cage, 754 m from the club's pier at Crosshaven, between them near the
+1500 m line, 431 m from its midpoint. The fit recovered a point near the
+Grassy Walk line without being told the line exists. A wrong Cage would
+have dragged it off; so would a mis-numbered buoy. Median error 0.54 nm on
+courses of six to twelve miles. The fit was first made on the
+OpenStreetMap traces and 22.3's laid marks, when it landed 367 m from the
+midpoint with a median error of 0.46 nm: the positions carried now fit the
+printed distances no better, and the printed distances, as below, are
+estimates. The five courses that EF2 and EF4 have since made computable
+(8, 20, 71, 76, 81) fit less well still — with them, 33 courses, the point
+is 597 m from the midpoint and course 20 is 2.0 nm short of its printed
+13.5 — and are left out so the figure stays comparable.
 
 That check also settles course 12, whose third round prints "(3nm)" after
-rounds of 7 and 9. Computed from positions it is 10.34 nm, which is what a
+rounds of 7 and 9. Computed from positions it is 10.38 nm, which is what a
 third round after 7 and 9 should be: the card has a misprint, and the JSON
 still carries 3 as printed. Courses 3 and 19 sit furthest out — printed 12.0
-against 9.12 and 10.51. Pat Tanner's workbook records the card's author on
+against 9.08 and 10.46. Pat Tanner's workbook records the card's author on
 the printed distances generally: they are estimates, carried forward
 through the card's revisions and not recalculated when a course changes.
 

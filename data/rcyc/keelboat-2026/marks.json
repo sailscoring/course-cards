@@ -1,23 +1,23 @@
 {
   "formatVersion": 2,
   "club": "RCYC",
-  "name": "Keelboat racing marks 2026: the Port of Cork laid race marks the General Sailing Instructions position, the harbour navigation buoys from eOceanic's list and local knowledge, Cage as the club gave it, and every other mark the course card names",
-  "source": "https://www.royalcork.com/wp-content/uploads/2026/03/General-Sailing-Instructions-for-Royal-Cork-Yacht-Club-Keelboat-Racing-2026.pdf",
+  "name": "Keelboat racing marks 2026: the Port of Cork laid race marks the Autumn League Sailing Instructions position, and East Mark the General Sailing Instructions do, the harbour navigation buoys from eOceanic's list and local knowledge, Cage as the club gave it, and every other mark the course card names",
+  "source": "https://www.royalcork.com/wp-content/uploads/2026/09/Royal-Cork-Yacht-Club-Keelboat-Autumn-League-2026-Sailing-Instructions-Final.pdf",
   "notes": [
     {
       "title": "Positions",
-      "text": "Port of Cork Laid Race Marks are yellow cones permanently laid and may be in these approximate locations."
+      "text": "Port of Cork Laid Race Marks are yellow permanently laid and may be in these approximate locations."
     }
   ],
   "marks": [
     {
-      "id": "Dosco",
-      "name": "Dosco (Corkbeg)",
+      "id": "Harp",
+      "name": "Harp",
       "shape": "conical",
       "color": "yellow",
       "position": {
-        "lat": 51.821,
-        "lng": -8.2635
+        "lat": 51.786667,
+        "lng": -8.238
       }
     },
     {
@@ -26,18 +26,18 @@
       "shape": "conical",
       "color": "yellow",
       "position": {
-        "lat": 51.770667,
-        "lng": -8.292
+        "lat": 51.773167,
+        "lng": -8.296333
       }
     },
     {
-      "id": "Harp",
-      "name": "Harp",
+      "id": "Dosco",
+      "name": "Dosco (Corkbeg)",
       "shape": "conical",
       "color": "yellow",
       "position": {
-        "lat": 51.7865,
-        "lng": -8.236833
+        "lat": 51.820833,
+        "lng": -8.263833
       }
     },
     {
@@ -48,7 +48,8 @@
       "position": {
         "lat": 51.771833,
         "lng": -8.236333
-      }
+      },
+      "source": "General Sailing Instructions for Royal Cork Yacht Club Keelboat Racing 2026, 22.3"
     },
     {
       "id": "No.3",

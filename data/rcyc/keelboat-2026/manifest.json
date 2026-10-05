@@ -16,17 +16,33 @@
       "url": "https://www.royalcork.com/wp-content/uploads/2026/03/General-Sailing-Instructions-for-Royal-Cork-Yacht-Club-Keelboat-Racing-2026.pdf",
       "title": "General Sailing Instructions for Royal Cork Yacht Club Keelboat Racing 2026",
       "why": "22.1 makes the card the round-the-cans course list; 22.3 gives the only positions the club publishes, for the Port of Cork's four permanently laid race marks; 26 defines the start and finish lines every course begins and ends at."
+    },
+    {
+      "output": "source/Royal-Cork-Yacht-Club-Keelboat-Autumn-League-2026-Sailing-Instructions-Final.md",
+      "source": "source/Royal-Cork-Yacht-Club-Keelboat-Autumn-League-2026-Sailing-Instructions-Final.pdf",
+      "url": "https://www.royalcork.com/wp-content/uploads/2026/09/Royal-Cork-Yacht-Club-Keelboat-Autumn-League-2026-Sailing-Instructions-Final.pdf",
+      "title": "Sailing Instructions for Royal Cork Yacht Club Autumn League 2026",
+      "why": "36 positions three of the Port of Cork's permanently laid race marks — Harp, Ringabella and Dosco — and it is the later of the club's two 2026 statements of where they are. The general instructions' 22.3 gives all three differently, Ringabella by 408 m; the marks file takes these, the later document, as Pat Tanner's Cork Harbour workbook does, and the club has not said which is right. 43 names Cage (C1) as the Grassy Walk line's distance mark."
     }
   ],
   "artifacts": [
     {
       "output": "marks.json",
       "tool": "extract_rcyc_marks",
-      "source": "source/General-Sailing-Instructions-for-Royal-Cork-Yacht-Club-Keelboat-Racing-2026.pdf",
-      "url": "https://www.royalcork.com/wp-content/uploads/2026/03/General-Sailing-Instructions-for-Royal-Cork-Yacht-Club-Keelboat-Racing-2026.pdf",
+      "source": "source/Royal-Cork-Yacht-Club-Keelboat-Autumn-League-2026-Sailing-Instructions-Final.pdf",
+      "url": "https://www.royalcork.com/wp-content/uploads/2026/09/Royal-Cork-Yacht-Club-Keelboat-Autumn-League-2026-Sailing-Instructions-Final.pdf",
       "card": "source/RCYC-Course-Card-Art-2026.pdf",
+      "supplement": {
+        "source": "source/General-Sailing-Instructions-for-Royal-Cork-Yacht-Club-Keelboat-Racing-2026.pdf",
+        "url": "https://www.royalcork.com/wp-content/uploads/2026/03/General-Sailing-Instructions-for-Royal-Cork-Yacht-Club-Keelboat-Racing-2026.pdf",
+        "ids": [
+          "East Mark"
+        ],
+        "citation": "General Sailing Instructions for Royal Cork Yacht Club Keelboat Racing 2026, 22.3",
+        "why": "The Autumn League instructions' 36 lists three of the four Port of Cork laid race marks; East Mark (formerly Mark B), which the card never names but 22.2 lets the race officer call, is positioned only by the general instructions, and is taken from them."
+      },
       "addMarks": {
-        "why": "The instructions position four marks; the card names twenty-six more. The numbered channel buoys and the E, W, EF2 and C1 buoys are Port of Cork navigation marks: charted, but given a position in no official document, no Cork Week instruction of any year, and no Port of Cork publication found — the port's Information Manual and passage plans name them and place none, and the NGA List of Lights (Pub. 114) carries Cork Harbour's shore, range and pier lights but not one channel buoy. Nineteen of them are positioned from eOceanic's list of Irish marks, which names each by its number — see `buoys`; their entries here carry only an id and a name. E4, a north cardinal, is positioned from Pat Tanner's Cork Harbour workbook: a geotagged photograph of the buoy, which a Navionics reading puts 6.9 m off and a B&G Vulcan reading 0.9 m off. It is preferred to eOceanic's E4, 23 m away and 24–30 m from both plotter readings. OpenStreetMap, where all twenty were first traced and numbered by eye against the chart, is now the cross-check in `checks`; its E4 is 16 m from the photograph's. Cage is placed from neither: buoy C1 is not in OpenStreetMap — the nearest node to it is 850 m away — and the club supplied its position directly, so it is carried as club correspondence; eOceanic's C1 is 39 m from it, corroboration rather than a better authority for the mark the club's own line is laid to. It is the Grassy Walk line's outer distance mark, and with it placed the line's geometry checks out: solving for the start line that best fits the card's own printed distances over 28 courses lands 321 m from the midpoint of the line between Cage and the club, which is corroboration of Cage, of the numbering and of both at once. EF2 is placed as the club gave it, 51° 50.631' N 8° 14.238' W, the same footing as Cage; eOceanic's EF2 is 49 m from it and a Navionics reading by Pat Tanner 15 m. EF4 is not a navigation buoy: Pat Tanner's workbook records it as a permanently moored race mark, unlit, at 51° 50.720' N 8° 14.740' W, citing an RCYC reference it does not name; it is placed on the workbook's word until that reference is found. It is not EF1, the lit starboard-hand channel buoy 1.6 km to the east, and eOceanic, which lists the channel's lit buoys, has nothing within 500 m of it. OpenStreetMap's three East Ferry nodes, once taken for the EF buoys, are not them: the nearest is 571 m from EF2. Dutchman and Curlane are laid marks the card places in words; White Bay the card only names.",
+        "why": "The instructions position four marks between them; the card names twenty-six more. The numbered channel buoys and the E, W, EF2 and C1 buoys are Port of Cork navigation marks: charted, but given a position in no official document, no Cork Week instruction of any year, and no Port of Cork publication found — the port's Information Manual and passage plans name them and place none, and the NGA List of Lights (Pub. 114) carries Cork Harbour's shore, range and pier lights but not one channel buoy. Nineteen of them are positioned from eOceanic's list of Irish marks, which names each by its number — see `buoys`; their entries here carry only an id and a name. E4, a north cardinal, is positioned from Pat Tanner's Cork Harbour workbook: a geotagged photograph of the buoy, which a Navionics reading puts 6.9 m off and a B&G Vulcan reading 0.9 m off. It is preferred to eOceanic's E4, 23 m away and 24–30 m from both plotter readings. OpenStreetMap, where all twenty were first traced and numbered by eye against the chart, is now the cross-check in `checks`; its E4 is 16 m from the photograph's. Cage is placed from neither: buoy C1 is not in OpenStreetMap — the nearest node to it is 850 m away — and the club supplied its position directly, so it is carried as club correspondence; eOceanic's C1 is 39 m from it, corroboration rather than a better authority for the mark the club's own line is laid to. It is the Grassy Walk line's outer distance mark, and with it placed the line's geometry checks out: solving for the start line that best fits the card's own printed distances over 28 courses lands 321 m from the midpoint of the line between Cage and the club, which is corroboration of Cage, of the numbering and of both at once. EF2 is placed as the club gave it, 51° 50.631' N 8° 14.238' W, the same footing as Cage; eOceanic's EF2 is 49 m from it and a Navionics reading by Pat Tanner 15 m. EF4 is not a navigation buoy: Pat Tanner's workbook records it as a permanently moored race mark, unlit, at 51° 50.720' N 8° 14.740' W, citing an RCYC reference it does not name; it is placed on the workbook's word until that reference is found. It is not EF1, the lit starboard-hand channel buoy 1.6 km to the east, and eOceanic, which lists the channel's lit buoys, has nothing within 500 m of it. OpenStreetMap's three East Ferry nodes, once taken for the EF buoys, are not them: the nearest is 571 m from EF2. Dutchman and Curlane are laid marks the card places in words; White Bay the card only names.",
         "marks": [
           {
             "id": "No.3",
@@ -161,12 +177,12 @@
       },
       "meta": {
         "club": "RCYC",
-        "name": "Keelboat racing marks 2026: the Port of Cork laid race marks the General Sailing Instructions position, the harbour navigation buoys from eOceanic's list and local knowledge, Cage as the club gave it, and every other mark the course card names",
-        "source": "https://www.royalcork.com/wp-content/uploads/2026/03/General-Sailing-Instructions-for-Royal-Cork-Yacht-Club-Keelboat-Racing-2026.pdf",
+        "name": "Keelboat racing marks 2026: the Port of Cork laid race marks the Autumn League Sailing Instructions position, and East Mark the General Sailing Instructions do, the harbour navigation buoys from eOceanic's list and local knowledge, Cage as the club gave it, and every other mark the course card names",
+        "source": "https://www.royalcork.com/wp-content/uploads/2026/09/Royal-Cork-Yacht-Club-Keelboat-Autumn-League-2026-Sailing-Instructions-Final.pdf",
         "notes": [
           {
             "title": "Positions",
-            "text": "Port of Cork Laid Race Marks are yellow cones permanently laid and may be in these approximate locations."
+            "text": "Port of Cork Laid Race Marks are yellow permanently laid and may be in these approximate locations."
           }
         ]
       },
@@ -348,6 +364,17 @@
           "EF2": "Cork Harbour east channel"
         },
         "why": "Cage and EF2 are placed from the club's correspondence, and eOceanic lists both — C1 by that name, EF2 as \"Cork Harbour east channel\" with EF2 in its light. The club's figure is carried, for the marks of its own racing; eOceanic's should agree with it to within a buoy's swing. eOceanic prints \"C1\" twice, the other off the Essex coast, so the row nearer the mark is the one compared."
+      },
+      {
+        "check": "general-si-positions",
+        "marks": "marks.json",
+        "pdf": "source/General-Sailing-Instructions-for-Royal-Cork-Yacht-Club-Keelboat-Racing-2026.pdf",
+        "toleranceNm": 0.02,
+        "why": "The general instructions' 22.3 is the club's other 2026 statement of where the Port of Cork laid race marks are, and still current. Both print to a hundredth of a minute, about 18 m, so the two should agree to within that and a little more; Dosco does, at 29 m. Ringabella and Harp do not, and the club has not said which is right. If it corrects either document so that they agree, this check fails and the record below is removed.",
+        "expected": {
+          "Ringabella": "22.3 prints 51º 46.24’ N 8º 17.52’ W, 408 m from 36",
+          "Harp": "22.3 prints 51º 47.19’ N 8º 14.21’ W, 82 m from 36"
+        }
       }
     ]
   }

@@ -205,6 +205,10 @@ def extract(base, artifact, meta_path):
                '--card', os.path.join(base, artifact['card'])]
         if artifact.get('addMarks'):
             cmd += ['--add', added_marks_file(base, artifact)]
+        if artifact.get('supplement'):
+            sup = artifact['supplement']
+            cmd += ['--supplement', os.path.join(base, sup['source']), '--supplement-ids', ','.join(sup['ids']),
+                    '--supplement-citation', sup['citation']]
         if artifact.get('buoys'):
             b = artifact['buoys']
             with tempfile.NamedTemporaryFile('w', suffix='.json', delete=False) as fh:

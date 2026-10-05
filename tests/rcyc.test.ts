@@ -41,20 +41,28 @@ function sequence(id: string): string {
 }
 
 describe('the Royal Cork 2026 marks file', () => {
-  it('positions the four Port of Cork laid race marks from the General Sailing Instructions 22.3', () => {
-    expect(byId.get('Dosco')).toMatchObject({ name: 'Dosco (Corkbeg)', shape: 'conical', color: 'yellow', position: { lat: 51.821, lng: -8.2635 } });
-    expect(byId.get('Ringabella')!.position).toEqual({ lat: 51.770667, lng: -8.292 });
-    expect(byId.get('Harp')!.position).toEqual({ lat: 51.7865, lng: -8.236833 });
-    expect(byId.get('East Mark')).toMatchObject({ name: 'East Mark (Formerly Mark B)', position: { lat: 51.771833, lng: -8.236333 } });
-    expect(marks.marks.filter((m) => m.position).slice(0, 4).map((m) => m.id)).toEqual(['Dosco', 'Ringabella', 'Harp', 'East Mark']);
+  it('positions three Port of Cork laid race marks from the Autumn League Sailing Instructions 36', () => {
+    // 36 prints "51º 47’ .20 N 008º 14’ .28 W" under "Harp Mark".
+    expect(byId.get('Harp')).toMatchObject({ name: 'Harp', shape: 'conical', color: 'yellow', position: { lat: 51.786667, lng: -8.238 } });
+    expect(byId.get('Ringabella')!.position).toEqual({ lat: 51.773167, lng: -8.296333 });
+    expect(byId.get('Dosco')).toMatchObject({ name: 'Dosco (Corkbeg)', position: { lat: 51.820833, lng: -8.263833 } });
+    expect(marks.marks.filter((m) => m.position).slice(0, 4).map((m) => m.id)).toEqual(['Harp', 'Ringabella', 'Dosco', 'East Mark']);
   });
 
-  it('names the General Sailing Instructions as its source, and 22.3 says the four are approximate', () => {
-    expect(marks.source).toBe('https://www.royalcork.com/wp-content/uploads/2026/03/General-Sailing-Instructions-for-Royal-Cork-Yacht-Club-Keelboat-Racing-2026.pdf');
-    for (const id of ['Dosco', 'Ringabella', 'Harp', 'East Mark']) expect(byId.get(id)!.source, id).toBeUndefined();
+  it('names the Autumn League instructions as its source, and 36 says the three are approximate', () => {
+    expect(marks.source).toBe('https://www.royalcork.com/wp-content/uploads/2026/09/Royal-Cork-Yacht-Club-Keelboat-Autumn-League-2026-Sailing-Instructions-Final.pdf');
+    for (const id of ['Harp', 'Ringabella', 'Dosco']) expect(byId.get(id)!.source, id).toBeUndefined();
     expect(marks.notes).toEqual([
-      { title: 'Positions', text: 'Port of Cork Laid Race Marks are yellow cones permanently laid and may be in these approximate locations.' },
+      { title: 'Positions', text: 'Port of Cork Laid Race Marks are yellow permanently laid and may be in these approximate locations.' },
     ]);
+  });
+
+  it('takes East Mark, which 36 does not list, from the General Sailing Instructions 22.3', () => {
+    expect(byId.get('East Mark')).toMatchObject({
+      name: 'East Mark (Formerly Mark B)',
+      position: { lat: 51.771833, lng: -8.236333 },
+      source: 'General Sailing Instructions for Royal Cork Yacht Club Keelboat Racing 2026, 22.3',
+    });
   });
 
   it('positions nineteen harbour navigation buoys from eOceanic, quoting the row that numbers each', () => {
@@ -195,7 +203,7 @@ describe('the Keelboat Racing Course Card 2026', () => {
     const legs = courseLegs(card, marks, '1', { marks: { SL } });
     expect(legs.map((l) => l.to.mark)).toEqual(['Ringabella', 'W2', 'Cage', 'No.7', 'Cage', 'Dosco', 'SL']);
     // Every mark of course 1 but the line comes from the file, so these are real.
-    expect(legs[1]!.distanceNm).toBeCloseTo(1.627, 2);
+    expect(legs[1]!.distanceNm).toBeCloseTo(1.579, 2);
     expect(legs[3]!.distanceNm).toBeCloseTo(0.970, 2);
 
     const resolved = card.courses.filter((c) => {

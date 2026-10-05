@@ -17,14 +17,20 @@ the card's notes and its starting and finishing lines.
 
 The club's **General Sailing Instructions** (22.3) give positions for the
 Port of Cork's permanently laid race marks — Dosco, Ringabella, Harp, East
-Mark — and for nothing else the courses name: the numbered channel buoys,
+Mark — and its **Autumn League Sailing Instructions** (36) for three of
+them again, differently; neither positions anything else the courses name: the numbered channel buoys,
 the E, W and EF2 buoys and Cage are Port of Cork navigation marks, charted
 but positioned in no club or port document, EF4 is a race mark, and
-Dutchman, Curlane and White Bay are laid where the card says. `marks` mode reads the four
-positions from the instructions and takes the rest from `--add`, refusing
-a card that names a mark neither supplies.
+Dutchman, Curlane and White Bay are laid where the card says. `marks` mode reads the laid marks'
+positions from the instructions it is given — either layout: 22.3 prints
+"Dosco 51º 49.26’ N 8º 15.81’ W" on one line, 36 prints the name and below
+it "51º 47’ .20 N 008º 14’ .28 W" — takes any the other instructions place
+and these do not from `--supplement`, each naming it as its `source`, and
+takes the rest from `--add`, refusing a card that names a mark none of
+them supplies.
 
-    python3 tools/extract_rcyc_card.py marks <general-si.pdf> --card <card.pdf> --add marks.json \
+    python3 tools/extract_rcyc_card.py marks <si.pdf> --card <card.pdf> --add marks.json \
+        [--supplement <other-si.pdf> --supplement-ids 'East Mark' --supplement-citation TEXT] \
         [--buoys eoceanic.html --buoy-rows rows.json --buoy-citation TEXT] --meta meta.json > marks.json
 
 Most of the buoys are positioned from **eOceanic**'s list of Irish marks, a
@@ -62,6 +68,7 @@ ROUND_RE = re.compile(r'^Round\s*(One|Two|Three)\s*:?\s*(.*)$', re.S)
 DISTANCE_RE = re.compile(r'^(.*?)\s*\(?\s*(\d+(?:\.\d+)?)\s*(?:nm|NM|Nm)?\s*\)?\s*\.?\s*$', re.S)  # "(4.7nm)"; once "4.7nm)", once "(8.4nm"
 MARK_RE = re.compile(r'^(.+?)\s*\((P|S)\)$')
 WINDS = {'N': 0, 'NE': 45, 'E': 90, 'SE': 135, 'S': 180, 'SW': 225, 'W': 270, 'NW': 315}
+SPLIT_POSITION_RE = re.compile(r"^\s*(\d{2})\s*º\s*(\d{2})[’']\s*\.(\d+)\s*N\s+(\d{3})\s*º\s*(\d{2})[’']\s*\.(\d+)\s*W\s*$")
 POSITION_RE = re.compile(r"^\s*(.+?)\s+(\d{2})º\s*(\d{2}\.\d+)[’']\s*N\s+(\d)º\s*(\d{2}\.\d+)[’']?\s*W\s*$")
 
 
@@ -273,13 +280,25 @@ def cmd_notes(args):
 # --- marks: the general instructions' positions, and the rest -----------------------------------------
 
 def laid_marks(pdf):
-    """The Port of Cork laid race marks 22.3 positions, as printed: a name,
-    a position, and for two of them a parenthesis on the next line
-    ("(Corkbeg)", "(Formerly Mark B)")."""
+    """The Port of Cork laid race marks' positions, as printed. The general
+    instructions' 22.3 prints a name and a position on one line, and for two
+    of them a parenthesis on the next ("(Corkbeg)", "(Formerly Mark B)"); the
+    Autumn League's 36 prints the name ("Harp Mark", "Dosco (Corkbeg)") and,
+    on the next line, the position with the minutes split at the point."""
     text = subprocess.run(['pdftotext', '-layout', pdf, '-'], check=True, capture_output=True, text=True).stdout
     lines = text.splitlines()
     marks = []
     for i, line in enumerate(lines):
+        m = SPLIT_POSITION_RE.match(line)
+        if m:
+            name_line = next(l for l in reversed(lines[:i]) if l.strip())
+            base, _, note = ' '.join(name_line.split()).partition(' (')
+            name = normalise(base) + (f' ({note}' if note else '')
+            lat = int(m.group(1)) + float(f'{m.group(2)}.{m.group(3)}') / 60
+            lng = -(int(m.group(4)) + float(f'{m.group(5)}.{m.group(6)}') / 60)
+            marks.append({'id': normalise(base), 'name': name, 'shape': 'conical', 'color': 'yellow',
+                          'position': {'lat': round(lat, 6), 'lng': round(lng, 6)}})
+            continue
         m = POSITION_RE.match(line)
         if not m:
             continue
@@ -298,8 +317,8 @@ def laid_marks(pdf):
         lng = -(int(m.group(4)) + float(m.group(5)) / 60)
         mark = {'id': name, 'name': name + (f' {note}' if note else ''), 'shape': 'conical', 'color': 'yellow', 'position': {'lat': round(lat, 6), 'lng': round(lng, 6)}}
         marks.append(mark)
-    if len(marks) != 4:
-        sys.exit(f'{pdf}: expected the four Port of Cork laid marks, read {len(marks)}')
+    if len(marks) not in (3, 4):
+        sys.exit(f'{pdf}: expected three or four Port of Cork laid marks, read {len(marks)}')
     return marks
 
 
@@ -335,6 +354,17 @@ def buoy_positions(path, wanted, citation):
 def cmd_marks(args):
     marks = laid_marks(args.pdf)
     ids = {m['id'] for m in marks}
+    if args.supplement_ids:
+        if not args.supplement or not args.supplement_citation:
+            sys.exit('--supplement-ids needs --supplement and --supplement-citation')
+        others = {m['id']: m for m in laid_marks(args.supplement)}
+        for id_ in args.supplement_ids.split(','):
+            if id_ in ids:
+                sys.exit(f'--supplement-ids: {id_!r} is already placed by {args.pdf}')
+            if id_ not in others:
+                sys.exit(f'--supplement-ids: {args.supplement} does not place {id_!r}')
+            marks.append({**others[id_], 'source': args.supplement_citation})
+            ids.add(id_)
     added = json.load(open(args.add)) if args.add else []
     if args.buoys:
         placed = buoy_positions(args.buoys, json.load(open(args.buoy_rows)), args.buoy_citation)
@@ -383,6 +413,9 @@ def main():
     m.add_argument('pdf', help='the general sailing instructions')
     m.add_argument('--card', required=True)
     m.add_argument('--add')
+    m.add_argument('--supplement', help='other instructions, for laid marks these do not place')
+    m.add_argument('--supplement-ids', default='', help='comma-separated ids to take from them')
+    m.add_argument('--supplement-citation', help="those instructions in words, as the supplemented marks' source")
     m.add_argument('--buoys', help="eOceanic's page of marks, kept verbatim")
     m.add_argument('--buoy-rows', help='JSON: {mark id: the row naming it}')
     m.add_argument('--buoy-citation')

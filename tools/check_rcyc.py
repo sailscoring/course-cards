@@ -20,6 +20,11 @@ against:
      club's correspondence must lie within the manifest's tolerance of the
      row eOceanic lists them under — the nearer, where a name is printed
      twice.
+  4. **The general instructions' 22.3**: the marks file takes the Port of
+     Cork laid race marks from the Autumn League instructions, and 22.3 is
+     the club's other 2026 statement of where they are. Each mark both
+     place must agree within the manifest's tolerance, apart from those
+     recorded as expected — and one recorded that now agrees is reported.
 
     python3 tools/check_rcyc.py data/rcyc/keelboat-2026
 
@@ -34,7 +39,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from check_kyc import distance_nm  # noqa: E402
-from extract_rcyc_card import eoceanic_rows  # noqa: E402
+from extract_rcyc_card import eoceanic_rows, laid_marks  # noqa: E402
 
 
 def check_osm(base, item):
@@ -94,6 +99,31 @@ def check_club(base, item):
     return f'{item["marks"]} vs {item["buoys"]}: {len(item["rows"])} club positions', problems, []
 
 
+def check_general_si(base, item):
+    marks = {m['id']: m for m in json.load(open(os.path.join(base, item['marks'])))['marks']}
+    expected = item.get('expected', {})
+    problems, noted, n = [], [], 0
+    for theirs in laid_marks(os.path.join(base, item['pdf'])):
+        id_ = theirs['id']
+        ours = marks.get(id_)
+        if not ours or 'position' not in ours:
+            problems.append(f'{id_}: placed by 22.3 but not in {item["marks"]}')
+            continue
+        if ours.get('source'):
+            continue  # taken from 22.3 itself
+        n += 1
+        d = distance_nm(ours['position'], theirs['position'])
+        line = f'{id_}: 22.3 {theirs["position"]["lat"]:.6f}, {theirs["position"]["lng"]:.6f}; marks file {ours["position"]["lat"]:.6f}, {ours["position"]["lng"]:.6f} — {d * 1852:.0f} m apart'
+        if id_ in expected:
+            if d <= item['toleranceNm']:
+                problems.append(f'{id_}: recorded as a known difference, but 22.3 and the marks file now agree')
+            else:
+                noted.append(f'known: {line} ({expected[id_]})')
+        elif d > item['toleranceNm']:
+            problems.append(line)
+    return f'{item["pdf"]} 22.3 vs {item["marks"]}: {n} marks compared', problems, noted
+
+
 def main():
     base = sys.argv[1]
     manifest = json.load(open(os.path.join(base, 'manifest.json')))
@@ -107,6 +137,8 @@ def main():
             heading, problems, noted = check_colours(base, item, rows_by_id)
         elif kind == 'eoceanic-positions':
             heading, problems, noted = check_club(base, item)
+        elif kind == 'general-si-positions':
+            heading, problems, noted = check_general_si(base, item)
         else:
             sys.exit(f'unknown check {kind}')
         known = f', {len(noted)} known difference(s)' if noted else ''
