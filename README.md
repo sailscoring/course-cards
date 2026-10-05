@@ -58,7 +58,10 @@ Around that:
 
 - `courseMarks(card, marks, courseId)` — the course's marks resolved, each
   saying whether the card places it; the ones it does not are what to ask
-  the race officer for.
+  the race officer for. Each also carries its `source`: the mark's own, else
+  the card's for the start line and finish and the marks file's for the
+  rest. The legs' waypoints carry it too, except where the position was
+  given for the race — that one is the caller's.
 - `printedMarks(card, courseId)` — the course as the club sets it on the
   card: the sequence without the start line at its head, and without an
   ending the sailing instructions add at its tail. What to show a competitor

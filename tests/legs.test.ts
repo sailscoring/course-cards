@@ -199,3 +199,48 @@ describe('printedMarks', () => {
     expect(() => printedMarks(offshore2026, 'ZZ')).toThrow(CourseError);
   });
 });
+
+describe('where each mark comes from', () => {
+  const file = parseMarksFile({
+    formatVersion: 2,
+    source: 'https://example.org/si.pdf',
+    marks: [
+      { id: 'D', position: { lat: 51.821, lng: -8.2635 } },
+      { id: 'No.3', position: { lat: 51.801736, lng: -8.259799 }, source: 'Cork Harbour buoy positions' },
+      { id: 'Z', placement: 'Upwind of the line' },
+    ],
+  });
+  const card = parseCourseCardFile({
+    formatVersion: 2,
+    source: 'https://example.org/card.pdf',
+    startLine: { id: 'SL', placement: 'Off the club', source: 'SI 4.1' },
+    finish: { id: 'FL', position: { lat: 51.81, lng: -8.27 } },
+    courses: [{ id: '1', marks: [{ mark: 'SL' }, { mark: 'Z' }, { mark: 'D' }, { mark: 'No.3' }, { mark: 'FL' }] }],
+  });
+  const day = { marks: { SL: { lat: 51.8, lng: -8.28 }, Z: { lat: 51.79, lng: -8.29 } } };
+
+  it('is the mark’s own source, else the file it came from', () => {
+    expect(courseMarks(card, file, '1').map((r) => [r.mark.id, r.source])).toEqual([
+      ['SL', 'SI 4.1'],
+      ['Z', 'https://example.org/si.pdf'],
+      ['D', 'https://example.org/si.pdf'],
+      ['No.3', 'Cork Harbour buoy positions'],
+      ['FL', 'https://example.org/card.pdf'],
+    ]);
+  });
+
+  it('follows a position from the files onto its waypoint, and not one given for the race', () => {
+    const legs = courseLegs(card, file, '1', day);
+    const waypoints = [legs[0]!.from, ...legs.map((l) => l.to)];
+    expect(waypoints.map((w) => [w.mark, w.source])).toEqual([
+      ['SL', undefined],
+      ['Z', undefined],
+      ['D', 'https://example.org/si.pdf'],
+      ['No.3', 'Cork Harbour buoy positions'],
+      ['FL', 'https://example.org/card.pdf'],
+    ]);
+    // A fixed mark moved for the race is the caller's too.
+    const moved = courseLegs(card, file, '1', { marks: { ...day.marks, D: { lat: 51.82, lng: -8.26 } } });
+    expect(moved[1]!.to).not.toHaveProperty('source');
+  });
+});

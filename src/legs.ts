@@ -17,6 +17,10 @@ export interface ResolvedCourseMark {
   entry: CourseMark;
   mark: Mark;
   placed: boolean;
+  /** The authority for the mark: its own `source`, else the file it comes
+   *  from — the card for the start line and the finish, the marks file for
+   *  the rest. Absent where neither names one. */
+  source?: string;
 }
 
 /** The course a card gives that id, or an error naming it. */
@@ -41,15 +45,18 @@ export function printedMarks(card: CourseCardFile, courseId: string): CourseMark
 /** The marks of a sequence resolved against a card and its marks file: the
  *  start line and the finish ahead of the marks file, then the marks file. A
  *  mark none of them lists is an error naming it; `what` says which course
- *  the error is about. */
+ *  the error is about. Each mark's authority is its own `source`, else that
+ *  of the file it came from. */
 function resolve(card: CourseCardFile, marks: MarksFile, sequence: CourseMark[], what: string): ResolvedCourseMark[] {
-  const byId = new Map(marks.marks.map((m) => [m.id, m]));
-  if (card.startLine) byId.set(card.startLine.id, card.startLine);
-  if (card.finish) byId.set(card.finish.id, card.finish);
+  const byId = new Map(marks.marks.map((m) => [m.id, { mark: m, fileSource: marks.source }]));
+  if (card.startLine) byId.set(card.startLine.id, { mark: card.startLine, fileSource: card.source });
+  if (card.finish) byId.set(card.finish.id, { mark: card.finish, fileSource: card.source });
   return sequence.map((entry) => {
-    const mark = byId.get(entry.mark);
-    if (!mark) throw new CourseError(`${what}: unknown mark "${entry.mark}"`);
-    return { entry, mark, placed: mark.position != null };
+    const found = byId.get(entry.mark);
+    if (!found) throw new CourseError(`${what}: unknown mark "${entry.mark}"`);
+    const { mark } = found;
+    const source = mark.source ?? found.fileSource;
+    return { entry, mark, placed: mark.position != null, ...(source != null ? { source } : {}) };
   });
 }
 
@@ -112,15 +119,23 @@ export function legsFromWaypoints(waypoints: Waypoint[]): CourseLeg[] {
  *  mark laid on the day — the line itself, a windward mark, a finish; a
  *  race-day position also overrides a fixed one. A mark with no position
  *  from either source is an error naming it and quoting where the club
- *  says it goes, so the caller knows what to ask the race officer for. */
+ *  says it goes, so the caller knows what to ask the race officer for. A
+ *  waypoint carries the mark's `source` only where the position is the
+ *  files': one given for the race is the caller's. */
 function place(resolved: ResolvedCourseMark[], race: RacePositions, what: string): Waypoint[] {
-  return resolved.map(({ mark }) => {
-    const position = race.marks?.[mark.id] ?? mark.position;
+  return resolved.map(({ mark, source }) => {
+    const given = race.marks?.[mark.id];
+    const position = given ?? mark.position;
     if (!position) {
       const where = mark.placement ? ` (${mark.placement})` : '';
       throw new CourseError(`${what}: no position for mark "${mark.id}"${where}`);
     }
-    return { mark: mark.id, label: mark.name ? `${mark.name} (${mark.id})` : mark.id, position };
+    return {
+      mark: mark.id,
+      label: mark.name ? `${mark.name} (${mark.id})` : mark.id,
+      position,
+      ...(!given && source != null ? { source } : {}),
+    };
   });
 }
 

@@ -157,6 +157,11 @@ export interface Waypoint {
   mark: string;
   label: string;
   position: Position;
+  /** The authority for `position`: the mark's own `source`, else its file's
+   *  — the card's for the start line and the finish, the marks file's for
+   *  the rest. Absent where the position was given for the race, which makes
+   *  it the caller's, and where no file names a source. */
+  source?: string;
 }
 
 /** One leg of a course: the great-circle distance and initial true bearing
