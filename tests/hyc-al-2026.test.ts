@@ -35,6 +35,7 @@ describe('the HYC Autumn League 2026 marks file', () => {
       shape: 'iala',
       color: 'green',
       position: { lat: 53.395451, lng: -6.059883 },
+      source: 'OpenStreetMap node 1592333181 (CIL00910)',
     });
     expect(marks.marks.filter((m) => m.id === 'HM')).toHaveLength(1);
   });

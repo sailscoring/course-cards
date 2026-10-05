@@ -94,7 +94,8 @@ Rowan Rocks is the sheet's Q, and the Howth Mark it does not letter. It is
 here as **HM**, declared in the manifest with the instruction that names it,
 at the position OpenStreetMap holds for the Commissioners of Irish Lights
 buoy of that name — node 1592333181, `seamark:reference` CIL00910,
-© OpenStreetMap contributors, the same source as the chart imagery. Nothing
+© OpenStreetMap contributors, the same source as the chart imagery; HM
+names the node as its `source`. Nothing
 else is added: `extract_marks.py` refuses a declared mark whose id is on the
 sheet, so the sheet stays the source for its own.
 

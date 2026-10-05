@@ -75,7 +75,8 @@ source as the chart imagery and as the Howth Mark in `../../hyc/al-2026`:
 the island's centre (a rounding mark the size of an island has no better
 single point, and a course drawn to it is a few hundred metres off the
 water actually sailed), the CIL buoy (node 1593411492, CIL00240) and the
-fort's lighthouse (node 322520677). The manifest says so beside each. A
+fort's lighthouse (node 322520677). The manifest says so beside each, and
+each mark names its OpenStreetMap object as its `source`. A
 finishing line off Charles Fort is where the committee boat lays it, so a
 caller may override CF as it may any mark.
 

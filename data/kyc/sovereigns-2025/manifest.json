@@ -48,7 +48,8 @@
             "position": {
               "lat": 51.675779,
               "lng": -8.449779
-            }
+            },
+            "source": "OpenStreetMap way 97382978, the island's centre"
           },
           {
             "id": "Cork Buoy",
@@ -58,7 +59,8 @@
             "position": {
               "lat": 51.71599,
               "lng": -8.26017
-            }
+            },
+            "source": "OpenStreetMap node 1593411492 (CIL00240)"
           },
           {
             "id": "CF",
@@ -68,7 +70,8 @@
             "position": {
               "lat": 51.695736,
               "lng": -8.499636
-            }
+            },
+            "source": "OpenStreetMap node 322520677, Charles Fort light (A 5712)"
           }
         ]
       },

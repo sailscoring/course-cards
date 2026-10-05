@@ -104,6 +104,10 @@ describe('the Sovereign’s Cup 2025 marks file', () => {
   it('holds the table’s eleven lettered marks and Black Tom, then the three the manifest adds', () => {
     expect(marks.marks.map((m) => m.id)).toEqual(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'M', 'Black Tom', 'Lge Sov', 'Cork Buoy', 'CF']);
     for (const m of marks.marks) expect(m.position, m.id).toBeDefined();
+    // The three added marks are OpenStreetMap's, and say so; the table's are the instructions'.
+    for (const id of ['Lge Sov', 'Cork Buoy', 'CF']) {
+      expect(marks.marks.find((m) => m.id === id)!.source, id).toMatch(/^OpenStreetMap /);
+    }
   });
 
   it('places M where amendment 1 puts it, not on K’s latitude as the instructions print it', () => {

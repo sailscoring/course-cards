@@ -17,7 +17,7 @@ them, for a race officer's called course to be resolved against.
 
 | File | Source | Made by |
 |---|---|---|
-| `marks.json` | `source/CalvesWeek_Marks_Bearings_Distances_2026_v1.pdf`; the chartlet's index for the ids; OpenStreetMap for the Fastnet Rock | `tools/extract_shsc.py marks` |
+| `marks.json` | `source/CalvesWeek_Marks_Bearings_Distances_2026_v1.pdf`; the chartlet's index for the ids; OpenStreetMap for the Fastnet Rock, which names it as its `source` | `tools/extract_shsc.py marks` |
 | `course-card.json` | the sheet's caveats; the sailing instructions' 9–11 as notes, 12.1 as the start line and 13.1 as the finish, from the transcript below | `tools/extract_shsc.py card`, `… notes`, `tools/extract_start_line.py`, `tools/extract_finish.py` |
 | `source/Calves_Week_Sailing_Instructions_2026.md` | the instructions, a scan — transcribed by hand | a person |
 | `source/Calves_Week_Chartlet_2026.md`, `…_Buoy_Photos_2026.md` | the two documents | `tools/pdf_markdown.py` |

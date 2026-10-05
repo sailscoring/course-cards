@@ -40,7 +40,13 @@ describe('the Calves Week 2026 marks file', () => {
       expect(m.position.lng, m.id).toBeGreaterThan(-9.7);
       expect(m.position.lng, m.id).toBeLessThan(-9.47);
     }
-    expect(byId.get('Fastnet')).toEqual({ id: 'Fastnet', name: 'Fastnet Rock', shape: 'rock', position: { lat: 51.389282, lng: -9.602686 } });
+    expect(byId.get('Fastnet')).toEqual({
+      id: 'Fastnet',
+      name: 'Fastnet Rock',
+      shape: 'rock',
+      position: { lat: 51.389282, lng: -9.602686 },
+      source: "OpenStreetMap way 348787096, the islet's centre",
+    });
   });
 
   it('carries the weather mark as laid on the day, with no position', () => {
