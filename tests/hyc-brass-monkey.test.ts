@@ -48,6 +48,10 @@ describe('the HYC Brass Monkey 2025 marks file', () => {
     expect(marks.marks.find((m) => m.id === 'C')!.position).toEqual({ lat: 53.408333, lng: -6.090667 });
     // Portmarnock from the Autumn League sheet, not the SI's table (53 25.2 N, 06 04.00 W) — see the README
     expect(marks.marks.find((m) => m.id === 'P')!.position).toEqual({ lat: 53.427167, lng: -6.096667 });
+    // …and it is the one mark that names a source of its own
+    expect(marks.marks.filter((m) => m.source).map((m) => [m.id, m.source])).toEqual([
+      ['P', 'HYC Autumn League 2025 course card technical sheet'],
+    ]);
   });
 });
 

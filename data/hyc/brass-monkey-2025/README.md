@@ -39,7 +39,8 @@ not which is which. These are the same club's marks as the Autumn League
 2025 technical sheet lists (`../al-2025/marks.json`, same names; seven of
 the eight positions agree within 0.12′), so the manifest's `details` has
 the extractor take each mark's **shape and colour from that sheet** — and
-its **position for Portmarnock**, whose table entry is wrong (below). The
+its **position for Portmarnock**, whose table entry is wrong (below), and
+which therefore names the sheet as its `source`. The
 sheet has Dunbo yellow and Viceroy orange conical, a little more varied
 than 10.2's summary. The finish `F` ends every course but is
 on no table: the extractor requires exactly one such mark, last on every

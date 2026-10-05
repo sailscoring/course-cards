@@ -24,6 +24,7 @@
       "details": {
         "source": "../al-2025/marks.json",
         "url": "https://hyc.ie/system/resources/2331/original/AL_Course_Card_Technical_Sheet.pdf",
+        "citation": "HYC Autumn League 2025 course card technical sheet",
         "fields": [
           "shape",
           "color"

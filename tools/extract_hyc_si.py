@@ -15,8 +15,11 @@ The SI's table gives names and positions only. Details the club publishes
 for the same marks elsewhere — the Autumn League technical sheet's shape
 and colour, and its position for a mark whose table entry is doubtful —
 can be taken from that marks file with `--details ../al-2025/marks.json
---details-fields shape,color --details-positions P`; the marks must match
-by id and name.
+--details-fields shape,color --details-positions P --details-citation
+<words>`; the marks must match by id and name. A mark whose position is
+taken names the citation as its `source`: the SI is no longer where its
+position comes from. Shapes and colours taken are not cited, since a
+mark's `source` speaks for its position only.
 
 The SI is a real-text PDF; the tables are read from `pdftotext -bbox` word
 positions, the instructions from `pdftotext -layout`. A mark the courses
@@ -207,9 +210,10 @@ def finish_mark(id_, text):
     return mark
 
 
-def with_details(marks, path, fields, positions):
-    """Copy `fields` (and, for ids in `positions`, the position) onto the
-    table's marks from another marks file of the same club's marks."""
+def with_details(marks, path, fields, positions, citation):
+    """Copy `fields` (and, for ids in `positions`, the position, citing
+    `citation`) onto the table's marks from another marks file of the same
+    club's marks."""
     theirs = {m['id']: m for m in json.load(open(path))['marks']}
     out = []
     for m in marks:
@@ -221,7 +225,11 @@ def with_details(marks, path, fields, positions):
             if f not in t:
                 sys.exit(f'{path}: mark {m["id"]} has no {f}')
             entry[f] = t[f]
-        entry['position'] = t['position'] if m['id'] in positions else m['position']
+        if m['id'] in positions:
+            entry['position'] = t['position']
+            entry['source'] = citation
+        else:
+            entry['position'] = m['position']
         out.append(entry)
     for id_ in positions:
         if id_ not in {m['id'] for m in marks}:
@@ -274,12 +282,16 @@ def main():
     ap.add_argument('--details', help="marks: another marks file of the club's to take details from")
     ap.add_argument('--details-fields', default='', help='marks: comma-separated fields to take from it (shape,color)')
     ap.add_argument('--details-positions', default='', help='marks: comma-separated ids whose position to take from it')
+    ap.add_argument('--details-citation', help="marks: the details' document in words, as the source of a position taken")
     args = ap.parse_args()
     meta = json.load(open(args.meta)) if args.meta else {}
     if args.what == 'marks':
         details = None
         if args.details:
-            details = (args.details, [f for f in args.details_fields.split(',') if f], [i for i in args.details_positions.split(',') if i])
+            positions = [i for i in args.details_positions.split(',') if i]
+            if positions and not args.details_citation:
+                sys.exit('--details-positions needs --details-citation')
+            details = (args.details, [f for f in args.details_fields.split(',') if f], positions, args.details_citation)
         out = {'formatVersion': FORMAT_VERSION, **meta, 'marks': marks_file(args.pdf, details)}
     elif args.what == 'card':
         courses, notes = card_file(args.pdf)

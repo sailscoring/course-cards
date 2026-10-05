@@ -180,6 +180,8 @@ def extract(base, artifact, meta_path):
             d = artifact['details']
             cmd += ['--details', os.path.join(base, d['source']), '--details-fields', ','.join(d.get('fields', [])),
                     '--details-positions', ','.join(d.get('positions', []))]
+            if d.get('citation'):
+                cmd += ['--details-citation', d['citation']]
     elif tool == 'extract_dlcc_card':
         cmd = [sys.executable, os.path.join(TOOLS, 'extract_dlcc_card.py'), 'card', source, '--meta', meta_path,
                '--templates', os.path.join(TOOLS, 'templates', artifact['templates'])]
