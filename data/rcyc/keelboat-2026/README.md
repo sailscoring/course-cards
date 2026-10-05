@@ -14,7 +14,7 @@ start and finish lines (26).
 
 | File | Source | Made by |
 |---|---|---|
-| `marks.json` | `source/General-Sailing-Instructions-…-2026.pdf`, 22.3, for the four laid marks; `source/eoceanic-ireland.html`, eOceanic's list of Irish marks, for nineteen harbour buoys; OpenStreetMap for E4; the club, for Cage; the card, for every mark its courses name | `tools/extract_rcyc_card.py marks` |
+| `marks.json` | `source/General-Sailing-Instructions-…-2026.pdf`, 22.3, for the four laid marks; `source/eoceanic-ireland.html`, eOceanic's list of Irish marks, for nineteen harbour buoys; Pat Tanner's workbook for E4; the club, for Cage; the card, for every mark its courses name | `tools/extract_rcyc_card.py marks` |
 | `keelboat.json` | `source/RCYC-Course-Card-Art-2026.pdf`, pages 2–4; the instructions' 26 for the start line | `tools/extract_rcyc_card.py card`, `… notes`, `tools/extract_start_line.py` |
 | `source/*.md` | the two documents | `tools/pdf_markdown.py` |
 | `keelboat.html`, `map/marks.svg` | the JSON above, `map/background.png` | `tools/render-cards.ts` |
@@ -96,10 +96,10 @@ maintainer. That reading is now the cross-check, and it agrees. Every
 eOceanic buoy is the nearest of eOceanic's buoys to the OpenStreetMap
 node this data set had numbered the same — the numbering, a human reading
 until now, is confirmed by a document — and sixteen of the nineteen lie
-within 60 m of their node. The other three are further apart: No.9 by
+within 60 m of their node, as does E4, below. The other three are further apart: No.9 by
 295 m, No.6 by 102 m and W1 by 73 m. Which reading is nearer the buoy is
-not known; eOceanic's is the one carried. `tools/check_rcyc.py` holds every
-buoy to its node, with those three recorded as known differences, and
+not known; eOceanic's is the one carried. `tools/check_rcyc.py` holds all
+twenty buoys to their nodes, with those three recorded as known differences, and
 checks that each row eOceanic is read from prints the buoy's number and a
 light of the colour IALA region A gives it — odd green, even red, which the
 card's own Cage settles: the instructions call C1 "Green Conical", and C1
@@ -111,10 +111,14 @@ opposite sides of a channel that bends west past Cobh, so no distance from
 any one point rises along either, and a test that claimed otherwise would
 need a channel centreline this data set has no source for.
 
-**E4 stays on its OpenStreetMap trace** for now, and names `OpenStreetMap`
-as its `source`. eOceanic lists it ("The Sound E4") 23 m away, and two
-plotter readings Pat Tanner took put it nearer the trace than eOceanic;
-which to carry is a separate decision.
+**E4, the north cardinal, is placed from Pat Tanner's workbook**, not
+from eOceanic. His position is a geotagged photograph of the buoy, and on
+29 September 2026 he confirmed it with two plotters: a Navionics reading
+6.9 m from it and a B&G Vulcan 0.9 m. eOceanic's "The Sound E4" is 23 m
+from it, and 24 and 30 m from the two readings, so of the three
+statements of where E4 is, the photograph has the best support. Its
+OpenStreetMap node, the cross-check, is 16 m off. E4's `source` names the
+workbook and the readings.
 
 **Cage is placed from the club's correspondence.** Buoy C1 is not in
 OpenStreetMap — the nearest node to it is 850 m away — so it could not be
@@ -229,13 +233,12 @@ suite to assert; `tools/` has no script for it either. Re-derive it from
   2008 (the chart on the club's website is "Revised 2008"); the 2025
   edition is also on the club's site.
 - Nineteen buoy positions are eOceanic's, whose own source is not stated;
-  E4's is traced from OpenStreetMap; Cage is the club's own figure given in
+  E4's is Pat Tanner's, from a photograph and two plotter readings; Cage is the club's own figure given in
   correspondence. None is backed by an official document, and a Port of
   Cork notice or list, or the club adding positions to its instructions,
   would replace them with a citation. OpenStreetMap's data is ODbL, which
   the MIT licence on this repository does not carry — worth settling for
-  E4 and the cross-check's traces, since these are positions taken as data,
-  not tiles shown with attribution; eOceanic states no licence for its
-  list.
+  the cross-check's traces, since these are positions taken as data, not
+  tiles shown with attribution; eOceanic states no licence for its list.
 - EF2 and EF4 are the two still open, and nothing distinguishes
   OpenStreetMap's three East Ferry nodes from one another.

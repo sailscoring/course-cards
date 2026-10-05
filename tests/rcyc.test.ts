@@ -79,8 +79,11 @@ describe('the Royal Cork 2026 marks file', () => {
     }
   });
 
-  it('keeps E4 on its OpenStreetMap trace', () => {
-    expect(byId.get('E4')).toMatchObject({ position: { lat: 51.798718, lng: -8.26246 }, source: 'OpenStreetMap' });
+  it('places E4 from Pat Tanner’s photograph and plotter readings', () => {
+    // 51°47.9305'N 8°15.7541'W.
+    expect(byId.get('E4')!.position).toEqual({ lat: 51.798842, lng: -8.262568 });
+    expect(byId.get('E4')!.source).toMatch(/^Pat Tanner, Cork Harbour workbook v3\.19 .*Navionics and B&G Vulcan/);
+    expect(marks.marks.filter((m) => m.source === 'OpenStreetMap')).toEqual([]);
   });
 
   it('places Cage from the position the club gave, not from OpenStreetMap', () => {

@@ -26,7 +26,7 @@
       "url": "https://www.royalcork.com/wp-content/uploads/2026/03/General-Sailing-Instructions-for-Royal-Cork-Yacht-Club-Keelboat-Racing-2026.pdf",
       "card": "source/RCYC-Course-Card-Art-2026.pdf",
       "addMarks": {
-        "why": "The instructions position four marks; the card names twenty-six more. The numbered channel buoys and the E, W, EF and C buoys are Port of Cork navigation marks: charted, but given a position in no official document, no Cork Week instruction of any year, and no Port of Cork publication found — the port's Information Manual and passage plans name them and place none, and the NGA List of Lights (Pub. 114) carries Cork Harbour's shore, range and pier lights but not one channel buoy. Nineteen of them are positioned from eOceanic's list of Irish marks, which names each by its number — see `buoys`; their entries here carry only an id and a name. E4 is positioned from OpenStreetMap, which holds the harbour's lateral buoys with their positions and colours but without their numbers, so it was numbered by eye against the chart; eOceanic lists it 23 m away, and two plotter readings by Pat Tanner lie 9 m and 15 m from the trace against 30 m and 24 m from eOceanic's, so the trace is kept. OpenStreetMap was where all twenty were first traced, and is now the cross-check in `checks`. Cage is placed from neither: buoy C1 is not in OpenStreetMap — the nearest node to it is 850 m away — and the club supplied its position directly, so it is carried as club correspondence; eOceanic's C1 is 39 m from it, corroboration rather than a better authority for the mark the club's own line is laid to. It is the Grassy Walk line's outer distance mark, and with it placed the line's geometry checks out: solving for the start line that best fits the card's own printed distances over 28 courses lands 321 m from the midpoint of the line between Cage and the club, which is corroboration of Cage, of the numbering and of both at once. EF2 and EF4 were not identified — OpenStreetMap's three East Ferry nodes are tagged seamark:type=yes with no colour to tell them apart — and keep their placement and no position. Dutchman and Curlane are laid marks the card places in words; White Bay the card only names.",
+        "why": "The instructions position four marks; the card names twenty-six more. The numbered channel buoys and the E, W, EF and C buoys are Port of Cork navigation marks: charted, but given a position in no official document, no Cork Week instruction of any year, and no Port of Cork publication found — the port's Information Manual and passage plans name them and place none, and the NGA List of Lights (Pub. 114) carries Cork Harbour's shore, range and pier lights but not one channel buoy. Nineteen of them are positioned from eOceanic's list of Irish marks, which names each by its number — see `buoys`; their entries here carry only an id and a name. E4, a north cardinal, is positioned from Pat Tanner's Cork Harbour workbook: a geotagged photograph of the buoy, which a Navionics reading puts 6.9 m off and a B&G Vulcan reading 0.9 m off. It is preferred to eOceanic's E4, 23 m away and 24–30 m from both plotter readings. OpenStreetMap, where all twenty were first traced and numbered by eye against the chart, is now the cross-check in `checks`; its E4 is 16 m from the photograph's. Cage is placed from neither: buoy C1 is not in OpenStreetMap — the nearest node to it is 850 m away — and the club supplied its position directly, so it is carried as club correspondence; eOceanic's C1 is 39 m from it, corroboration rather than a better authority for the mark the club's own line is laid to. It is the Grassy Walk line's outer distance mark, and with it placed the line's geometry checks out: solving for the start line that best fits the card's own printed distances over 28 courses lands 321 m from the midpoint of the line between Cage and the club, which is corroboration of Cage, of the numbering and of both at once. EF2 and EF4 were not identified — OpenStreetMap's three East Ferry nodes are tagged seamark:type=yes with no colour to tell them apart — and keep their placement and no position. Dutchman and Curlane are laid marks the card places in words; White Bay the card only names.",
         "marks": [
           {
             "id": "No.3",
@@ -96,10 +96,10 @@
             "id": "E4",
             "name": "Harbour navigation buoy E4",
             "position": {
-              "lat": 51.798718,
-              "lng": -8.26246
+              "lat": 51.798842,
+              "lng": -8.262568
             },
-            "source": "OpenStreetMap"
+            "source": "Pat Tanner, Cork Harbour workbook v3.19 (github.com/Bateleur88/cork-harbour-orc): a geotagged photograph of the buoy, confirmed within 7 m by Navionics and B&G Vulcan readings, 29 September 2026"
           },
           {
             "id": "W1",
@@ -153,7 +153,7 @@
       },
       "meta": {
         "club": "RCYC",
-        "name": "Keelboat racing marks 2026: the Port of Cork laid race marks the General Sailing Instructions position, the harbour navigation buoys from eOceanic's list and E4 from OpenStreetMap, Cage as the club gave it, and every other mark the course card names",
+        "name": "Keelboat racing marks 2026: the Port of Cork laid race marks the General Sailing Instructions position, the harbour navigation buoys from eOceanic's list and local knowledge, Cage as the club gave it, and every other mark the course card names",
         "source": "https://www.royalcork.com/wp-content/uploads/2026/03/General-Sailing-Instructions-for-Royal-Cork-Yacht-Club-Keelboat-Racing-2026.pdf",
         "notes": [
           {
@@ -235,7 +235,7 @@
         "check": "osm-positions",
         "marks": "marks.json",
         "toleranceNm": 0.035,
-        "why": "The buoys were first positioned from OpenStreetMap, independently of eOceanic, and numbered by eye against the chart. Two independent readings of one buoy field should agree to within a buoy's swing and the imagery's registration; sixteen of the nineteen are within 60 m. The three below are further apart and are recorded as such: which reading is nearer the buoy is not known, and eOceanic's is the one carried.",
+        "why": "The buoys were first positioned from OpenStreetMap, independently of eOceanic and of the photograph E4 is placed from, and numbered by eye against the chart. Two independent readings of one buoy field should agree to within a buoy's swing and the imagery's registration; seventeen of the twenty are within 60 m. The three below are further apart and are recorded as such: which reading is nearer the buoy is not known, and eOceanic's is the one carried.",
         "positions": {
           "No.3": {
             "lat": 51.801736,
@@ -300,6 +300,10 @@
           "E2": {
             "lat": 51.792806,
             "lng": -8.261462
+          },
+          "E4": {
+            "lat": 51.798718,
+            "lng": -8.26246
           },
           "W1": {
             "lat": 51.794504,
