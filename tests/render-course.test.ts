@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { destination, renderCourseBackgroundSymbol, renderCourseSvg, type CourseBackground, type DrawnMark } from '../src/index';
+import { destination, parseRoutingFile, renderCourseBackgroundSymbol, renderCourseSvg, type CourseBackground, type DrawnMark } from '../src/index';
 
 // A Saturday off Howth: the line, two windward marks laid inner and outer,
 // and the club's fixed marks W, C, H and S.
@@ -55,6 +55,33 @@ describe('renderCourseSvg', () => {
     const m = renderCourseSvg(marks, course, { magneticVariationDeg: -1.5 });
     expect(m).toMatch(/<tspan font-weight="700">1<\/tspan> 191°M 0\.54 NM/);
     expect(m).not.toMatch(/\d°T /);
+  });
+
+  it('draws a leg a routing overlay routes through its waypoints, lettered, and a leg it does not speak for dashed', () => {
+    // An overlay that sends W to C round a point to the west, finds C to H
+    // direct, and says nothing of the rest.
+    const routing = parseRoutingFile({
+      formatVersion: 2,
+      assumed: [
+        { mark: 'W', position: marks[3]!.position, toleranceM: 20 },
+        { mark: 'C', position: marks[4]!.position, toleranceM: 20 },
+        { mark: 'H', position: marks[5]!.position, toleranceM: 20 },
+      ],
+      waypoints: [{ id: 'RW_West', position: { lat: 53.425, lng: -6.11 } }],
+      passages: [{ from: 'W', to: 'C', via: ['RW_West'] }],
+      direct: [{ from: 'C', to: 'H' }],
+    });
+    const routed = renderCourseSvg(marks, course, { routing });
+    expect(routed).toMatch(/<tspan font-weight="700">3a<\/tspan> \d{3}°T/);
+    expect(routed).toMatch(/<tspan font-weight="700">3b<\/tspan> \d{3}°T/);
+    expect(routed).not.toMatch(/<tspan font-weight="700">3<\/tspan>/);
+    expect(routed).toMatch(/<path d="[^"]+z" fill="#fff" stroke="#0b57d0"[^>]*><title>RW_West<\/title>/);
+    // Seven legs drawn — 3 is two — of which 1, 2, 5 and 6 are unreviewed and dashed.
+    expect((routed.match(/<path d="M7 0L-5 5L-5 -5z"/g) ?? []).length).toBe(7);
+    expect((routed.match(/stroke="#0b57d0" stroke-width="[\d.]+" fill="none" stroke-dasharray/g) ?? []).length).toBe(4);
+    // Without an overlay nothing is dashed and nothing lettered.
+    expect(svg).not.toMatch(/stroke="#0b57d0" stroke-width="[\d.]+" fill="none" stroke-dasharray/);
+    expect(svg).not.toMatch(/RW_West|3a/);
   });
 
   it('rings each rounding for its side, dashed for a passing mark', () => {

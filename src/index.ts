@@ -32,6 +32,7 @@ export {
   courseMarks,
   legsFromWaypoints,
   printedMarks,
+  routedLegsFromWaypoints,
   totalDistanceNm,
 } from './legs.js';
 export type { ResolvedCourseMark } from './legs.js';

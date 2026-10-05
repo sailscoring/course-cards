@@ -245,6 +245,19 @@ function routedLegs(points: Waypoint[], routing: RoutingFile, markAt: (id: strin
 }
 
 /**
+ * The legs between consecutive waypoints, as a routing overlay sails them:
+ * what `courseLegs` does given an overlay, for waypoints placed by hand — a
+ * course with no card behind it, or a drawing's marks. `marks` are the marks
+ * a passage may turn at, where they are (W2, on Cork Harbour's way from
+ * Ringabella to Cage); the waypoints themselves by default. Each leg's
+ * `cardLeg` indexes the pair of `waypoints` it sails between.
+ */
+export function routedLegsFromWaypoints(waypoints: Waypoint[], routing: RoutingFile, marks: Waypoint[] = waypoints): CourseLeg[] {
+  const byMark = new Map(marks.map((m) => [m.mark, m]));
+  return routedLegs(waypoints, routing, (id) => byMark.get(id));
+}
+
+/**
  * The legs of a course: each of the course's marks in order, the first of
  * which is the card's start line. Positions come from the marks file, or
  * from `race.marks` for marks laid on the day — the line itself, a windward

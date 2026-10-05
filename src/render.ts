@@ -14,8 +14,8 @@
  * linked, so a published page still fetches nothing.
  */
 
-import { bearingDeg, distanceNm } from './geo.js';
-import type { Position, Side } from './types.js';
+import { legsFromWaypoints, routedLegsFromWaypoints } from './legs.js';
+import type { CourseLeg, Position, RoutingFile, Side, Waypoint } from './types.js';
 
 /** A mark to draw. `label` is what is printed beside it — a letter or two,
  *  as on the card. `fixed` marks are the club's charted marks; the rest
@@ -71,6 +71,11 @@ export interface RenderCourseOptions {
    *  `164°M`. Without it they are labelled true: `162°T`. Bearings are
    *  computed from positions, so they are true until a variation is given. */
   magneticVariationDeg?: number;
+  /** A routing overlay for the marks' water: each leg it routes round an
+   *  obstruction is drawn through the passage's waypoints, as legs `1a`,
+   *  `1b`… each with its own bearing and distance, the waypoints as small
+   *  diamonds; a leg it does not speak for is drawn dashed. */
+  routing?: RoutingFile;
 }
 
 // Web Mercator on the unit square.
@@ -248,17 +253,32 @@ export function renderCourseSvg(marks: DrawnMark[], course: DrawnCourseMark[] = 
   svg += `<path d="M ${f(width - 14 * u)} ${f(22 * u)} l ${f(4 * u)} ${f(12 * u)} l ${f(-4 * u)} ${f(-3 * u)} l ${f(-4 * u)} ${f(3 * u)} z" fill="#222"/>`;
 
   // Legs: numbered arrows in sailing order, a repeated leg in its own lane
-  // beside the first, each labelled with its true bearing and distance.
+  // beside the first, each labelled with its true bearing and distance. With
+  // a routing overlay, a leg it routes is drawn through the passage's
+  // waypoints, its parts lettered; one it does not speak for, dashed.
   const byId = new Map(marks.map((m) => [m.id, m]));
   const ends = course.map((entry) => ({ entry, mark: byId.get(entry.mark) }));
-  const traversals = new Map<string, number>();
-  let legs = '';
-  let labels = '';
+  const point = (m: DrawnMark): Waypoint => ({ mark: m.id, label: m.label, position: m.position });
+  const turnAt = marks.map(point);
+  const parts: Array<{ leg: CourseLeg; number: string }> = [];
   for (let i = 0; i < ends.length - 1; i++) {
     const a = ends[i]!.mark;
     const b = ends[i + 1]!.mark;
     if (!a || !b) continue;
-    const key = [a.id, b.id].sort().join('\0');
+    const routed = options.routing
+      ? routedLegsFromWaypoints([point(a), point(b)], options.routing, turnAt)
+      : legsFromWaypoints([point(a), point(b)]);
+    routed.forEach((leg, j) => parts.push({ leg, number: routed.length > 1 ? `${i + 1}${String.fromCharCode(97 + j)}` : `${i + 1}` }));
+  }
+  const traversals = new Map<string, number>();
+  let legs = '';
+  let labels = '';
+  const turns = new Map<string, Position>();
+  for (const { leg, number } of parts) {
+    const a = leg.from;
+    const b = leg.to;
+    for (const w of [a, b]) if (w.routing) turns.set(w.mark, w.position);
+    const key = [a.mark, b.mark].sort().join('\0');
     const n = traversals.get(key) ?? 0;
     traversals.set(key, n + 1);
     const ax = x(a.position.lng);
@@ -269,12 +289,15 @@ export function renderCourseSvg(marks: DrawnMark[], course: DrawnCourseMark[] = 
     const ux = dx / len;
     const uy = dy / len;
     const off = (3 + 7 * n) * u;
-    const trim = Math.min(12 * u, len / 3);
-    const x1 = ax - uy * off + ux * trim;
-    const y1 = ay + ux * off + uy * trim;
-    const x2 = ax + dx - uy * off - ux * trim;
-    const y2 = ay + dy + ux * off - uy * trim;
-    legs += `<path d="M${f(x1)} ${f(y1)}L${f(x2)} ${f(y2)}" stroke="#0b57d0" stroke-width="${f(2.5 * u)}" fill="none"/>`;
+    // Stop short of a mark's ring; run right up to a waypoint, which has none.
+    const trim1 = a.routing ? 0 : Math.min(12 * u, len / 3);
+    const trim2 = b.routing ? 0 : Math.min(12 * u, len / 3);
+    const x1 = ax - uy * off + ux * trim1;
+    const y1 = ay + ux * off + uy * trim1;
+    const x2 = ax + dx - uy * off - ux * trim2;
+    const y2 = ay + dy + ux * off - uy * trim2;
+    const dash = leg.review === 'unreviewed' ? ` stroke-dasharray="${f(6 * u)} ${f(4 * u)}"` : '';
+    legs += `<path d="M${f(x1)} ${f(y1)}L${f(x2)} ${f(y2)}" stroke="#0b57d0" stroke-width="${f(2.5 * u)}" fill="none"${dash}/>`;
     const cx = (x1 + x2) / 2;
     const cy = (y1 + y2) / 2;
     const deg = (Math.atan2(dy, dx) * 180) / Math.PI;
@@ -284,14 +307,21 @@ export function renderCourseSvg(marks: DrawnMark[], course: DrawnCourseMark[] = 
     const lx = cx - uy * 9 * u + ux * 16 * u * n;
     const ly = cy + ux * 9 * u + uy * 16 * u * n;
     const anchor = -uy > 0.2 ? 'start' : -uy < -0.2 ? 'end' : 'middle';
-    const trueBrg = bearingDeg(a.position, b.position);
+    const trueBrg = leg.bearingDeg;
     const variation = options.magneticVariationDeg;
     const shown = variation == null ? trueBrg : (((trueBrg - variation) % 360) + 360) % 360;
     const brg = `${String(Math.round(shown) % 360).padStart(3, '0')}°${variation == null ? 'T' : 'M'}`;
-    const dist = distanceNm(a.position, b.position).toFixed(2);
-    labels += `<text x="${f(lx)}" y="${f(ly + 4 * u)}" ${font(11)} text-anchor="${anchor}" fill="#0b3d91" stroke="${halo}" stroke-width="${f(3 * u)}" paint-order="stroke"><tspan font-weight="700">${i + 1}</tspan> ${brg} ${dist} NM</text>`;
+    const dist = leg.distanceNm.toFixed(2);
+    labels += `<text x="${f(lx)}" y="${f(ly + 4 * u)}" ${font(11)} text-anchor="${anchor}" fill="#0b3d91" stroke="${halo}" stroke-width="${f(3 * u)}" paint-order="stroke"><tspan font-weight="700">${number}</tspan> ${brg} ${dist} NM</text>`;
   }
   svg += legs;
+  // The waypoints a passage turns at: small diamonds, named on hover. Nobody
+  // rounds one, so they take no ring and no label.
+  for (const [id, p] of turns) {
+    const cx = x(p.lng);
+    const cy = y(p.lat);
+    svg += `<path d="M${f(cx)} ${f(cy - 5 * u)}L${f(cx + 5 * u)} ${f(cy)}L${f(cx)} ${f(cy + 5 * u)}L${f(cx - 5 * u)} ${f(cy)}z" fill="#fff" stroke="#0b57d0" stroke-width="${f(1.5 * u)}"><title>${esc(id)}</title></path>`;
+  }
 
   // Rings for the side a mark is left on, dashed for a passing mark.
   for (const { entry, mark } of ends) {

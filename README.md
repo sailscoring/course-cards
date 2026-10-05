@@ -92,7 +92,8 @@ Around that:
   where the overlay assumed them (`offsetM`). A pair the overlay does not
   list, or one whose marks have moved from where it tested them, is a
   straight line marked `unreviewed`. Without an overlay the legs carry none
-  of this: no overlay makes no claim.
+  of this: no overlay makes no claim. `routedLegsFromWaypoints` is the same
+  for waypoints placed by hand.
 - `legsFromWaypoints(waypoints)` — the leg arithmetic on its own, for a
   course built by hand from placed marks with no card behind it.
 - `parsePosition` / `formatPosition` — positions the way sailors write
@@ -108,6 +109,9 @@ Around that:
   as `background`, the course sits on the club's own water, the image
   embedded in the drawing. Leg bearings are labelled true (`162°T`), or
   magnetic (`164°M`) given `magneticVariationDeg` for the place and date.
+  Given the data set's `routing` overlay, a routed leg is drawn through its
+  waypoints as legs `3a`, `3b`…, and a leg the overlay does not speak for is
+  dashed.
 - `renderCourseBackgroundSymbol(background, id)` — that chart as a symbol,
   for a page with several drawings to carry once: each drawing given
   `backgroundSymbol: id` refers to it instead of embedding its own copy.

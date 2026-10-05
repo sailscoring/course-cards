@@ -39,6 +39,7 @@ const expected = [
   'printedMarks',
   'renderCourseBackgroundSymbol',
   'renderCourseSvg',
+  'routedLegsFromWaypoints',
   'totalDistanceNm',
 ];
 assert.deepStrictEqual(Object.keys(lib).sort(), expected.sort());
