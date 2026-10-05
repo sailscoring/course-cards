@@ -127,7 +127,11 @@ for (const manifest of manifests(join(root, 'data'))) {
     marks: {
       file: `${rel}/${marksArtifact.output}`,
       count: marks.marks.length,
-      ...(marksArtifact.url ? { source: marksArtifact.url } : {}),
+      // The marks file's own source, the authority for its positions — not
+      // necessarily the PDF the marks were read from (Clontarf's are lettered
+      // from the club's card and positioned by Dublin Port's notice). One
+      // cited in words, never published, has no URL to give.
+      ...(marks.source && /^https?:\/\//.test(marks.source) ? { source: marks.source } : {}),
     },
     cards,
     ...(m.map
@@ -378,7 +382,7 @@ const setHtml = catalogue.sets
           <div class="sub">${s.marks.count} marks ·
             <a href="${esc(s.marks.file)}">JSON</a> ·
             <a href="${esc(versionDir + '/' + s.marks.file)}">JSON v${esc(version)}</a>${
-              s.marks.source ? ` · <a href="${esc(s.marks.source)}">club's PDF</a>` : ''
+              s.marks.source ? ` · <a href="${esc(s.marks.source)}">source</a>` : ''
             }${s.map ? ` · <a href="${esc(s.map.svg)}">map</a> · <a href="${esc(s.map.background)}">chart background</a>` : ''}</div>
         </li>
       </ul>

@@ -31,6 +31,8 @@ export interface CatalogueSet {
   marks: {
     file: string;
     count: number;
+    /** The marks file's `source`, where it is a published document: the
+     *  authority for the marks' positions. */
     source?: string;
     url: string;
   };
