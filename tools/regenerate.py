@@ -188,7 +188,7 @@ def extract(base, artifact, meta_path):
     elif tool == 'extract_kyc_marks':
         cmd = [sys.executable, os.path.join(TOOLS, 'extract_kyc_marks.py'), source, '--meta', meta_path]
         for amendment in artifact.get('amendments', []):
-            cmd += ['--amend', os.path.join(base, amendment['source'])]
+            cmd += ['--amend', os.path.join(base, amendment['source']), amendment['citation']]
         if artifact.get('addMarks'):
             cmd += ['--add', added_marks_file(base, artifact)]
     elif tool == 'extract_kyc_card':

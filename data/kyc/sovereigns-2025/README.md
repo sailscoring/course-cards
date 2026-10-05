@@ -61,8 +61,9 @@ matches to "Bulman", gets a name. FB 4 says the club's laid marks are
 Amendment 1 corrects M: the instructions print it at 51.39.48 N, which is
 K's latitude, and the amendment puts it at 51.40.10 N 008.31.25 W, where
 the club's 2022 card also has it. The tool reads the amendment's
-"… is changed as follows: M 51.40.10 N 008.31.25 W" and applies it; an
-amendment naming a mark the table lacks is refused.
+"… is changed as follows: M 51.40.10 N 008.31.25 W" and applies it, and M
+names the amendment as its `source`; an amendment naming a mark the table
+lacks is refused.
 
 Three marks the courses name are not in the table and are added from the
 manifest: **Lge Sov** (the Great Sovereign island, which the supplementary

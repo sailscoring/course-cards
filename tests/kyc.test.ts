@@ -110,6 +110,9 @@ describe('the Sovereign’s Cup 2025 marks file', () => {
     const byId = new Map(marks.marks.map((m) => [m.id, m]));
     expect(byId.get('M')!.position).toEqual({ lat: 51.668333, lng: -8.520833 });
     expect(byId.get('K')!.position).toEqual({ lat: 51.658, lng: -8.526333 });
+    // The amendment, not the instructions, is where M's position comes from.
+    expect(byId.get('M')!.source).toBe("Sovereign's Cup 2025 sailing instructions, amendment 1");
+    expect(byId.get('K')!.source).toBeUndefined();
   });
 
   it('describes the marks as the table’s colour line does', () => {

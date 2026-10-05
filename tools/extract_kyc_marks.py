@@ -13,12 +13,15 @@ latitude and longitude are the two positions on that baseline. The club's
 own 2022 course card and the 2023 Sovereign's Cup card print the same table
 with an identical layout, so this reads them too.
 
-    python3 tools/extract_kyc_marks.py <si.pdf> --meta meta.json [--amend <amendment.pdf>] [--add <marks.json>] > marks.json
+    python3 tools/extract_kyc_marks.py <si.pdf> --meta meta.json [--amend <amendment.pdf> <citation>] [--add <marks.json>] > marks.json
 
 `--amend` applies a sailing instructions amendment that changes the table:
 "KINSALE YACHT CLUB - RACING MARKS -APPROXIMATE POSITIONS is changed as
 follows:" and then a line per mark in the table's own form, "M 51.40.10 N
 008.31.25 W". An amendment naming a mark the table does not list is refused.
+A mark the amendment re-places names the citation, the amendment in words,
+as its `source`: the instructions are no longer where its position comes
+from.
 
 `--add` appends marks the courses name and the table does not place — the
 Sovereign islands, the Cork Buoy, the Charles Fort line — declared in the
@@ -260,7 +263,8 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('pdf')
     ap.add_argument('--meta', help='JSON file whose keys (club, name, source, notes) head the output')
-    ap.add_argument('--amend', action='append', default=[], help='an SI amendment re-placing marks in the table')
+    ap.add_argument('--amend', action='append', nargs=2, default=[], metavar=('PDF', 'CITATION'),
+                    help='an SI amendment re-placing marks in the table, and the amendment in words')
     ap.add_argument('--add', help='JSON list of marks to append that the table does not carry')
     args = ap.parse_args()
 
@@ -271,11 +275,12 @@ def main():
     ids = [m['id'] for m in marks]
     if len(set(ids)) != len(ids):
         sys.exit('duplicate mark ids in the table: ' + ', '.join(sorted({i for i in ids if ids.count(i) > 1})))
-    for pdf in args.amend:
+    for pdf, citation in args.amend:
         for mark_id, position in amendments(pdf).items():
             if mark_id not in ids:
                 sys.exit(f'{pdf}: amends mark {mark_id!r}, which the table does not list')
             marks[ids.index(mark_id)]['position'] = position
+            marks[ids.index(mark_id)]['source'] = citation
     if args.add:
         for extra in json.load(open(args.add)):
             if extra['id'] in ids:
