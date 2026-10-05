@@ -14,7 +14,7 @@ start and finish lines (26).
 
 | File | Source | Made by |
 |---|---|---|
-| `marks.json` | `source/General-Sailing-Instructions-…-2026.pdf`, 22.3, for the four laid marks; `source/eoceanic-ireland.html`, eOceanic's list of Irish marks, for nineteen harbour buoys; Pat Tanner's workbook for E4; the club, for Cage; the card, for every mark its courses name | `tools/extract_rcyc_card.py marks` |
+| `marks.json` | `source/General-Sailing-Instructions-…-2026.pdf`, 22.3, for the four laid marks; `source/eoceanic-ireland.html`, eOceanic's list of Irish marks, for nineteen harbour buoys; Pat Tanner's workbook for E4; the club, for Cage and EF2; the card, for every mark its courses name | `tools/extract_rcyc_card.py marks` |
 | `keelboat.json` | `source/RCYC-Course-Card-Art-2026.pdf`, pages 2–4; the instructions' 26 for the start line | `tools/extract_rcyc_card.py card`, `… notes`, `tools/extract_start_line.py` |
 | `source/*.md` | the two documents | `tools/pdf_markdown.py` |
 | `keelboat.html`, `map/marks.svg` | the JSON above, `map/background.png` | `tools/render-cards.ts` |
@@ -152,22 +152,31 @@ against 9.12 and 10.51. Pat Tanner's workbook records the card's author on
 the printed distances generally: they are estimates, carried forward
 through the card's revisions and not recalculated when a course changes.
 
-Five marks are still unplaced, each with a `placement` and no position.
-**EF2 and EF4** were not identified — OpenStreetMap has three nodes in the
-East Ferry channel, but tagged `seamark:type=yes` with no colour, so
-nothing distinguishes them. The other three are laid marks:
+**EF2 is placed as the club gave it**, on the same footing as Cage:
+51° 50.631' N 8° 14.238' W, in correspondence, and its `source` says so.
+Two other readings agree: eOceanic lists it, as "Cork Harbour east channel"
+with EF2 in its light, 49 m away, and a Navionics reading by Pat Tanner is
+15 m south on the same longitude. `tools/check_rcyc.py` holds Cage and EF2
+to eOceanic's rows. This data set once explained EF2 and EF4 as
+unidentifiable because OpenStreetMap's three East Ferry nodes, tagged
+`seamark:type=yes`, had no colour to tell them apart; that took the nodes
+for the EF buoys, and they are not: the nearest is 571 m from the club's
+EF2 (#14).
+
+Four marks are still unplaced, each with a `placement` and no position.
+**EF4** was not identified. The other three are laid marks:
 Dutchman ("approx. 2 cables SE of the Dutchman Rock/Fennels Bay") and
 Curlane ("a mark laid on the Curlane Bank") in the card's own words, and
 White Bay, which course 73 names and nothing describes. The manifest lists
 all twenty-six with the reasoning beside them.
 
-The consequence has shifted but not closed: **thirty of the forty courses
-can now be computed with only the start line supplied**, which was the point
-of the exercise. Course 1, for instance, resolves Ringabella, W2, Cage, No.7
-and Dosco from this file and asks only for SL. The ten that cannot are the
-five rounding EF2 (8, 20, 76, 81) or EF4 (71), the four at Curlane (72, 75,
-83) or Dutchman (2), and course 73 at White Bay — each asks the caller for
-that mark, as every course asks for the line.
+The consequence has shifted but not closed: **thirty-four of the forty
+courses can now be computed with only the start line supplied**, which was
+the point of the exercise. Course 1, for instance, resolves Ringabella, W2,
+Cage, No.7 and Dosco from this file and asks only for SL. The six that
+cannot are course 71 at EF4, the four at Curlane (72, 75, 83) or Dutchman
+(2), and course 73 at White Bay — each asks the caller for that mark, as
+every course asks for the line.
 
 **Card.** Pages 2 and 3 of the card are two columns of courses; the tool
 reads each column of each page top to bottom from `pdftotext -bbox` word
@@ -233,12 +242,11 @@ suite to assert; `tools/` has no script for it either. Re-derive it from
   2008 (the chart on the club's website is "Revised 2008"); the 2025
   edition is also on the club's site.
 - Nineteen buoy positions are eOceanic's, whose own source is not stated;
-  E4's is Pat Tanner's, from a photograph and two plotter readings; Cage is the club's own figure given in
-  correspondence. None is backed by an official document, and a Port of
+  E4's is Pat Tanner's, from a photograph and two plotter readings; Cage and
+  EF2 are the club's own figures given in correspondence. None is backed by an official document, and a Port of
   Cork notice or list, or the club adding positions to its instructions,
   would replace them with a citation. OpenStreetMap's data is ODbL, which
   the MIT licence on this repository does not carry — worth settling for
   the cross-check's traces, since these are positions taken as data, not
   tiles shown with attribution; eOceanic states no licence for its list.
-- EF2 and EF4 are the two still open, and nothing distinguishes
-  OpenStreetMap's three East Ferry nodes from one another.
+- EF4 is the one buoy still open.

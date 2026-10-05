@@ -69,7 +69,7 @@ describe('the Royal Cork 2026 marks file', () => {
     expect(byId.get('W4')!.position).toEqual({ lat: 51.800517, lng: -8.26565 });
     // A placed mark carries no placement: that field is for marks laid per race.
     for (const id of ['No.3', 'No.20', 'E1', 'W4']) expect(byId.get(id)!.placement, id).toBeUndefined();
-    expect(marks.marks.filter((m) => m.position)).toHaveLength(25);
+    expect(marks.marks.filter((m) => m.position)).toHaveLength(26);
     const listed = marks.marks.filter((m) => m.source?.startsWith("eOceanic's list of Irish marks")).map((m) => m.id);
     expect(listed).toEqual(['No.3', 'No.5', 'No.6', 'No.7', 'No.8', 'No.9', 'No.10', 'No.11', 'No.12', 'No.13', 'No.14', 'No.16', 'No.18', 'No.20', 'E1', 'E2', 'W1', 'W2', 'W4']);
     // Each row eOceanic is read from prints the buoy's number.
@@ -97,16 +97,20 @@ describe('the Royal Cork 2026 marks file', () => {
     expect(byId.get('Cage')!.placement).toBeUndefined();
   });
 
-  it('leaves unplaced the two buoys not identified, and the marks the card only describes', () => {
-    for (const id of ['EF2', 'EF4']) {
-      expect(byId.get(id)!.position, id).toBeUndefined();
-      expect(byId.get(id)!.placement, id).toMatch(/navigation buoy/);
-    }
+  it('places EF2 from the position the club gave', () => {
+    // 51°50.631'N 8°14.238'W.
+    expect(byId.get('EF2')).toMatchObject({ position: { lat: 51.84385, lng: -8.2373 }, source: 'Royal Cork Yacht Club correspondence' });
+    expect(byId.get('EF2')!.placement).toBeUndefined();
+  });
+
+  it('leaves unplaced the buoy not identified, and the marks the card only describes', () => {
+    expect(byId.get('EF4')!.position).toBeUndefined();
+    expect(byId.get('EF4')!.placement).toMatch(/navigation buoy/);
     expect(byId.get('Dutchman')!.placement).toMatch(/approx\. 2 cables SE of the Dutchman Rock/);
     expect(byId.get('Curlane')!.placement).toBe('“Curlane” will be a mark laid on the Curlane Bank.');
     expect(byId.get('White Bay')!.position).toBeUndefined();
     // A source speaks for a position, and these have none.
-    for (const id of ['EF2', 'EF4', 'Dutchman', 'Curlane', 'White Bay']) expect(byId.get(id)!.source, id).toBeUndefined();
+    for (const id of ['EF4', 'Dutchman', 'Curlane', 'White Bay']) expect(byId.get(id)!.source, id).toBeUndefined();
     const named = new Set(card.courses.flatMap((c) => c.marks.map((m) => m.mark)));
     for (const id of named) if (id !== 'SL') expect(byId.has(id), id).toBe(true);
   });
@@ -181,7 +185,7 @@ describe('the Keelboat Racing Course Card 2026', () => {
     expect(card.notes!.map((n) => n.title).slice(1)).toEqual(['IMPORTANT NOTES', 'COMMITTEE VESSEL', 'GRASSY WALK LINE']);
   });
 
-  it('needs from the caller only the line, for thirty of the forty courses', () => {
+  it('needs from the caller only the line, for thirty-four of the forty courses', () => {
     const SL = { lat: 51.81155, lng: -8.29461 };
     const legs = courseLegs(card, marks, '1', { marks: { SL } });
     expect(legs.map((l) => l.to.mark)).toEqual(['Ringabella', 'W2', 'Cage', 'No.7', 'Cage', 'Dosco', 'SL']);
@@ -192,16 +196,15 @@ describe('the Keelboat Racing Course Card 2026', () => {
     const resolved = card.courses.filter((c) => {
       try { courseLegs(card, marks, c.id, { marks: { SL } }); return true; } catch { return false; }
     });
-    expect(resolved).toHaveLength(30);
+    expect(resolved).toHaveLength(34);
   });
 
-  it('still asks the caller for EF2, EF4 and the marks the card only describes', () => {
+  it('still asks the caller for EF4 and the marks the card only describes', () => {
     const SL = { lat: 51.81155, lng: -8.29461 };
-    expect(() => courseLegs(card, marks, '8', { marks: { SL } })).toThrow(/no position for mark "EF2" \(A Port of Cork navigation buoy/);
-    expect(() => courseLegs(card, marks, '71', { marks: { SL } })).toThrow(/no position for mark "EF4"/);
+    expect(() => courseLegs(card, marks, '71', { marks: { SL } })).toThrow(/no position for mark "EF4" \(A Port of Cork navigation buoy/);
     expect(() => courseLegs(card, marks, '2', { marks: { SL } })).toThrow(/no position for mark "Dutchman"/);
     expect(() => courseLegs(card, marks, '73', { marks: { SL } })).toThrow(/no position for mark "White Bay"/);
-    const legs = courseLegs(card, marks, '8', { marks: { SL, EF2: { lat: 51.84, lng: -8.243 } } });
-    expect(legs.map((l) => l.to.mark)).toContain('EF2');
+    const legs = courseLegs(card, marks, '71', { marks: { SL, EF4: { lat: 51.845, lng: -8.246 } } });
+    expect(legs.map((l) => l.to.mark)).toContain('EF4');
   });
 });

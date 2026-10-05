@@ -16,6 +16,10 @@ against:
      the buoy's number and give a light whose colour matches it under IALA
      region A — odd green, even red — so a row taken for the wrong buoy is
      caught.
+  3. **eOceanic, for the club's own positions**: the marks placed from the
+     club's correspondence must lie within the manifest's tolerance of the
+     row eOceanic lists them under — the nearer, where a name is printed
+     twice.
 
     python3 tools/check_rcyc.py data/rcyc/keelboat-2026
 
@@ -72,6 +76,24 @@ def check_colours(base, item, rows_by_id):
     return f'{item["buoys"]}: {len(rows_by_id)} rows against IALA region A', problems, []
 
 
+def check_club(base, item):
+    marks = {m['id']: m for m in json.load(open(os.path.join(base, item['marks'])))['marks']}
+    rows = eoceanic_rows(os.path.join(base, item['buoys']))
+    problems = []
+    for id_, name in item['rows'].items():
+        mark = marks.get(id_)
+        if not mark or 'position' not in mark:
+            problems.append(f'{id_}: not placed in {item["marks"]}')
+            continue
+        if name not in rows:
+            problems.append(f'{id_}: no row {name!r} in {item["buoys"]}')
+            continue
+        d, (lat, lng, _) = min((distance_nm(mark['position'], {'lat': r[0], 'lng': r[1]}), r) for r in rows[name])
+        if d > item['toleranceNm']:
+            problems.append(f'{id_}: {mark["position"]["lat"]:.6f}, {mark["position"]["lng"]:.6f} is {d * 1852:.0f} m from eOceanic\'s {name!r} {lat:.6f}, {lng:.6f}')
+    return f'{item["marks"]} vs {item["buoys"]}: {len(item["rows"])} club positions', problems, []
+
+
 def main():
     base = sys.argv[1]
     manifest = json.load(open(os.path.join(base, 'manifest.json')))
@@ -83,6 +105,8 @@ def main():
             heading, problems, noted = check_osm(base, item)
         elif kind == 'lateral-colours':
             heading, problems, noted = check_colours(base, item, rows_by_id)
+        elif kind == 'eoceanic-positions':
+            heading, problems, noted = check_club(base, item)
         else:
             sys.exit(f'unknown check {kind}')
         known = f', {len(noted)} known difference(s)' if noted else ''

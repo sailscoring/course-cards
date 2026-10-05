@@ -26,7 +26,7 @@
       "url": "https://www.royalcork.com/wp-content/uploads/2026/03/General-Sailing-Instructions-for-Royal-Cork-Yacht-Club-Keelboat-Racing-2026.pdf",
       "card": "source/RCYC-Course-Card-Art-2026.pdf",
       "addMarks": {
-        "why": "The instructions position four marks; the card names twenty-six more. The numbered channel buoys and the E, W, EF and C buoys are Port of Cork navigation marks: charted, but given a position in no official document, no Cork Week instruction of any year, and no Port of Cork publication found — the port's Information Manual and passage plans name them and place none, and the NGA List of Lights (Pub. 114) carries Cork Harbour's shore, range and pier lights but not one channel buoy. Nineteen of them are positioned from eOceanic's list of Irish marks, which names each by its number — see `buoys`; their entries here carry only an id and a name. E4, a north cardinal, is positioned from Pat Tanner's Cork Harbour workbook: a geotagged photograph of the buoy, which a Navionics reading puts 6.9 m off and a B&G Vulcan reading 0.9 m off. It is preferred to eOceanic's E4, 23 m away and 24–30 m from both plotter readings. OpenStreetMap, where all twenty were first traced and numbered by eye against the chart, is now the cross-check in `checks`; its E4 is 16 m from the photograph's. Cage is placed from neither: buoy C1 is not in OpenStreetMap — the nearest node to it is 850 m away — and the club supplied its position directly, so it is carried as club correspondence; eOceanic's C1 is 39 m from it, corroboration rather than a better authority for the mark the club's own line is laid to. It is the Grassy Walk line's outer distance mark, and with it placed the line's geometry checks out: solving for the start line that best fits the card's own printed distances over 28 courses lands 321 m from the midpoint of the line between Cage and the club, which is corroboration of Cage, of the numbering and of both at once. EF2 and EF4 were not identified — OpenStreetMap's three East Ferry nodes are tagged seamark:type=yes with no colour to tell them apart — and keep their placement and no position. Dutchman and Curlane are laid marks the card places in words; White Bay the card only names.",
+        "why": "The instructions position four marks; the card names twenty-six more. The numbered channel buoys and the E, W, EF and C buoys are Port of Cork navigation marks: charted, but given a position in no official document, no Cork Week instruction of any year, and no Port of Cork publication found — the port's Information Manual and passage plans name them and place none, and the NGA List of Lights (Pub. 114) carries Cork Harbour's shore, range and pier lights but not one channel buoy. Nineteen of them are positioned from eOceanic's list of Irish marks, which names each by its number — see `buoys`; their entries here carry only an id and a name. E4, a north cardinal, is positioned from Pat Tanner's Cork Harbour workbook: a geotagged photograph of the buoy, which a Navionics reading puts 6.9 m off and a B&G Vulcan reading 0.9 m off. It is preferred to eOceanic's E4, 23 m away and 24–30 m from both plotter readings. OpenStreetMap, where all twenty were first traced and numbered by eye against the chart, is now the cross-check in `checks`; its E4 is 16 m from the photograph's. Cage is placed from neither: buoy C1 is not in OpenStreetMap — the nearest node to it is 850 m away — and the club supplied its position directly, so it is carried as club correspondence; eOceanic's C1 is 39 m from it, corroboration rather than a better authority for the mark the club's own line is laid to. It is the Grassy Walk line's outer distance mark, and with it placed the line's geometry checks out: solving for the start line that best fits the card's own printed distances over 28 courses lands 321 m from the midpoint of the line between Cage and the club, which is corroboration of Cage, of the numbering and of both at once. EF2 is placed as the club gave it, 51° 50.631' N 8° 14.238' W, the same footing as Cage; eOceanic's EF2 is 49 m from it and a Navionics reading by Pat Tanner 15 m. EF4 was not identified, and keeps its placement and no position. OpenStreetMap's three East Ferry nodes, once taken for the EF buoys, are not them: the nearest is 571 m from EF2. Dutchman and Curlane are laid marks the card places in words; White Bay the card only names.",
         "marks": [
           {
             "id": "No.3",
@@ -116,7 +116,11 @@
           {
             "id": "EF2",
             "name": "Harbour navigation buoy EF2",
-            "placement": "A Port of Cork navigation buoy, charted (Admiralty 1777) and maintained by the port; the club publishes no position for it, and none was found in any port publication. Its position is a race-day fact until one is."
+            "position": {
+              "lat": 51.84385,
+              "lng": -8.2373
+            },
+            "source": "Royal Cork Yacht Club correspondence"
           },
           {
             "id": "EF4",
@@ -329,6 +333,17 @@
         "marks": "marks.json",
         "buoys": "source/eoceanic-ireland.html",
         "why": "Under IALA region A the harbour's odd-numbered buoys are starboard hand, green, and its even-numbered ones port hand, red — which the card's own Cage, C1, settles as green. Each row eOceanic is read from must name the mark's number and give a light of the matching colour, so a row taken for the wrong buoy is caught."
+      },
+      {
+        "check": "eoceanic-positions",
+        "marks": "marks.json",
+        "buoys": "source/eoceanic-ireland.html",
+        "toleranceNm": 0.035,
+        "rows": {
+          "Cage": "C1",
+          "EF2": "Cork Harbour east channel"
+        },
+        "why": "Cage and EF2 are placed from the club's correspondence, and eOceanic lists both — C1 by that name, EF2 as \"Cork Harbour east channel\" with EF2 in its light. The club's figure is carried, for the marks of its own racing; eOceanic's should agree with it to within a buoy's swing. eOceanic prints \"C1\" twice, the other off the Essex coast, so the row nearer the mark is the one compared."
       }
     ]
   }

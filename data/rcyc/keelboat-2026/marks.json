@@ -233,7 +233,11 @@
     {
       "id": "EF2",
       "name": "Harbour navigation buoy EF2",
-      "placement": "A Port of Cork navigation buoy, charted (Admiralty 1777) and maintained by the port; the club publishes no position for it, and none was found in any port publication. Its position is a race-day fact until one is."
+      "position": {
+        "lat": 51.84385,
+        "lng": -8.2373
+      },
+      "source": "Royal Cork Yacht Club correspondence"
     },
     {
       "id": "EF4",
