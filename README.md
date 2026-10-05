@@ -86,7 +86,8 @@ Around that:
   north arrow, scale bar; one inert SVG element with no script, style, id or
   external resource, so it can go inline anywhere. Given a data set's chart
   as `background`, the course sits on the club's own water, the image
-  embedded in the drawing.
+  embedded in the drawing. Leg bearings are labelled true (`162°T`), or
+  magnetic (`164°M`) given `magneticVariationDeg` for the place and date.
 - `renderCourseBackgroundSymbol(background, id)` — that chart as a symbol,
   for a page with several drawings to carry once: each drawing given
   `backgroundSymbol: id` refers to it instead of embedding its own copy.

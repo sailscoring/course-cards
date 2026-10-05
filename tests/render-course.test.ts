@@ -43,9 +43,18 @@ describe('renderCourseSvg', () => {
 
   it('numbers the legs in order with their bearing and distance', () => {
     expect((svg.match(/<path d="M7 0L-5 5L-5 -5z"/g) ?? []).length).toBe(6);
-    expect(svg).toMatch(/<tspan font-weight="700">1<\/tspan> 190° 0\.54 NM/);
-    expect(svg).toMatch(/<tspan font-weight="700">6<\/tspan> \d{3}° \d+\.\d\d NM/);
+    expect(svg).toMatch(/<tspan font-weight="700">1<\/tspan> 190°T 0\.54 NM/);
+    expect(svg).toMatch(/<tspan font-weight="700">6<\/tspan> \d{3}°T \d+\.\d\d NM/);
     expect(svg).not.toMatch(/<tspan font-weight="700">7<\/tspan>/);
+  });
+
+  it('labels the bearings in magnetic when given the variation', () => {
+    // 1.5° west: magnetic reads 1.5° more than true, and is rounded after
+    // the variation is applied — the first leg is 189.6° true, so 191°M,
+    // not 190 + 1.5 rounded.
+    const m = renderCourseSvg(marks, course, { magneticVariationDeg: -1.5 });
+    expect(m).toMatch(/<tspan font-weight="700">1<\/tspan> 191°M 0\.54 NM/);
+    expect(m).not.toMatch(/\d°T /);
   });
 
   it('rings each rounding for its side, dashed for a passing mark', () => {

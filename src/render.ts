@@ -66,6 +66,11 @@ export interface RenderCourseOptions {
    *  once, not once per race. `background` is still needed: it says where
    *  the chart lies and whose it is. */
   backgroundSymbol?: string;
+  /** The magnetic variation where and when the course is sailed, in
+   *  degrees east (west negative), to label the legs' bearings in magnetic:
+   *  `164°M`. Without it they are labelled true: `162°T`. Bearings are
+   *  computed from positions, so they are true until a variation is given. */
+  magneticVariationDeg?: number;
 }
 
 // Web Mercator on the unit square.
@@ -279,9 +284,12 @@ export function renderCourseSvg(marks: DrawnMark[], course: DrawnCourseMark[] = 
     const lx = cx - uy * 9 * u + ux * 16 * u * n;
     const ly = cy + ux * 9 * u + uy * 16 * u * n;
     const anchor = -uy > 0.2 ? 'start' : -uy < -0.2 ? 'end' : 'middle';
-    const brg = String(Math.round(bearingDeg(a.position, b.position)) % 360).padStart(3, '0');
+    const trueBrg = bearingDeg(a.position, b.position);
+    const variation = options.magneticVariationDeg;
+    const shown = variation == null ? trueBrg : (((trueBrg - variation) % 360) + 360) % 360;
+    const brg = `${String(Math.round(shown) % 360).padStart(3, '0')}°${variation == null ? 'T' : 'M'}`;
     const dist = distanceNm(a.position, b.position).toFixed(2);
-    labels += `<text x="${f(lx)}" y="${f(ly + 4 * u)}" ${font(11)} text-anchor="${anchor}" fill="#0b3d91" stroke="${halo}" stroke-width="${f(3 * u)}" paint-order="stroke"><tspan font-weight="700">${i + 1}</tspan> ${brg}° ${dist} NM</text>`;
+    labels += `<text x="${f(lx)}" y="${f(ly + 4 * u)}" ${font(11)} text-anchor="${anchor}" fill="#0b3d91" stroke="${halo}" stroke-width="${f(3 * u)}" paint-order="stroke"><tspan font-weight="700">${i + 1}</tspan> ${brg} ${dist} NM</text>`;
   }
   svg += legs;
 
