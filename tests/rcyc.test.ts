@@ -57,17 +57,30 @@ describe('the Royal Cork 2026 marks file', () => {
     ]);
   });
 
-  it('positions twenty harbour navigation buoys traced from OpenStreetMap', () => {
+  it('positions nineteen harbour navigation buoys from eOceanic, quoting the row that numbers each', () => {
     expect(marks.marks).toHaveLength(30);
-    expect(byId.get('No.3')!.position).toEqual({ lat: 51.801736, lng: -8.259799 });
-    expect(byId.get('No.20')!.position).toEqual({ lat: 51.847303, lng: -8.287576 });
-    expect(byId.get('E1')!.position).toEqual({ lat: 51.794378, lng: -8.25878 });
-    expect(byId.get('W4')!.position).toEqual({ lat: 51.800244, lng: -8.26526 });
+    // 51°48.130'N 8°15.615'W, "White Bay No.3."; 51°50.828'N 8°17.285'W, "Cork harbour Cobh Road No.20".
+    expect(byId.get('No.3')).toMatchObject({
+      position: { lat: 51.802167, lng: -8.26025 },
+      source: "eOceanic's list of Irish marks (eoceanic.com/weather/ireland, 5 October 2026): “White Bay No.3.”",
+    });
+    expect(byId.get('No.20')!.position).toEqual({ lat: 51.847133, lng: -8.288083 });
+    expect(byId.get('E1')!.position).toEqual({ lat: 51.794517, lng: -8.258917 });
+    expect(byId.get('W4')!.position).toEqual({ lat: 51.800517, lng: -8.26565 });
     // A placed mark carries no placement: that field is for marks laid per race.
     for (const id of ['No.3', 'No.20', 'E1', 'W4']) expect(byId.get(id)!.placement, id).toBeUndefined();
     expect(marks.marks.filter((m) => m.position)).toHaveLength(25);
-    const traced = marks.marks.filter((m) => m.source === 'OpenStreetMap').map((m) => m.id);
-    expect(traced).toEqual(['No.3', 'No.5', 'No.6', 'No.7', 'No.8', 'No.9', 'No.10', 'No.11', 'No.12', 'No.13', 'No.14', 'No.16', 'No.18', 'No.20', 'E1', 'E2', 'E4', 'W1', 'W2', 'W4']);
+    const listed = marks.marks.filter((m) => m.source?.startsWith("eOceanic's list of Irish marks")).map((m) => m.id);
+    expect(listed).toEqual(['No.3', 'No.5', 'No.6', 'No.7', 'No.8', 'No.9', 'No.10', 'No.11', 'No.12', 'No.13', 'No.14', 'No.16', 'No.18', 'No.20', 'E1', 'E2', 'W1', 'W2', 'W4']);
+    // Each row eOceanic is read from prints the buoy's number.
+    for (const id of listed) {
+      const row = byId.get(id)!.source!.match(/“(.*)”$/)![1]!;
+      expect(row.split(' ').map((w) => w.replace(/\.$/, '')), id).toContain(id);
+    }
+  });
+
+  it('keeps E4 on its OpenStreetMap trace', () => {
+    expect(byId.get('E4')).toMatchObject({ position: { lat: 51.798718, lng: -8.26246 }, source: 'OpenStreetMap' });
   });
 
   it('places Cage from the position the club gave, not from OpenStreetMap', () => {
@@ -170,7 +183,7 @@ describe('the Keelboat Racing Course Card 2026', () => {
     const legs = courseLegs(card, marks, '1', { marks: { SL } });
     expect(legs.map((l) => l.to.mark)).toEqual(['Ringabella', 'W2', 'Cage', 'No.7', 'Cage', 'Dosco', 'SL']);
     // Every mark of course 1 but the line comes from the file, so these are real.
-    expect(legs[1]!.distanceNm).toBeCloseTo(1.608, 2);
+    expect(legs[1]!.distanceNm).toBeCloseTo(1.627, 2);
     expect(legs[3]!.distanceNm).toBeCloseTo(0.970, 2);
 
     const resolved = card.courses.filter((c) => {

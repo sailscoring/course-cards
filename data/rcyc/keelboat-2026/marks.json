@@ -1,7 +1,7 @@
 {
   "formatVersion": 2,
   "club": "RCYC",
-  "name": "Keelboat racing marks 2026: the Port of Cork laid race marks the General Sailing Instructions position, the harbour navigation buoys traced from OpenStreetMap, Cage as the club gave it, and every other mark the course card names",
+  "name": "Keelboat racing marks 2026: the Port of Cork laid race marks the General Sailing Instructions position, the harbour navigation buoys from eOceanic's list and E4 from OpenStreetMap, Cage as the club gave it, and every other mark the course card names",
   "source": "https://www.royalcork.com/wp-content/uploads/2026/03/General-Sailing-Instructions-for-Royal-Cork-Yacht-Club-Keelboat-Racing-2026.pdf",
   "notes": [
     {
@@ -54,145 +54,145 @@
       "id": "No.3",
       "name": "Harbour navigation buoy No.3",
       "position": {
-        "lat": 51.801736,
-        "lng": -8.259799
+        "lat": 51.802167,
+        "lng": -8.26025
       },
-      "source": "OpenStreetMap"
+      "source": "eOceanic's list of Irish marks (eoceanic.com/weather/ireland, 5 October 2026): “White Bay No.3.”"
     },
     {
       "id": "No.5",
       "name": "Harbour navigation buoy No.5",
       "position": {
-        "lat": 51.816964,
-        "lng": -8.270356
+        "lat": 51.8171,
+        "lng": -8.270083
       },
-      "source": "OpenStreetMap"
+      "source": "eOceanic's list of Irish marks (eoceanic.com/weather/ireland, 5 October 2026): “Cork outer harbour Dogsnose bank No.5”"
     },
     {
       "id": "No.6",
       "name": "Harbour navigation buoy No.6",
       "position": {
-        "lat": 51.804616,
-        "lng": -8.265475
+        "lat": 51.805533,
+        "lng": -8.265367
       },
-      "source": "OpenStreetMap"
+      "source": "eOceanic's list of Irish marks (eoceanic.com/weather/ireland, 5 October 2026): “Cork outer harbour Ramshead Bank No.6.”"
     },
     {
       "id": "No.7",
       "name": "Harbour navigation buoy No.7",
       "position": {
-        "lat": 51.826951,
-        "lng": -8.267406
+        "lat": 51.827067,
+        "lng": -8.26755
       },
-      "source": "OpenStreetMap"
+      "source": "eOceanic's list of Irish marks (eoceanic.com/weather/ireland, 5 October 2026): “Cork outer harbour Corkbeg No.7”"
     },
     {
       "id": "No.8",
       "name": "Harbour navigation buoy No.8",
       "position": {
-        "lat": 51.82087,
-        "lng": -8.277416
+        "lat": 51.821167,
+        "lng": -8.277183
       },
-      "source": "OpenStreetMap"
+      "source": "eOceanic's list of Irish marks (eoceanic.com/weather/ireland, 5 October 2026): “Cork outer harbour Curlane bank No.8”"
     },
     {
       "id": "No.9",
       "name": "Harbour navigation buoy No.9",
       "position": {
-        "lat": 51.840383,
-        "lng": -8.256752
+        "lat": 51.837783,
+        "lng": -8.257617
       },
-      "source": "OpenStreetMap"
+      "source": "eOceanic's list of Irish marks (eoceanic.com/weather/ireland, 5 October 2026): “Cork Harbour east channel No.9”"
     },
     {
       "id": "No.10",
       "name": "Harbour navigation buoy No.10",
       "position": {
-        "lat": 51.829146,
-        "lng": -8.275828
+        "lat": 51.829383,
+        "lng": -8.275317
       },
-      "source": "OpenStreetMap"
+      "source": "eOceanic's list of Irish marks (eoceanic.com/weather/ireland, 5 October 2026): “Cork outer harbour Curlane bank No.10”"
     },
     {
       "id": "No.11",
       "name": "Harbour navigation buoy No.11",
       "position": {
-        "lat": 51.844012,
-        "lng": -8.258683
+        "lat": 51.844033,
+        "lng": -8.258717
       },
-      "source": "OpenStreetMap"
+      "source": "eOceanic's list of Irish marks (eoceanic.com/weather/ireland, 5 October 2026): “Cork harbour fairway No.11”"
     },
     {
       "id": "No.12",
       "name": "Harbour navigation buoy No.12",
       "position": {
-        "lat": 51.83262,
-        "lng": -8.269627
+        "lat": 51.8327,
+        "lng": -8.269667
       },
-      "source": "OpenStreetMap"
+      "source": "eOceanic's list of Irish marks (eoceanic.com/weather/ireland, 5 October 2026): “Spike Island No.12”"
     },
     {
       "id": "No.13",
       "name": "Harbour navigation buoy No.13",
       "position": {
-        "lat": 51.849553,
-        "lng": -8.265228
+        "lat": 51.849483,
+        "lng": -8.26545
       },
-      "source": "OpenStreetMap"
+      "source": "eOceanic's list of Irish marks (eoceanic.com/weather/ireland, 5 October 2026): “Cork harbour fairway No.13”"
     },
     {
       "id": "No.14",
       "name": "Harbour navigation buoy No.14",
       "position": {
-        "lat": 51.835477,
-        "lng": -8.267138
+        "lat": 51.835417,
+        "lng": -8.26735
       },
-      "source": "OpenStreetMap"
+      "source": "eOceanic's list of Irish marks (eoceanic.com/weather/ireland, 5 October 2026): “Spike Island No.14”"
     },
     {
       "id": "No.16",
       "name": "Harbour navigation buoy No.16",
       "position": {
-        "lat": 51.844794,
-        "lng": -8.264219
+        "lat": 51.844883,
+        "lng": -8.26425
       },
-      "source": "OpenStreetMap"
+      "source": "eOceanic's list of Irish marks (eoceanic.com/weather/ireland, 5 October 2026): “Cork harbour fairway No.16”"
     },
     {
       "id": "No.18",
       "name": "Harbour navigation buoy No.18",
       "position": {
-        "lat": 51.84893,
-        "lng": -8.271322
+        "lat": 51.848767,
+        "lng": -8.27155
       },
-      "source": "OpenStreetMap"
+      "source": "eOceanic's list of Irish marks (eoceanic.com/weather/ireland, 5 October 2026): “Cork harbour fairway No.18”"
     },
     {
       "id": "No.20",
       "name": "Harbour navigation buoy No.20",
       "position": {
-        "lat": 51.847303,
-        "lng": -8.287576
+        "lat": 51.847133,
+        "lng": -8.288083
       },
-      "source": "OpenStreetMap"
+      "source": "eOceanic's list of Irish marks (eoceanic.com/weather/ireland, 5 October 2026): “Cork harbour Cobh Road No.20”"
     },
     {
       "id": "E1",
       "name": "Harbour navigation buoy E1",
       "position": {
-        "lat": 51.794378,
-        "lng": -8.25878
+        "lat": 51.794517,
+        "lng": -8.258917
       },
-      "source": "OpenStreetMap"
+      "source": "eOceanic's list of Irish marks (eoceanic.com/weather/ireland, 5 October 2026): “Chicargo Knoll E1 Cork Outer Harbour”"
     },
     {
       "id": "E2",
       "name": "Harbour navigation buoy E2",
       "position": {
-        "lat": 51.792806,
-        "lng": -8.261462
+        "lat": 51.79265,
+        "lng": -8.261483
       },
-      "source": "OpenStreetMap"
+      "source": "eOceanic's list of Irish marks (eoceanic.com/weather/ireland, 5 October 2026): “Cork outer harbour rock E2”"
     },
     {
       "id": "E4",
@@ -207,28 +207,28 @@
       "id": "W1",
       "name": "Harbour navigation buoy W1",
       "position": {
-        "lat": 51.794504,
-        "lng": -8.26762
+        "lat": 51.79515,
+        "lng": -8.2678
       },
-      "source": "OpenStreetMap"
+      "source": "eOceanic's list of Irish marks (eoceanic.com/weather/ireland, 5 October 2026): “Cork outer harbour W1”"
     },
     {
       "id": "W2",
       "name": "Harbour navigation buoy W2",
       "position": {
-        "lat": 51.794604,
-        "lng": -8.272566
+        "lat": 51.794867,
+        "lng": -8.2723
       },
-      "source": "OpenStreetMap"
+      "source": "eOceanic's list of Irish marks (eoceanic.com/weather/ireland, 5 October 2026): “Cork outer harbour W2”"
     },
     {
       "id": "W4",
       "name": "Harbour navigation buoy W4",
       "position": {
-        "lat": 51.800244,
-        "lng": -8.26526
+        "lat": 51.800517,
+        "lng": -8.26565
       },
-      "source": "OpenStreetMap"
+      "source": "eOceanic's list of Irish marks (eoceanic.com/weather/ireland, 5 October 2026): “Cork outer harbour W4”"
     },
     {
       "id": "EF2",

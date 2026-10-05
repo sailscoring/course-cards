@@ -26,151 +26,71 @@
       "url": "https://www.royalcork.com/wp-content/uploads/2026/03/General-Sailing-Instructions-for-Royal-Cork-Yacht-Club-Keelboat-Racing-2026.pdf",
       "card": "source/RCYC-Course-Card-Art-2026.pdf",
       "addMarks": {
-        "why": "The instructions position four marks; the card names twenty-six more. The numbered channel buoys and the E, W, EF and C buoys are Port of Cork navigation marks: charted, but given a position in no club document, no Cork Week instruction of any year, and no Port of Cork publication found — the port's Information Manual and passage plans name them and place none, and the NGA List of Lights (Pub. 114) carries Cork Harbour's shore, range and pier lights but not one channel buoy. Twenty of them are positioned here from OpenStreetMap, which holds the harbour's lateral buoys with their positions and colours but without their numbers: the numbering is in no open data and was read off the chart buoy by buoy. Three checks hold across all twenty — each is a distinct OpenStreetMap node, each node's recorded colour agrees with the odd-is-green, even-is-red convention of IALA region A, and within each series the numbers ascend up-harbour. Cage is placed from neither: buoy C1 is in no publication and not in OpenStreetMap either — the nearest node to it is 850 m away — and the club supplied its position directly, so it is carried on the club's word and cited to no document. It is the Grassy Walk line's outer distance mark, and with it placed the line's geometry checks out: solving for the start line that best fits the card's own printed distances over 28 courses lands 367 m from the midpoint of the line between Cage and the club, which is corroboration of Cage, of the numbering and of both at once. EF2 and EF4 were not identified — OpenStreetMap's three East Ferry nodes are tagged seamark:type=yes with no colour to tell them apart — and keep their placement and no position. Dutchman and Curlane are laid marks the card places in words; White Bay the card only names.",
+        "why": "The instructions position four marks; the card names twenty-six more. The numbered channel buoys and the E, W, EF and C buoys are Port of Cork navigation marks: charted, but given a position in no official document, no Cork Week instruction of any year, and no Port of Cork publication found — the port's Information Manual and passage plans name them and place none, and the NGA List of Lights (Pub. 114) carries Cork Harbour's shore, range and pier lights but not one channel buoy. Nineteen of them are positioned from eOceanic's list of Irish marks, which names each by its number — see `buoys`; their entries here carry only an id and a name. E4 is positioned from OpenStreetMap, which holds the harbour's lateral buoys with their positions and colours but without their numbers, so it was numbered by eye against the chart; eOceanic lists it 23 m away, and two plotter readings by Pat Tanner lie 9 m and 15 m from the trace against 30 m and 24 m from eOceanic's, so the trace is kept. OpenStreetMap was where all twenty were first traced, and is now the cross-check in `checks`. Cage is placed from neither: buoy C1 is not in OpenStreetMap — the nearest node to it is 850 m away — and the club supplied its position directly, so it is carried as club correspondence; eOceanic's C1 is 39 m from it, corroboration rather than a better authority for the mark the club's own line is laid to. It is the Grassy Walk line's outer distance mark, and with it placed the line's geometry checks out: solving for the start line that best fits the card's own printed distances over 28 courses lands 321 m from the midpoint of the line between Cage and the club, which is corroboration of Cage, of the numbering and of both at once. EF2 and EF4 were not identified — OpenStreetMap's three East Ferry nodes are tagged seamark:type=yes with no colour to tell them apart — and keep their placement and no position. Dutchman and Curlane are laid marks the card places in words; White Bay the card only names.",
         "marks": [
           {
             "id": "No.3",
-            "name": "Harbour navigation buoy No.3",
-            "position": {
-              "lat": 51.801736,
-              "lng": -8.259799
-            },
-            "source": "OpenStreetMap"
+            "name": "Harbour navigation buoy No.3"
           },
           {
             "id": "No.5",
-            "name": "Harbour navigation buoy No.5",
-            "position": {
-              "lat": 51.816964,
-              "lng": -8.270356
-            },
-            "source": "OpenStreetMap"
+            "name": "Harbour navigation buoy No.5"
           },
           {
             "id": "No.6",
-            "name": "Harbour navigation buoy No.6",
-            "position": {
-              "lat": 51.804616,
-              "lng": -8.265475
-            },
-            "source": "OpenStreetMap"
+            "name": "Harbour navigation buoy No.6"
           },
           {
             "id": "No.7",
-            "name": "Harbour navigation buoy No.7",
-            "position": {
-              "lat": 51.826951,
-              "lng": -8.267406
-            },
-            "source": "OpenStreetMap"
+            "name": "Harbour navigation buoy No.7"
           },
           {
             "id": "No.8",
-            "name": "Harbour navigation buoy No.8",
-            "position": {
-              "lat": 51.82087,
-              "lng": -8.277416
-            },
-            "source": "OpenStreetMap"
+            "name": "Harbour navigation buoy No.8"
           },
           {
             "id": "No.9",
-            "name": "Harbour navigation buoy No.9",
-            "position": {
-              "lat": 51.840383,
-              "lng": -8.256752
-            },
-            "source": "OpenStreetMap"
+            "name": "Harbour navigation buoy No.9"
           },
           {
             "id": "No.10",
-            "name": "Harbour navigation buoy No.10",
-            "position": {
-              "lat": 51.829146,
-              "lng": -8.275828
-            },
-            "source": "OpenStreetMap"
+            "name": "Harbour navigation buoy No.10"
           },
           {
             "id": "No.11",
-            "name": "Harbour navigation buoy No.11",
-            "position": {
-              "lat": 51.844012,
-              "lng": -8.258683
-            },
-            "source": "OpenStreetMap"
+            "name": "Harbour navigation buoy No.11"
           },
           {
             "id": "No.12",
-            "name": "Harbour navigation buoy No.12",
-            "position": {
-              "lat": 51.83262,
-              "lng": -8.269627
-            },
-            "source": "OpenStreetMap"
+            "name": "Harbour navigation buoy No.12"
           },
           {
             "id": "No.13",
-            "name": "Harbour navigation buoy No.13",
-            "position": {
-              "lat": 51.849553,
-              "lng": -8.265228
-            },
-            "source": "OpenStreetMap"
+            "name": "Harbour navigation buoy No.13"
           },
           {
             "id": "No.14",
-            "name": "Harbour navigation buoy No.14",
-            "position": {
-              "lat": 51.835477,
-              "lng": -8.267138
-            },
-            "source": "OpenStreetMap"
+            "name": "Harbour navigation buoy No.14"
           },
           {
             "id": "No.16",
-            "name": "Harbour navigation buoy No.16",
-            "position": {
-              "lat": 51.844794,
-              "lng": -8.264219
-            },
-            "source": "OpenStreetMap"
+            "name": "Harbour navigation buoy No.16"
           },
           {
             "id": "No.18",
-            "name": "Harbour navigation buoy No.18",
-            "position": {
-              "lat": 51.84893,
-              "lng": -8.271322
-            },
-            "source": "OpenStreetMap"
+            "name": "Harbour navigation buoy No.18"
           },
           {
             "id": "No.20",
-            "name": "Harbour navigation buoy No.20",
-            "position": {
-              "lat": 51.847303,
-              "lng": -8.287576
-            },
-            "source": "OpenStreetMap"
+            "name": "Harbour navigation buoy No.20"
           },
           {
             "id": "E1",
-            "name": "Harbour navigation buoy E1",
-            "position": {
-              "lat": 51.794378,
-              "lng": -8.25878
-            },
-            "source": "OpenStreetMap"
+            "name": "Harbour navigation buoy E1"
           },
           {
             "id": "E2",
-            "name": "Harbour navigation buoy E2",
-            "position": {
-              "lat": 51.792806,
-              "lng": -8.261462
-            },
-            "source": "OpenStreetMap"
+            "name": "Harbour navigation buoy E2"
           },
           {
             "id": "E4",
@@ -183,30 +103,15 @@
           },
           {
             "id": "W1",
-            "name": "Harbour navigation buoy W1",
-            "position": {
-              "lat": 51.794504,
-              "lng": -8.26762
-            },
-            "source": "OpenStreetMap"
+            "name": "Harbour navigation buoy W1"
           },
           {
             "id": "W2",
-            "name": "Harbour navigation buoy W2",
-            "position": {
-              "lat": 51.794604,
-              "lng": -8.272566
-            },
-            "source": "OpenStreetMap"
+            "name": "Harbour navigation buoy W2"
           },
           {
             "id": "W4",
-            "name": "Harbour navigation buoy W4",
-            "position": {
-              "lat": 51.800244,
-              "lng": -8.26526
-            },
-            "source": "OpenStreetMap"
+            "name": "Harbour navigation buoy W4"
           },
           {
             "id": "EF2",
@@ -248,7 +153,7 @@
       },
       "meta": {
         "club": "RCYC",
-        "name": "Keelboat racing marks 2026: the Port of Cork laid race marks the General Sailing Instructions position, the harbour navigation buoys traced from OpenStreetMap, Cage as the club gave it, and every other mark the course card names",
+        "name": "Keelboat racing marks 2026: the Port of Cork laid race marks the General Sailing Instructions position, the harbour navigation buoys from eOceanic's list and E4 from OpenStreetMap, Cage as the club gave it, and every other mark the course card names",
         "source": "https://www.royalcork.com/wp-content/uploads/2026/03/General-Sailing-Instructions-for-Royal-Cork-Yacht-Club-Keelboat-Racing-2026.pdf",
         "notes": [
           {
@@ -256,6 +161,34 @@
             "text": "Port of Cork Laid Race Marks are yellow cones permanently laid and may be in these approximate locations."
           }
         ]
+      },
+      "buoys": {
+        "source": "source/eoceanic-ireland.html",
+        "url": "https://eoceanic.com/weather/ireland",
+        "fetched": "2026-10-05",
+        "citation": "eOceanic's list of Irish marks (eoceanic.com/weather/ireland, 5 October 2026)",
+        "why": "eOceanic, a cruising-guide site, lists Ireland's buoys and lights by name with positions to a thousandth of a minute and their light characteristics, and names every channel buoy the card uses by its number. It does not say where its positions come from. It is preferred to OpenStreetMap, which these buoys were first traced from, because it is a document that numbers them — the numbering was otherwise our own reading of the chart — and because Pat Tanner's Cork Harbour workbook (github.com/Bateleur88/cork-harbour-orc), whose depth tests for the passages in #16 were run against these positions, takes its buoys from it. E4 is not taken from it: see the manifest's addMarks.",
+        "rows": {
+          "No.3": "White Bay No.3.",
+          "No.5": "Cork outer harbour Dogsnose bank No.5",
+          "No.6": "Cork outer harbour Ramshead Bank No.6.",
+          "No.7": "Cork outer harbour Corkbeg No.7",
+          "No.8": "Cork outer harbour Curlane bank No.8",
+          "No.9": "Cork Harbour east channel No.9",
+          "No.10": "Cork outer harbour Curlane bank No.10",
+          "No.11": "Cork harbour fairway No.11",
+          "No.12": "Spike Island No.12",
+          "No.13": "Cork harbour fairway No.13",
+          "No.14": "Spike Island No.14",
+          "No.16": "Cork harbour fairway No.16",
+          "No.18": "Cork harbour fairway No.18",
+          "No.20": "Cork harbour Cobh Road No.20",
+          "E1": "Chicargo Knoll E1 Cork Outer Harbour",
+          "E2": "Cork outer harbour rock E2",
+          "W1": "Cork outer harbour W1",
+          "W2": "Cork outer harbour W2",
+          "W4": "Cork outer harbour W4"
+        }
       }
     },
     {
@@ -294,5 +227,105 @@
     ],
     "zoom": 14,
     "paddingMinutes": 1.0
+  },
+  "checks": {
+    "tool": "check_rcyc",
+    "items": [
+      {
+        "check": "osm-positions",
+        "marks": "marks.json",
+        "toleranceNm": 0.035,
+        "why": "The buoys were first positioned from OpenStreetMap, independently of eOceanic, and numbered by eye against the chart. Two independent readings of one buoy field should agree to within a buoy's swing and the imagery's registration; sixteen of the nineteen are within 60 m. The three below are further apart and are recorded as such: which reading is nearer the buoy is not known, and eOceanic's is the one carried.",
+        "positions": {
+          "No.3": {
+            "lat": 51.801736,
+            "lng": -8.259799
+          },
+          "No.5": {
+            "lat": 51.816964,
+            "lng": -8.270356
+          },
+          "No.6": {
+            "lat": 51.804616,
+            "lng": -8.265475
+          },
+          "No.7": {
+            "lat": 51.826951,
+            "lng": -8.267406
+          },
+          "No.8": {
+            "lat": 51.82087,
+            "lng": -8.277416
+          },
+          "No.9": {
+            "lat": 51.840383,
+            "lng": -8.256752
+          },
+          "No.10": {
+            "lat": 51.829146,
+            "lng": -8.275828
+          },
+          "No.11": {
+            "lat": 51.844012,
+            "lng": -8.258683
+          },
+          "No.12": {
+            "lat": 51.83262,
+            "lng": -8.269627
+          },
+          "No.13": {
+            "lat": 51.849553,
+            "lng": -8.265228
+          },
+          "No.14": {
+            "lat": 51.835477,
+            "lng": -8.267138
+          },
+          "No.16": {
+            "lat": 51.844794,
+            "lng": -8.264219
+          },
+          "No.18": {
+            "lat": 51.84893,
+            "lng": -8.271322
+          },
+          "No.20": {
+            "lat": 51.847303,
+            "lng": -8.287576
+          },
+          "E1": {
+            "lat": 51.794378,
+            "lng": -8.25878
+          },
+          "E2": {
+            "lat": 51.792806,
+            "lng": -8.261462
+          },
+          "W1": {
+            "lat": 51.794504,
+            "lng": -8.26762
+          },
+          "W2": {
+            "lat": 51.794604,
+            "lng": -8.272566
+          },
+          "W4": {
+            "lat": 51.800244,
+            "lng": -8.26526
+          }
+        },
+        "expected": {
+          "No.9": "the nearest eOceanic buoy to the trace all the same; the next, No.11, is 428 m from it",
+          "No.6": "the nearest eOceanic buoy to the trace all the same; the next, No.3, is 451 m from it",
+          "W1": "the nearest eOceanic buoy to the trace all the same; the next, W2, is 324 m from it"
+        }
+      },
+      {
+        "check": "lateral-colours",
+        "marks": "marks.json",
+        "buoys": "source/eoceanic-ireland.html",
+        "why": "Under IALA region A the harbour's odd-numbered buoys are starboard hand, green, and its even-numbered ones port hand, red — which the card's own Cage, C1, settles as green. Each row eOceanic is read from must name the mark's number and give a light of the matching colour, so a row taken for the wrong buoy is caught."
+      }
+    ]
   }
 }

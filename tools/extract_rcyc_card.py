@@ -24,7 +24,18 @@ White Bay are laid where the card says. `marks` mode reads the four
 positions from the instructions and takes the rest from `--add`, refusing
 a card that names a mark neither supplies.
 
-    python3 tools/extract_rcyc_card.py marks <general-si.pdf> --card <card.pdf> --add marks.json --meta meta.json > marks.json
+    python3 tools/extract_rcyc_card.py marks <general-si.pdf> --card <card.pdf> --add marks.json \
+        [--buoys eoceanic.html --buoy-rows rows.json --buoy-citation TEXT] --meta meta.json > marks.json
+
+Most of the buoys are positioned from **eOceanic**'s list of Irish marks, a
+web page kept verbatim beside the instructions: a table of rows, each a
+name ("Cork outer harbour Ramshead Bank No.6."), a latitude and longitude
+in degrees and decimal minutes, and a light characteristic. `--buoy-rows`
+maps a mark id to the row that names it; the mark's entry in `--add`
+carries its id and name, and its position and `source` — the citation
+followed by the row's name, which is where the buoy's number is printed —
+are read from the page. A row named twice, or not at all, is refused, and
+so is an `--add` entry for such a mark that brings a position of its own.
 
 Mark names are normalised to the card's commonest spelling: "No.7", "No 7"
 and "No7" are one mark, "Dosco" and "DOSCO" one, "Harp Mark" is Harp and
@@ -33,6 +44,7 @@ line.
 """
 
 import argparse
+import html
 import json
 import os
 import re
@@ -291,10 +303,50 @@ def laid_marks(pdf):
     return marks
 
 
+def eoceanic_rows(path):
+    """Every row of eOceanic's table of marks: {name: [(lat, lng, light), ...]},
+    the name as printed, whitespace trimmed; a name printed twice keeps both."""
+    page = open(path, encoding='utf-8', errors='replace').read()
+    rows = {}
+    for name, lat, lng, light in re.findall(r"<tr><td align='left'>(.*?)</td><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td>", page):
+        name, lat, lng, light = (' '.join(html.unescape(x).split()) for x in (name, lat, lng, light))
+        mlat = re.fullmatch(r"(\d+)° ([\d.]+)' ([NS])", lat)
+        mlng = re.fullmatch(r"(\d+)° ([\d.]+)' ([EW])", lng)
+        if not (mlat and mlng):
+            continue
+        dd = lambda m: (int(m.group(1)) + float(m.group(2)) / 60) * (-1 if m.group(3) in 'SW' else 1)
+        rows.setdefault(name, []).append((round(dd(mlat), 6), round(dd(mlng), 6), light))
+    return rows
+
+
+def buoy_positions(path, wanted, citation):
+    """{id: (position, source)} for each id → row name of `wanted`."""
+    rows = eoceanic_rows(path)
+    out = {}
+    for id_, name in wanted.items():
+        found = rows.get(name, [])
+        if len(found) != 1:
+            sys.exit(f'--buoys: row {name!r} for {id_} appears {len(found)} times in {path}')
+        lat, lng, _ = found[0]
+        out[id_] = ({'lat': lat, 'lng': lng}, f'{citation}: “{name}”')
+    return out
+
+
 def cmd_marks(args):
     marks = laid_marks(args.pdf)
     ids = {m['id'] for m in marks}
     added = json.load(open(args.add)) if args.add else []
+    if args.buoys:
+        placed = buoy_positions(args.buoys, json.load(open(args.buoy_rows)), args.buoy_citation)
+        listed = {extra['id'] for extra in added}
+        for id_ in placed:
+            if id_ not in listed:
+                sys.exit(f'--buoy-rows: {id_!r} is not among the --add marks')
+        for extra in added:
+            if extra['id'] in placed:
+                if 'position' in extra or 'source' in extra:
+                    sys.exit(f'--add: {extra["id"]!r} is positioned from --buoys and brings a position or source of its own')
+                extra['position'], extra['source'] = placed[extra['id']]
     for extra in added:
         if extra['id'] in ids:
             sys.exit(f'--add: {extra["id"]!r} is already placed by the instructions')
@@ -331,6 +383,9 @@ def main():
     m.add_argument('pdf', help='the general sailing instructions')
     m.add_argument('--card', required=True)
     m.add_argument('--add')
+    m.add_argument('--buoys', help="eOceanic's page of marks, kept verbatim")
+    m.add_argument('--buoy-rows', help='JSON: {mark id: the row naming it}')
+    m.add_argument('--buoy-citation')
     m.add_argument('--meta')
     m.set_defaults(func=cmd_marks)
     args = ap.parse_args()

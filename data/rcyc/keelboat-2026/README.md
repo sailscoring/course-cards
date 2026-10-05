@@ -14,7 +14,7 @@ start and finish lines (26).
 
 | File | Source | Made by |
 |---|---|---|
-| `marks.json` | `source/General-Sailing-Instructions-…-2026.pdf`, 22.3, for the four laid marks; OpenStreetMap for twenty harbour buoys, numbered by eye; the club, for Cage; the card, for every mark its courses name | `tools/extract_rcyc_card.py marks` |
+| `marks.json` | `source/General-Sailing-Instructions-…-2026.pdf`, 22.3, for the four laid marks; `source/eoceanic-ireland.html`, eOceanic's list of Irish marks, for nineteen harbour buoys; OpenStreetMap for E4; the club, for Cage; the card, for every mark its courses name | `tools/extract_rcyc_card.py marks` |
 | `keelboat.json` | `source/RCYC-Course-Card-Art-2026.pdf`, pages 2–4; the instructions' 26 for the start line | `tools/extract_rcyc_card.py card`, `… notes`, `tools/extract_start_line.py` |
 | `source/*.md` | the two documents | `tools/pdf_markdown.py` |
 | `keelboat.html`, `map/marks.svg` | the JSON above, `map/background.png` | `tools/render-cards.ts` |
@@ -63,7 +63,7 @@ numbered channel buoys (No.3 to No.20), eight are the lettered buoys of
 the entrance and East Ferry channels (E1, E2, E4, W1, W2, W4, EF2, EF4) and
 one is Cage, buoy C1, the green conical the Grassy Walk line finishes at.
 They are Port of Cork navigation marks, on Admiralty chart 1777, and **no
-document publishes a position for any of them**: not the club's
+official document publishes a position for any of them**: not the club's
 instructions, not the Cork Harbour Combined League's or the Autumn
 League's, not any year's Cork Week instructions (whose harbour-marks
 exhibit is a picture, and whose mark list positions only the offshore and
@@ -73,36 +73,56 @@ plans, which name the buoys and place none, and not the NGA List of Lights
 Roche's Point, White Bay Range, Fort Davis Range, Spit Bank, Haulbowline,
 Monkstown — and not one channel buoy.
 
-**Twenty of them are positioned here anyway, and this is where they came
-from.** OpenStreetMap holds the harbour's forty-six buoys with their
-positions and, for thirty-two of them, their lateral colour; it holds no
-name, number or reference for a single one, and neither does the
-OpenSeaMap rendering of it, which draws the cones unlabelled. So the
-positions are open data and the numbering is not: which cone is No.7 was
-read off the chart, buoy by buoy, by this data set's maintainer, against
-a plot of all forty-six. That is a human reading, not a citation, and it
-is the one thing here that no document backs. Each of the twenty names
-`OpenStreetMap` as its `source`; a mark's source speaks for its position,
-so the numbering is not in it, and is told here instead.
+**Nineteen of them are positioned from eOceanic, a cruising-guide site.**
+Its list of Irish marks (https://eoceanic.com/weather/ireland, kept
+verbatim as `source/eoceanic-ireland.html`, fetched 5 October 2026) gives
+Cork Harbour's buoys by name, each with a position to a thousandth of a
+minute and its light, and the names carry the numbers: "Cork outer harbour
+Ramshead Bank No.6.", "Chicargo Knoll E1 Cork Outer Harbour". It does not
+say where its positions come from, so they are a published list of unknown
+origin rather than an official one. The manifest maps each mark to the row
+that names it, the tool reads the position from that row, and each mark's
+`source` quotes the row — which is where its number is printed. Pat
+Tanner's Cork Harbour workbook
+(https://github.com/Bateleur88/cork-harbour-orc), built from local
+knowledge for the passage work in #16, takes its buoys from the same list,
+and its depth tests were run against these positions.
 
-Three checks hold across all twenty, and they are what makes the reading
-worth trusting. Every mark is a distinct OpenStreetMap node — no node
-serves two numbers. Every node's recorded colour agrees with the
-odd-is-green, even-is-red convention of IALA region A, which the card's own
-Cage settles: the instructions call C1 "Green Conical", and C1 is odd.
-And each series runs from the harbour mouth inward, its lowest number
-nearer the entrance than its highest. `tests/rcyc.test.ts` asserts all
-three. What is **not** asserted is that the numbers rise monotonically buoy
-by buoy: the odd and even runs climb opposite sides of a channel that
-bends west past Cobh, so no distance from any one point rises along either,
-and a test that claimed otherwise would need a channel centreline this data
-set has no source for.
+The buoys were first positioned here from **OpenStreetMap**, which holds
+the harbour's forty-six buoys with their positions and, for thirty-two of
+them, their lateral colour, but no name or number for a single one: which
+cone was No.7 was read off the chart, buoy by buoy, by this data set's
+maintainer. That reading is now the cross-check, and it agrees. Every
+eOceanic buoy is the nearest of eOceanic's buoys to the OpenStreetMap
+node this data set had numbered the same — the numbering, a human reading
+until now, is confirmed by a document — and sixteen of the nineteen lie
+within 60 m of their node. The other three are further apart: No.9 by
+295 m, No.6 by 102 m and W1 by 73 m. Which reading is nearer the buoy is
+not known; eOceanic's is the one carried. `tools/check_rcyc.py` holds every
+buoy to its node, with those three recorded as known differences, and
+checks that each row eOceanic is read from prints the buoy's number and a
+light of the colour IALA region A gives it — odd green, even red, which the
+card's own Cage settles: the instructions call C1 "Green Conical", and C1
+is odd. `tests/rcyc.test.ts` asserts that no two buoys share a place and
+that each series runs from the harbour mouth inward, its lowest number
+nearer the entrance than its highest. What is **not** asserted is that the
+numbers rise monotonically buoy by buoy: the odd and even runs climb
+opposite sides of a channel that bends west past Cobh, so no distance from
+any one point rises along either, and a test that claimed otherwise would
+need a channel centreline this data set has no source for.
 
-**Cage is placed from neither source, and on the club's word alone.** Buoy
-C1 is in no publication, and it is not in OpenStreetMap either — the
-nearest node to it is 850 m away — so it could not be read off the chart
-with the others. The club supplied its position directly: 51°48.834'N
-8°16.968'W, the green conical the instructions describe at 26.1. That is
+**E4 stays on its OpenStreetMap trace** for now, and names `OpenStreetMap`
+as its `source`. eOceanic lists it ("The Sound E4") 23 m away, and two
+plotter readings Pat Tanner took put it nearer the trace than eOceanic;
+which to carry is a separate decision.
+
+**Cage is placed from the club's correspondence.** Buoy C1 is not in
+OpenStreetMap — the nearest node to it is 850 m away — so it could not be
+read off the chart with the others. The club supplied its position
+directly: 51°48.834'N 8°16.968'W, the green conical the instructions
+describe at 26.1. eOceanic lists "C1" 39 m from it, which corroborates it
+and does not displace it: the club's figure for the mark its own line is
+laid to is the better authority. That is
 correspondence, not a document, and Cage's `source` says so — "Royal Cork
 Yacht Club correspondence"; if the club ever prints it, the citation
 replaces the correspondence.
@@ -111,19 +131,22 @@ It is worth having, because it is the Grassy Walk line's outer distance
 mark, and placing it made a check possible that tests everything at once.
 Solve for the start line position that best fits the card's own printed
 distances — 28 courses, nothing fed in but the mark positions and the
-printed totals — and the answer lands at 51°48.693'N 8°17.676'W: 853 m from
-Cage, 817 m from the club's pier at Crosshaven, on the 1500 m line between
-them, 367 m from its midpoint. The fit recovered a point on the Grassy Walk
+printed totals — and the answer lands at 51°48.623'N 8°17.702'W: 929 m from
+Cage, 684 m from the club's pier at Crosshaven, between them on the 1500 m
+line, 321 m from its midpoint. The fit recovered a point on the Grassy Walk
 line without being told the line exists. A wrong Cage would have dragged it
-off; so would a mis-numbered buoy. Median error 0.46 nm on courses of six to
-twelve miles.
+off; so would a mis-numbered buoy. Median error 0.54 nm on courses of six to
+twelve miles. On the OpenStreetMap traces the fit was 133 m to the north,
+with a median error of 0.46 nm: the eOceanic positions fit the printed
+distances no better, and the printed distances, as below, are estimates.
 
 That check also settles course 12, whose third round prints "(3nm)" after
-rounds of 7 and 9. Computed from positions it is 10.04 nm, which is what a
+rounds of 7 and 9. Computed from positions it is 10.34 nm, which is what a
 third round after 7 and 9 should be: the card has a misprint, and the JSON
 still carries 3 as printed. Courses 3 and 19 sit furthest out — printed 12.0
-against 9.09 and 10.38 — and are unexplained; every other course over the
-same marks fits.
+against 9.12 and 10.51. Pat Tanner's workbook records the card's author on
+the printed distances generally: they are estimates, carried forward
+through the card's revisions and not recalculated when a course changes.
 
 Five marks are still unplaced, each with a `placement` and no position.
 **EF2 and EF4** were not identified — OpenStreetMap has three nodes in the
@@ -187,10 +210,11 @@ The marks tool refuses a card that names a mark neither the instructions
 nor the manifest supplies. Structural tests (`tests/rcyc.test.ts`) check
 the forty courses' order, a dozen of them against the printed card round by
 round, every course's start and finish at the line, the first note's
-content, that no OpenStreetMap node serves two numbers, that every buoy's
-colour agrees with the odd-is-green convention, that each series runs from
-the entrance inward, and that a course asks the caller only for the line
-and the marks left unplaced.
+content, the source of every position, that no two buoys share a place,
+that each series runs from the entrance inward, and that a course asks the
+caller only for the line and the marks left unplaced. `tools/check_rcyc.py`,
+run by `pnpm data:check`, holds the buoys to their OpenStreetMap traces and
+to the colours their numbers give them.
 
 The strongest check is the card's own arithmetic, described above: fitting
 a start line to the printed distances of 28 courses puts it on the Grassy
@@ -204,12 +228,14 @@ suite to assert; `tools/` has no script for it either. Re-derive it from
 - The card is the 2026 update of a card the club has kept since at least
   2008 (the chart on the club's website is "Revised 2008"); the 2025
   edition is also on the club's site.
-- The twenty buoy positions are traced from OpenStreetMap and numbered by
-  eye against the chart, and Cage is the club's own figure given in
-  correspondence; neither is backed by a document, and a Port of Cork notice
-  or list, or the club adding positions to its instructions, would replace
-  both with a citation. OpenStreetMap's data is ODbL, which the MIT licence
-  on this repository does not carry — worth settling, since these are
-  positions taken as data, not tiles shown with attribution.
+- Nineteen buoy positions are eOceanic's, whose own source is not stated;
+  E4's is traced from OpenStreetMap; Cage is the club's own figure given in
+  correspondence. None is backed by an official document, and a Port of
+  Cork notice or list, or the club adding positions to its instructions,
+  would replace them with a citation. OpenStreetMap's data is ODbL, which
+  the MIT licence on this repository does not carry — worth settling for
+  E4 and the cross-check's traces, since these are positions taken as data,
+  not tiles shown with attribution; eOceanic states no licence for its
+  list.
 - EF2 and EF4 are the two still open, and nothing distinguishes
   OpenStreetMap's three East Ferry nodes from one another.

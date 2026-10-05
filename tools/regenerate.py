@@ -205,6 +205,11 @@ def extract(base, artifact, meta_path):
                '--card', os.path.join(base, artifact['card'])]
         if artifact.get('addMarks'):
             cmd += ['--add', added_marks_file(base, artifact)]
+        if artifact.get('buoys'):
+            b = artifact['buoys']
+            with tempfile.NamedTemporaryFile('w', suffix='.json', delete=False) as fh:
+                json.dump(b['rows'], fh)
+            cmd += ['--buoys', os.path.join(base, b['source']), '--buoy-rows', fh.name, '--buoy-citation', b['citation']]
     elif tool == 'extract_rcyc_card':
         cmd = [sys.executable, os.path.join(TOOLS, 'extract_rcyc_card.py'), 'card', source, '--meta', meta_path]
     elif tool == 'extract_shsc_marks':
