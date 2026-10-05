@@ -284,6 +284,16 @@ function swatchOf(color: string | undefined): string {
   return '#888';
 }
 
+function isUrl(source: string): boolean {
+  return /^https?:\/\//.test(source);
+}
+
+/** A source as the page shows it: a link where it is a URL, and the words
+ *  where it is a document that was never published. */
+function cite(source: string): string {
+  return isUrl(source) ? `<a href="${esc(source)}">${esc(source)}</a>` : esc(source);
+}
+
 /** The club's marks, and what the marks file's source says about them. A
  *  file whose marks come from more than one authority gets a column naming
  *  each mark's own; a mark with none there is the file's source's. */
@@ -304,7 +314,11 @@ function marksTable(marks: MarksFile): string {
   }
   html += '</tbody></table>';
   if (sourced) {
-    const file = marks.source ? `<a href="${esc(marks.source)}">the marks file's source</a>` : "the marks file's source";
+    const file = !marks.source
+      ? "the marks file's source"
+      : isUrl(marks.source)
+        ? `<a href="${esc(marks.source)}">the marks file's source</a>`
+        : esc(marks.source);
     html += `<p class="meta">A mark with no source of its own is from ${file}.</p>`;
   }
   for (const n of marks.notes ?? []) {
@@ -655,7 +669,7 @@ function notes(items: Note[]): string {
 export function renderCardHtml(card: CourseCardFile, marks: MarksFile, options: RenderOptions = {}): string {
   const title = options.title ?? card.name ?? 'Course card';
   const sources = [card.source, marks.source].filter((s): s is string => !!s);
-  const meta = [card.club, ...sources.map((s) => `<a href="${esc(s)}">${esc(s)}</a>`)].filter(Boolean).join(' · ');
+  const meta = [card.club, ...sources.map(cite)].filter(Boolean).join(' · ');
   const allNotes = card.notes ?? [];
   const ends = [card.startLine, card.finish].filter((m): m is StartLine => !!m);
   const withEnds = ends.length

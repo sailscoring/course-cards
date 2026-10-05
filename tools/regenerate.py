@@ -254,12 +254,16 @@ def comparable(text):
     return ' '.join(text.split())
 
 
-def kept_copy(artifact, url):
-    """The copy in `source/` of the document an artifact fetched from `url`:
-    its own source, or one it names beside it (a notice, a supplement)."""
+def kept_copy(artifact, cited):
+    """The copy in `source/` of the document an output cites as its `source`:
+    the artifact's own, or one it names beside it (a notice, a supplement),
+    whichever was fetched from that URL. A document that was never published
+    is cited in words and has no URL; it is the artifact's own source."""
     for spec in [artifact, *(v for v in artifact.values() if isinstance(v, dict))]:
-        if spec.get('url') == url and spec.get('source'):
+        if spec.get('url') == cited and spec.get('source'):
             return spec['source']
+    if not artifact.get('url'):
+        return artifact['source']
     return None
 
 

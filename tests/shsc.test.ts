@@ -40,6 +40,7 @@ describe('the Calves Week 2026 marks file', () => {
       expect(m.position.lng, m.id).toBeGreaterThan(-9.7);
       expect(m.position.lng, m.id).toBeLessThan(-9.47);
     }
+    expect(marks.source).toMatch(/^Schull Harbour Sailing Club, "Calves Week, Marks, Distances and Bearings", version 1/);
     expect(byId.get('Fastnet')).toEqual({
       id: 'Fastnet',
       name: 'Fastnet Rock',

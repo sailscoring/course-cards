@@ -29,7 +29,9 @@ chartlet and buoy photos are from the event's official notice board on
 racingrulesofsailing.org (event 15264), with their URLs in the manifest.
 The sheet — "Calves Week, Marks, Distances and Bearings", version 1, dated
 9 July 2026 — is on neither the notice board nor the club's site, and the
-copy here was supplied to the project; the manifest says so. `manifest.json`
+copy here was supplied to the project; the manifest says so. It is where
+the marks' positions come from, so the marks file cites it, in words since
+it has no URL, as its `source`. `manifest.json`
 records each artifact's source, the metadata that heads the output, the
 cross-checks and the one mark added; `pnpm data` rebuilds everything and
 `pnpm data:check` verifies the committed files against a fresh run — the
