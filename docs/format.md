@@ -183,6 +183,40 @@ The card a club prints: the courses, each an ordered sequence of marks.
   club's own words and no `position`, exactly like HYC's Zephyr; a fixed one
   — DBSC's transit at the West Pier hut — could carry a `position`.
 
+  A line has two ends, and where the sailing instructions say what forms
+  them the card carries them as `ends`: one `starboard` and one `port`,
+  named as the instructions name them, looking towards the first mark —
+  not committee boat and pin, since the committee boat is not always at the
+  starboard end. Each end may have a `name` in the club's words ("Red and
+  white staff on the committee vessel"), and is placed one of three ways: a
+  `position` of its own for a fixed end (the pole in front of a hut), a
+  `mark` naming one of the marks file's marks (a club buoy that forms the
+  pin), or neither, with a `placement` saying where it is laid on the day.
+  An end's `source` is the instruction defining it, where that is not the
+  line's own.
+
+  ```json
+  "startLine": {
+    "id": "SL",
+    "name": "Start line",
+    "source": "CYBC sailing instructions 7.1 and 7.2",
+    "ends": [
+      { "end": "starboard", "name": "Mainmast of the committee boat", "placement": "Laid on the day" },
+      { "end": "port", "name": "Outer pin-end mark", "placement": "Laid on the day" }
+    ]
+  }
+  ```
+
+  **Legs to and from a line with ends are measured from its geodesic
+  midpoint**, which is how clubs' cards and race officers measure them. The
+  line is still one mark of the course, by its id: no course's `marks`
+  changes. A line with ends may carry a `position` as well, for readers
+  that know nothing of ends; where both ends are fixed by `position`, it
+  must be their midpoint, and the parser holds it to that within 5 m. A
+  finish carries `ends` exactly as a start line does, and a course that
+  finishes on the start line ends its sequence with the start line's id —
+  the same line, ends and all.
+
   The start line belongs to the card, not to the marks file, because one
   marks file serves cards that start in different places: HYC's Autumn
   League offshore and inshore cards share a technical sheet but start north
@@ -244,6 +278,27 @@ What the leg library needs beyond the two files:
   }
 }
 ```
+
+A line may be given its ends instead of one position — where the committee
+boat and the pin were:
+
+```json
+{
+  "marks": {
+    "SL": { "ends": { "starboard": { "lat": 51.7825, "lng": -8.23442 }, "port": { "lat": 51.78045, "lng": -8.23508 } } }
+  }
+}
+```
+
+Each end is then placed from the race if given there, else from the card —
+its own `position`, or where its `mark` was (for the race, or in the marks
+file). The leg is measured from the ends' midpoint, and the library's
+waypoint for the line says so (`line: "midpoint"`) and carries the ends. An
+end nobody places is an error naming it and quoting its `placement`: the
+library never guesses a midpoint from one end. A plain position for a line
+is the line as one point — the committee boat alone, say — and so is a
+card's own `position` for a line the race says nothing of. Ends given for a
+line the card gives none make one all the same.
 
 `marks` gives positions for everything the card cannot place — the start
 line, the marks laid on the day — and may also override a fixed mark that
@@ -363,7 +418,9 @@ mark: a reader that ignores it takes every mark to be the file's, which is
 what it did before. And so are a marks file's `notes`. The routing overlay
 is a file of its own beside the others, which a reader that has never heard
 of it does not open; the legs it splits are new fields on a leg, and a leg
-without them is what it always was.
+without them is what it always was. A line's `ends` are the same kind of
+field: a reader that ignores them sees the line as the single mark it always
+was, placed by its `position` or asked of the race.
 
 - **Version 1** — the initial format. Courses began at the first mark the
   card printed, and the start line was supplied per race, outside the files.

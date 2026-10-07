@@ -25,6 +25,21 @@ export interface DrawnMark {
   label: string;
   position: Position;
   fixed?: boolean;
+  /** A start or finish line with two ends, `position` being the point legs
+   *  are measured from — their midpoint. The line is drawn as the segment
+   *  between the ends, each with a symbol for what forms it, and the legs
+   *  leave from the midpoint. A line's ends as `lineGeometry` or a leg's
+   *  waypoint gives them will do. */
+  ends?: [DrawnLineEnd, DrawnLineEnd];
+}
+
+/** One end of a line to draw. `kind` is what forms it: a committee or
+ *  starting vessel, or a buoy; absent, a plain point — a pole, a hut. */
+export interface DrawnLineEnd {
+  position: Position;
+  /** Named on hover. */
+  label?: string;
+  kind?: 'vessel' | 'buoy';
 }
 
 /** One entry of the course to draw, by mark id, in sailing order. */
@@ -158,8 +173,9 @@ export function renderCourseSvg(marks: DrawnMark[], course: DrawnCourseMark[] = 
   // Bounds: the marks' extent, padded, and never narrower than 0.6′ so a
   // single mark or a short line still sits in a sensible frame; then the
   // aspect held between 0.6 and 1.4 by widening the narrower axis.
-  const lats = marks.map((m) => m.position.lat);
-  const lngs = marks.map((m) => m.position.lng);
+  const extent = marks.flatMap((m) => [m.position, ...(m.ends ?? []).map((e) => e.position)]);
+  const lats = extent.map((p) => p.lat);
+  const lngs = extent.map((p) => p.lng);
   const midLat = (Math.min(...lats) + Math.max(...lats)) / 2;
   const k = Math.cos((midLat * Math.PI) / 180) || 1e-6;
   const latSpan = Math.max(Math.max(...lats) - Math.min(...lats), 0.6 / 60);
@@ -251,6 +267,26 @@ export function renderCourseSvg(marks: DrawnMark[], course: DrawnCourseMark[] = 
   // North arrow.
   svg += `<text x="${f(width - 14 * u)}" y="${f(18 * u)}" ${font(12)} font-weight="700" text-anchor="middle" fill="#222">N</text>`;
   svg += `<path d="M ${f(width - 14 * u)} ${f(22 * u)} l ${f(4 * u)} ${f(12 * u)} l ${f(-4 * u)} ${f(-3 * u)} l ${f(-4 * u)} ${f(3 * u)} z" fill="#222"/>`;
+
+  // Lines with two ends: the segment between them, under the legs, and a
+  // symbol for each end — a hull for a vessel, a buoy, or a plain point.
+  for (const m of marks) {
+    if (!m.ends) continue;
+    const [a, b] = m.ends;
+    svg += `<path d="M${f(x(a.position.lng))} ${f(y(a.position.lat))}L${f(x(b.position.lng))} ${f(y(b.position.lat))}" stroke="#333" stroke-width="${f(2 * u)}" fill="none"/>`;
+    for (const end of m.ends) {
+      const cx = x(end.position.lng);
+      const cy = y(end.position.lat);
+      const title = end.label ? `<title>${esc(end.label)}</title>` : '';
+      if (end.kind === 'vessel') {
+        svg += `<path d="M${f(cx - 7 * u)} ${f(cy - 3 * u)}L${f(cx + 4 * u)} ${f(cy - 3 * u)}L${f(cx + 8 * u)} ${f(cy)}L${f(cx + 4 * u)} ${f(cy + 3 * u)}L${f(cx - 7 * u)} ${f(cy + 3 * u)}z" fill="#333" stroke="#fff" stroke-width="${f(u)}">${title}</path>`;
+      } else if (end.kind === 'buoy') {
+        svg += `<circle cx="${f(cx)}" cy="${f(cy)}" r="${f(4 * u)}" fill="#f57c00" stroke="#333" stroke-width="${f(1.5 * u)}">${title}</circle>`;
+      } else {
+        svg += `<rect x="${f(cx - 3 * u)}" y="${f(cy - 3 * u)}" width="${f(6 * u)}" height="${f(6 * u)}" fill="#333" stroke="#fff" stroke-width="${f(u)}">${title}</rect>`;
+      }
+    }
+  }
 
   // Legs: numbered arrows in sailing order, a repeated leg in its own lane
   // beside the first, each labelled with its true bearing and distance. With

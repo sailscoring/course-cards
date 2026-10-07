@@ -4,12 +4,14 @@
  * and consumers get plain typed objects.
  */
 
+import { METRES_PER_NM, distanceNm, midpointOf } from './geo.js';
 import {
   FORMAT_VERSION,
   type AssumedPosition,
   type CourseCardFile,
   type CourseMark,
   type Finish,
+  type LineEnd,
   type Mark,
   type MarksFile,
   type Note,
@@ -78,6 +80,47 @@ function checkMark(raw: unknown, path: string, seen?: Set<string>): Mark {
   };
 }
 
+/** How far, in metres, a line's own `position` may be from the midpoint of
+ *  its two fixed ends: rounding in the positions as printed, no more. */
+const LINE_MIDPOINT_TOLERANCE_M = 5;
+
+/** A start line or finish: a mark, and the two ends the sailing
+ *  instructions give it, where they do — one starboard, one port. A line
+ *  whose ends are both fixed by position and which carries a position of
+ *  its own must put that position at their midpoint, since that is where a
+ *  reader that knows nothing of ends will measure from. */
+function checkLine(raw: unknown, path: string): StartLine {
+  const line = checkMark(raw, path);
+  const r = raw as Record<string, unknown>;
+  if (r.ends == null) return line;
+  if (!Array.isArray(r.ends) || r.ends.length !== 2) fail(`${path}.ends`, 'expected two ends');
+  const ends = r.ends.map((rawEnd, i): LineEnd => {
+    const endPath = `${path}.ends[${i}]`;
+    if (typeof rawEnd !== 'object' || rawEnd === null) fail(endPath, 'expected an object');
+    const e = rawEnd as Record<string, unknown>;
+    if (e.end !== 'starboard' && e.end !== 'port') fail(`${endPath}.end`, 'expected "starboard" or "port"');
+    if (e.mark != null && (typeof e.mark !== 'string' || !e.mark)) fail(`${endPath}.mark`, 'expected a mark id');
+    if (e.mark != null && e.position != null) fail(endPath, 'expected at most one of mark and position');
+    return {
+      end: e.end,
+      ...optionalString(e, 'name'),
+      ...optionalString(e, 'mark'),
+      ...(e.position != null ? { position: checkPosition(e.position, `${endPath}.position`) } : {}),
+      ...optionalString(e, 'placement'),
+      ...optionalString(e, 'source'),
+    };
+  }) as [LineEnd, LineEnd];
+  if (ends[0].end === ends[1].end) fail(`${path}.ends`, 'expected one starboard end and one port end');
+  const [a, b] = ends;
+  if (line.position && a.position && b.position) {
+    const offM = distanceNm(line.position, midpointOf(a.position, b.position)) * METRES_PER_NM;
+    if (offM > LINE_MIDPOINT_TOLERANCE_M) {
+      fail(`${path}.position`, `expected the midpoint of the line's fixed ends, not ${Math.round(offM)} m from it`);
+    }
+  }
+  return { ...line, ends };
+}
+
 export function parseMarksFile(data: unknown): MarksFile {
   if (typeof data !== 'object' || data === null) fail('marks', 'expected an object');
   const obj = data as Record<string, unknown>;
@@ -125,7 +168,7 @@ export function parseCourseCardFile(data: unknown): CourseCardFile {
 
   // The start line is a mark, its source the instruction that defines it.
   const startLine: { startLine?: StartLine } =
-    obj.startLine != null ? { startLine: checkMark(obj.startLine, 'card.startLine') } : {};
+    obj.startLine != null ? { startLine: checkLine(obj.startLine, 'card.startLine') } : {};
 
   // The finish is the same thing at the other end, plus the marks the run in
   // to it passes.
@@ -133,7 +176,7 @@ export function parseCourseCardFile(data: unknown): CourseCardFile {
   if (obj.finish != null) {
     const raw = obj.finish as Record<string, unknown>;
     const via = raw.via == null ? {} : { via: checkCourseMarks(raw.via, 'card.finish.via') };
-    finish = { finish: { ...checkMark(raw, 'card.finish'), ...via } };
+    finish = { finish: { ...checkLine(raw, 'card.finish'), ...via } };
   }
 
   const ids = new Set<string>();

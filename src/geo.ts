@@ -62,3 +62,17 @@ export function destination(from: Position, bearing: number, distanceMeters: num
     );
   return { lat: toDeg(φ2), lng: ((toDeg(λ2) + 540) % 360) - 180 };
 }
+
+/** The great-circle midpoint of a and b — where a line between two ends is
+ *  measured from. */
+export function midpointOf(a: Position, b: Position): Position {
+  const φ1 = toRad(a.lat);
+  const φ2 = toRad(b.lat);
+  const λ1 = toRad(a.lng);
+  const dLng = toRad(b.lng - a.lng);
+  const bx = Math.cos(φ2) * Math.cos(dLng);
+  const by = Math.cos(φ2) * Math.sin(dLng);
+  const φ3 = Math.atan2(Math.sin(φ1) + Math.sin(φ2), Math.sqrt((Math.cos(φ1) + bx) ** 2 + by ** 2));
+  const λ3 = λ1 + Math.atan2(by, Math.cos(φ1) + bx);
+  return { lat: toDeg(φ3), lng: ((toDeg(λ3) + 540) % 360) - 180 };
+}

@@ -8,6 +8,10 @@ export type {
   DirectPair,
   Finish,
   LegReview,
+  LineEnd,
+  LineEndWaypoint,
+  LineGeometry,
+  LinePositions,
   Mark,
   MarksFile,
   Note,
@@ -20,7 +24,7 @@ export type {
   StartLine,
   Waypoint,
 } from './types.js';
-export { METRES_PER_CABLE, METRES_PER_NM, bearingDeg, destination, distanceNm } from './geo.js';
+export { METRES_PER_CABLE, METRES_PER_NM, bearingDeg, destination, distanceNm, midpointOf } from './geo.js';
 export { formatPosition, parsePosition } from './position.js';
 export type { FormatPositionOptions } from './position.js';
 export {
@@ -31,6 +35,7 @@ export {
   courseLegs,
   courseMarks,
   legsFromWaypoints,
+  lineGeometry,
   printedMarks,
   routedLegsFromWaypoints,
   totalDistanceNm,
@@ -38,6 +43,6 @@ export {
 export type { ResolvedCourseMark } from './legs.js';
 export { FormatError, parseCourseCardFile, parseMarksFile, parseRoutingFile } from './parse.js';
 export { renderCourseBackgroundSymbol, renderCourseSvg } from './render.js';
-export type { CourseBackground, DrawnCourseMark, DrawnMark, RenderCourseOptions } from './render.js';
+export type { CourseBackground, DrawnCourseMark, DrawnLineEnd, DrawnMark, RenderCourseOptions } from './render.js';
 export { CatalogueError, parseCatalogue } from './catalogue.js';
 export type { Catalogue, CatalogueCard, CatalogueSet } from './catalogue.js';

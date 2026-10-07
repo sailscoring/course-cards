@@ -73,7 +73,40 @@ export interface CourseMark {
  *  the day, and its id at the head of every course. Its `source` is the
  *  document and clause the line is defined by: "DBSC Sailing Instructions
  *  H – Fixed Marks, Hut, 4.1 and 4.2". */
-export type StartLine = Mark;
+export interface StartLine extends Mark {
+  /** The line's two ends, where the sailing instructions define them: one
+   *  `starboard`, one `port`. Legs to and from a line with ends are measured
+   *  from its geodesic midpoint, which is how a club's card and a race
+   *  officer measure them. Absent, the line is a single point, as it always
+   *  was. A line with ends may still carry a `position` for readers that do
+   *  not know them; where both ends are fixed, it is their midpoint. */
+  ends?: [LineEnd, LineEnd];
+}
+
+/** One end of a start or finish line, as the sailing instructions describe
+ *  it: a staff on the committee vessel, a pin with an orange flag, the pole
+ *  in front of a hut, one of the club's buoys. Where an end laid on the day
+ *  was is a race position, given under the line's id (`RacePositions`). */
+export interface LineEnd {
+  /** Which end, in the instructions' terms, looking towards the first mark.
+   *  Not committee boat and pin: the committee boat is not always at the
+   *  starboard end. */
+  end: Side;
+  /** What forms the end, in the club's words: "Red and white staff on the
+   *  committee vessel". */
+  name?: string;
+  /** The end is one of the marks file's marks, by id: RCYC's ODM, "Buoy C1
+   *  (Cage)". It is where that mark is, for the race or in the file. */
+  mark?: string;
+  /** A fixed end with a position of its own: the pole in front of the
+   *  Grassy Walk hut. */
+  position?: Position;
+  /** Where an end laid on the day goes, in the club's words. */
+  placement?: string;
+  /** The instruction that defines this end, where it is not the line's own
+   *  `source`. */
+  source?: string;
+}
 
 /** The ending every course on a card runs to, where the club's sailing
  *  instructions add one the card itself does not print — HYC's 2026 Autumn
@@ -149,7 +182,38 @@ export interface CourseCardFile {
  * was moved.
  */
 export interface RacePositions {
-  marks?: Record<string, Position>;
+  /** A position per mark id. A line may be given its ends instead — where
+   *  the committee boat and the pin were — and is then measured from their
+   *  midpoint; a plain position for a line is the line as one point. */
+  marks?: Record<string, Position | LinePositions>;
+}
+
+/** Where a line's ends were for a race. An end the card fixes need not be
+ *  given; one given overrides the card's. */
+export interface LinePositions {
+  ends: Partial<Record<Side, Position>>;
+}
+
+/** One end of a line placed: which end, what it is, and where it was. */
+export interface LineEndWaypoint {
+  end: Side;
+  label: string;
+  position: Position;
+  /** The marks file's mark the end is, where it is one. */
+  mark?: string;
+  /** The authority for `position`, as for a `Waypoint`: absent where the
+   *  position was given for the race. */
+  source?: string;
+}
+
+/** A line with two ends, placed: the ends, the point legs are measured from
+ *  (their geodesic midpoint), the line's length, and the bearing from the
+ *  first end to the second. */
+export interface LineGeometry {
+  ends: [LineEndWaypoint, LineEndWaypoint];
+  measuringPoint: Position;
+  lengthM: number;
+  bearingDeg: number;
 }
 
 /** One end of a leg: a mark of the course, the start line included, and
@@ -169,6 +233,12 @@ export interface Waypoint {
   /** A routing waypoint: a point a passage turns at, not a mark of the
    *  course. Nobody rounds it; it says where the water is. */
   routing?: true;
+  /** A line with two ends, whose `position` is the point legs to and from
+   *  it are measured from: their midpoint. A leg with an end like this one
+   *  was measured from the middle of a line, not from a mark. */
+  line?: 'midpoint';
+  /** The line's ends, where `line` is set. */
+  ends?: [LineEndWaypoint, LineEndWaypoint];
 }
 
 /** How a routing overlay speaks for a leg: a straight line it checked and

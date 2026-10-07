@@ -94,13 +94,23 @@ Around that:
   straight line marked `unreviewed`. Without an overlay the legs carry none
   of this: no overlay makes no claim. `routedLegsFromWaypoints` is the same
   for waypoints placed by hand.
+- Start and finish lines with two ends. A card's line may say what forms
+  its `starboard` and `port` ends — a position, one of the marks file's
+  marks, or a `placement` where it is laid on the day — and a race may give
+  the ends' positions under the line's id (`SL: { ends: { starboard, port }
+  }`). Legs to and from such a line are measured from its geodesic midpoint,
+  and its waypoint says so (`line: 'midpoint'`) and carries the ends. An end
+  nobody places is an error naming it; the midpoint is never guessed from
+  one end. `lineGeometry(line, race, marks)` gives a line's ends, the
+  midpoint, its length and its bearing, and `midpointOf(a, b)` the midpoint
+  itself.
 - `legsFromWaypoints(waypoints)` — the leg arithmetic on its own, for a
   course built by hand from placed marks with no card behind it.
 - `parsePosition` / `formatPosition` — positions the way sailors write
   them: degrees and decimal minutes with or without the symbols, degrees
   minutes and seconds, decimal degrees; the hemisphere as a letter before or
   after, or a sign.
-- `distanceNm`, `bearingDeg`, `destination`, `METRES_PER_NM`,
+- `distanceNm`, `bearingDeg`, `destination`, `midpointOf`, `METRES_PER_NM`,
   `METRES_PER_CABLE` — the geometry for the arithmetic around a race.
 - `renderCourseSvg(marks, course)` — the course as a picture: marks at
   their real relative positions, legs numbered with bearing and distance,
@@ -112,6 +122,9 @@ Around that:
   Given the data set's `routing` overlay, a routed leg is drawn through its
   waypoints as legs `3a`, `3b`…, and a leg the overlay does not speak for is
   dashed.
+  A mark given `ends` is a line: drawn as the segment between them, with a
+  hull for a vessel, a buoy, or a plain point at each end, and the legs
+  leaving from its midpoint.
 - `renderCourseBackgroundSymbol(background, id)` — that chart as a symbol,
   for a page with several drawings to carry once: each drawing given
   `backgroundSymbol: id` refers to it instead of embedding its own copy.

@@ -31,6 +31,8 @@ const expected = [
   'distanceNm',
   'formatPosition',
   'legsFromWaypoints',
+  'lineGeometry',
+  'midpointOf',
   'parseCatalogue',
   'parseCourseCardFile',
   'parseMarksFile',

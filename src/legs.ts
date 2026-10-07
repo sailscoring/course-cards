@@ -3,18 +3,23 @@
  * sailed: each one a distance and a true bearing.
  */
 
-import { METRES_PER_NM, bearingDeg, distanceNm } from './geo.js';
+import { METRES_PER_NM, bearingDeg, distanceNm, midpointOf } from './geo.js';
 import type {
   AssumedPosition,
   Course,
   CourseCardFile,
   CourseLeg,
   CourseMark,
+  LineEnd,
+  LineEndWaypoint,
+  LineGeometry,
+  LinePositions,
   Mark,
   MarksFile,
   Position,
   RacePositions,
   RoutingFile,
+  StartLine,
   Waypoint,
 } from './types.js';
 
@@ -24,7 +29,8 @@ export class CourseError extends Error {}
  *  the card prints it, the mark it names, and whether the card itself places
  *  it. An unplaced mark — the start line laid on the day, a windward mark, a
  *  finish — is what a caller must ask the race officer for, and `placement`
- *  on the mark says where the club says it goes. */
+ *  on the mark says where the club says it goes. A line whose ends the card
+ *  fixes, each a position or a marks file mark with one, is placed. */
 export interface ResolvedCourseMark {
   entry: CourseMark;
   mark: Mark;
@@ -54,6 +60,101 @@ export function printedMarks(card: CourseCardFile, courseId: string): CourseMark
   return course.marks.slice(head, course.marks.length - tail);
 }
 
+function isLinePositions(given: Position | LinePositions): given is LinePositions {
+  return 'ends' in given;
+}
+
+function markLabel(mark: Mark): string {
+  return mark.name ? `${mark.name} (${mark.id})` : mark.id;
+}
+
+/** Whether the card places every end of a line itself: each a position of
+ *  its own, or a marks file mark with one. */
+function endsFixed(line: StartLine, marks: MarksFile | undefined): boolean {
+  if (!line.ends) return false;
+  return line.ends.every(
+    (e) => e.position != null || (e.mark != null && marks?.marks.find((m) => m.id === e.mark)?.position != null),
+  );
+}
+
+/** A line's ends placed for a race, and the ones that could not be: each
+ *  end from the race if it was given there, else the card's position for
+ *  it, else where its marks file mark was. A line the card gives no ends
+ *  but the race does takes the race's, starboard first. `lineSource` is the
+ *  authority for an end the card fixes and names none for. */
+function placeEnds(
+  line: StartLine,
+  race: RacePositions,
+  marks: MarksFile | undefined,
+  lineSource: string | undefined,
+  what: string,
+): { placed: LineEndWaypoint[]; missing: LineEnd[] } {
+  const given = race.marks?.[line.id];
+  const raceEnds = given && isLinePositions(given) ? given.ends : undefined;
+  const ends: LineEnd[] = line.ends ?? [{ end: 'starboard' }, { end: 'port' }];
+  const placed: LineEndWaypoint[] = [];
+  const missing: LineEnd[] = [];
+  for (const end of ends) {
+    const mark = end.mark != null ? marks?.marks.find((m) => m.id === end.mark) : undefined;
+    if (end.mark != null && !mark) throw new CourseError(`${what}: unknown mark "${end.mark}" at the ${end.end} end of "${line.id}"`);
+    const label = end.name ?? (mark ? markLabel(mark) : `${end.end === 'starboard' ? 'Starboard' : 'Port'} end`);
+    const base = { end: end.end, label, ...(mark ? { mark: mark.id } : {}) };
+    const raceEnd = raceEnds?.[end.end];
+    const raceMark = mark ? race.marks?.[mark.id] : undefined;
+    if (raceEnd) {
+      placed.push({ ...base, position: raceEnd });
+    } else if (end.position) {
+      const source = end.source ?? lineSource;
+      placed.push({ ...base, position: end.position, ...(source != null ? { source } : {}) });
+    } else if (raceMark && !isLinePositions(raceMark)) {
+      placed.push({ ...base, position: raceMark });
+    } else if (mark?.position) {
+      const source = mark.source ?? marks?.source;
+      placed.push({ ...base, position: mark.position, ...(source != null ? { source } : {}) });
+    } else {
+      missing.push(mark && !end.placement && mark.placement ? { ...end, placement: mark.placement } : end);
+    }
+  }
+  return { placed, missing };
+}
+
+function missingEnd(what: string, line: StartLine, end: LineEnd): CourseError {
+  const where = end.placement ? ` (${end.placement})` : '';
+  return new CourseError(`${what}: no position for the ${end.end} end of "${line.id}"${where}`);
+}
+
+function geometry(placed: LineEndWaypoint[]): LineGeometry {
+  const [a, b] = placed as [LineEndWaypoint, LineEndWaypoint];
+  return {
+    ends: [a, b],
+    measuringPoint: midpointOf(a.position, b.position),
+    lengthM: distanceNm(a.position, b.position) * METRES_PER_NM,
+    bearingDeg: bearingDeg(a.position, b.position),
+  };
+}
+
+/**
+ * A start or finish line with two ends, placed for a race: its ends, the
+ * point legs to and from it are measured from — their geodesic midpoint —
+ * its length in metres, and the bearing from its first end to its second.
+ * Each end is where the race says it was (`race.marks[line.id].ends`), else
+ * where the card fixes it: a position of its own, or the marks file mark it
+ * names (`marks`), wherever that mark was for the race. An end nobody
+ * places is an error naming it and quoting where the club says it goes; the
+ * midpoint is never guessed from one end.
+ *
+ * A line that is a single point is not a line with ends, and gives
+ * `undefined`: one with no ends on the card or for the race, or one the
+ * race gives a plain position.
+ */
+export function lineGeometry(line: StartLine, race: RacePositions = {}, marks?: MarksFile): LineGeometry | undefined {
+  const given = race.marks?.[line.id];
+  if (given ? !isLinePositions(given) : !line.ends) return undefined;
+  const { placed, missing } = placeEnds(line, race, marks, line.source, `line "${line.id}"`);
+  if (missing.length) throw missingEnd(`line "${line.id}"`, line, missing[0]!);
+  return geometry(placed);
+}
+
 /** The marks of a sequence resolved against a card and its marks file: the
  *  start line and the finish ahead of the marks file, then the marks file. A
  *  mark none of them lists is an error naming it; `what` says which course
@@ -68,7 +169,8 @@ function resolve(card: CourseCardFile, marks: MarksFile, sequence: CourseMark[],
     if (!found) throw new CourseError(`${what}: unknown mark "${entry.mark}"`);
     const { mark } = found;
     const source = mark.source ?? found.fileSource;
-    return { entry, mark, placed: mark.position != null, ...(source != null ? { source } : {}) };
+    const placed = mark.position != null || endsFixed(mark, marks);
+    return { entry, mark, placed, ...(source != null ? { source } : {}) };
   });
 }
 
@@ -133,21 +235,38 @@ export function legsFromWaypoints(waypoints: Waypoint[]): CourseLeg[] {
  *  from either source is an error naming it and quoting where the club
  *  says it goes, so the caller knows what to ask the race officer for. A
  *  waypoint carries the mark's `source` only where the position is the
- *  files': one given for the race is the caller's. */
-function place(resolved: ResolvedCourseMark[], race: RacePositions, what: string): Waypoint[] {
+ *  files': one given for the race is the caller's.
+ *
+ *  A line with two ends — on the card, or given for the race — is placed at
+ *  their midpoint, the waypoint saying so and carrying the ends. An end
+ *  nobody places is an error naming it, except where the race says nothing
+ *  of the line and the card gives it a position of its own: that position
+ *  stands, the line as one point, as it did before lines had ends. */
+function place(resolved: ResolvedCourseMark[], race: RacePositions, what: string, marks: MarksFile): Waypoint[] {
   return resolved.map(({ mark, source }) => {
     const given = race.marks?.[mark.id];
-    const position = given ?? mark.position;
-    if (!position) {
+    const point = { mark: mark.id, label: markLabel(mark) };
+    if (given && !isLinePositions(given)) return { ...point, position: given };
+    const line = mark as StartLine;
+    if (given || line.ends) {
+      const { placed, missing } = placeEnds(line, race, marks, source, what);
+      if (!missing.length) {
+        const { ends, measuringPoint } = geometry(placed);
+        return {
+          ...point,
+          position: measuringPoint,
+          ...(!given && source != null ? { source } : {}),
+          line: 'midpoint' as const,
+          ends,
+        };
+      }
+      if (given || !mark.position) throw missingEnd(what, line, missing[0]!);
+    }
+    if (!mark.position) {
       const where = mark.placement ? ` (${mark.placement})` : '';
       throw new CourseError(`${what}: no position for mark "${mark.id}"${where}`);
     }
-    return {
-      mark: mark.id,
-      label: mark.name ? `${mark.name} (${mark.id})` : mark.id,
-      position,
-      ...(!given && source != null ? { source } : {}),
-    };
+    return { ...point, position: mark.position, ...(source != null ? { source } : {}) };
   });
 }
 
@@ -156,7 +275,7 @@ function place(resolved: ResolvedCourseMark[], race: RacePositions, what: string
  *  a passage that turns at a mark needs. */
 function markWaypoint(card: CourseCardFile, marks: MarksFile, race: RacePositions, id: string): Waypoint | undefined {
   try {
-    return place(resolve(card, marks, [{ mark: id }], 'routing'), race, 'routing')[0];
+    return place(resolve(card, marks, [{ mark: id }], 'routing'), race, 'routing', marks)[0];
   } catch {
     return undefined;
   }
@@ -280,7 +399,7 @@ export function courseLegs(
   race: RacePositions,
   routing?: RoutingFile,
 ): CourseLeg[] {
-  const points = place(courseMarks(card, marks, courseId), race, `course ${courseId}`);
+  const points = place(courseMarks(card, marks, courseId), race, `course ${courseId}`, marks);
   if (!routing) return legsFromWaypoints(points);
   return routedLegs(points, routing, (id) => markWaypoint(card, marks, race, id));
 }
@@ -299,7 +418,7 @@ export function calledCourseLegs(
   race: RacePositions,
   routing?: RoutingFile,
 ): CourseLeg[] {
-  const points = place(calledCourseMarks(card, marks, sequence), race, 'called course');
+  const points = place(calledCourseMarks(card, marks, sequence), race, 'called course', marks);
   if (!routing) return legsFromWaypoints(points);
   return routedLegs(points, routing, (id) => markWaypoint(card, marks, race, id));
 }
