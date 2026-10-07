@@ -8,7 +8,19 @@
     "id": "SL",
     "name": "Start line",
     "placement": "The starting area will be North of Ireland’s Eye. The starting line shall be between an orange outer distance mark (to be passed to port) and a red/white pole (or mainmast) on the Committee Starting Vessel that will display an orange flag.",
-    "source": "HYC Autumn League 2025 sailing instructions 6.1 A and B"
+    "source": "HYC Autumn League 2025 sailing instructions 6.1 A and B",
+    "ends": [
+      {
+        "end": "starboard",
+        "name": "Red/white pole (or mainmast) on the Committee Starting Vessel",
+        "placement": "Laid on the day"
+      },
+      {
+        "end": "port",
+        "name": "Orange outer distance mark",
+        "placement": "Laid on the day"
+      }
+    ]
   },
   "notes": [
     {

@@ -119,8 +119,21 @@
         "meta": {
           "id": "SL",
           "name": "Start line",
-          "source": "Sovereign's Cup 2025 sailing instructions FB 2.1 and 2.2"
-        }
+          "source": "Sovereign's Cup 2025 sailing instructions FB 2.1 and 2.2",
+          "ends": [
+            {
+              "end": "starboard",
+              "name": "Red & White Pole on the Committee Vessel",
+              "placement": "Laid on the day"
+            },
+            {
+              "end": "port",
+              "name": "Mark (or a vessel displaying an orange flag)",
+              "placement": "Laid on the day"
+            }
+          ]
+        },
+        "why": "2.1 puts the mark \"at the port end\"; the pole on the committee vessel is the other, the starboard."
       }
     },
     {
@@ -144,9 +157,21 @@
         "meta": {
           "id": "SL",
           "name": "Start line",
-          "source": "Sovereign's Cup 2025 sailing instructions FB 2.1, which the supplementary instructions apply"
+          "source": "Sovereign's Cup 2025 sailing instructions FB 2.1, which the supplementary instructions apply",
+          "ends": [
+            {
+              "end": "starboard",
+              "name": "Red & White Pole on the Committee Vessel",
+              "placement": "Laid on the day"
+            },
+            {
+              "end": "port",
+              "name": "Mark (or a vessel displaying an orange flag)",
+              "placement": "Laid on the day"
+            }
+          ]
         },
-        "why": "The supplementary instructions say \"Starting Line: SI FB 2.1 applies\" and give each course its own start area, at mark C or mark J — carried in the card's notes."
+        "why": "The supplementary instructions say \"Starting Line: SI FB 2.1 applies\" and give each course its own start area, at mark C or mark J — carried in the card's notes. 2.1 puts the mark \"at the port end\"; the pole on the committee vessel is the other, the starboard."
       }
     }
   ],

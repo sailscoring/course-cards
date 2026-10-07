@@ -107,7 +107,9 @@ line, laid on the day, so a placement and no position — and `finish` is
 13.1, likewise: "the course side of a laid mark, or Mark No. 6 as
 indicated", inside Schull Harbour by 9.1. A race officer's called course
 is resolved against them with `calledCourseLegs`, the line, the finish and
-the weather mark supplied per race. The notes are the instructions'
+the weather mark supplied per race. Neither line has `ends`: 12.1 puts the
+committee boat "at the one end" and the mark "at the other", and 13.1 is no
+more specific, so the instructions do not say which end is starboard. The notes are the instructions'
 sections 9, 10 and 11 whole, one note each, and the sheet's own caveats
 last: "Bearings in Black, relative to True North. Distances in Red, in
 NM. Mark Positions may vary slightly. All figures are approximate.

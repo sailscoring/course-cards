@@ -84,7 +84,7 @@ describe('courseLegs', () => {
       'course 001: no position for mark "Z" (Upwind of Start Line)',
     );
     expect(() => courseLegs(inshore, marks, '001', {})).toThrow(
-      /no position for mark "SL" \(The starting area will be Northwest of Ireland/,
+      'course 001: no position for the starboard end of "SL" (Laid on the day)',
     );
     expect(() => courseLegs(inshore, marks, '999', race)).toThrow('no course "999"');
     const card = { formatVersion: 2, courses: [{ id: 'x', marks: [{ mark: 'Y' }] }] };

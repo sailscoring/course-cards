@@ -139,6 +139,9 @@ instructions say "Starting Line: SI FB 2.1 applies", so the Jeanot Petch
 card carries FB 2.1 too. Both are read by `extract_start_line.py`, which
 refuses text that is not in the instructions verbatim; the instructions
 are set in two columns, which the `columns` spec in the manifest tells it.
+FB 2.1 puts the mark "at the port end", so the line's `ends` are the
+committee vessel's pole at starboard and the mark at port, and legs to and
+from `SL` are measured from the middle of the line.
 
 **Notes.** FB 3 (courses), FB 4 (marks), FB 6 (finishing line) and the
 Fleet C counterparts FC 3 and FC 6, each paragraph as printed, read out of

@@ -271,6 +271,9 @@ blue dot some numbers carry is a graphic and is not read.
 in front of the hut and Cage or a laid mark as ODM) or a committee-vessel
 line, either of which is also the finish. It is carried as the card's
 `startLine` with no position, and every course begins and ends there.
+It has no `ends` yet: 26 gives alternative lines, and the Grassy Walk line's
+ODM is itself either Cage or a laid mark, which the format's ends cannot
+say until line options are added.
 The card's own page 4 says the same at more length and is carried as three
 notes, as printed.
 

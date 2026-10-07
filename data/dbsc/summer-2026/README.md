@@ -74,11 +74,17 @@ special and it is a rounding mark like the rest.
 instructions supplements do, and they differ by card. Supplement B 4.2 —
 cards 1, 3 and 4 — puts the line between a red and white staff on the
 committee vessel and a starting mark or an orange-flagged RIB: laid on the
-day, so a `placement` and no position. Supplement H 4.1 and 4.2 — cards 2
+day, so a `placement` and no position. It names the staff "at the
+starboard end" and the mark or RIB "at the port end", so the line carries
+them as its `ends` and legs to and from it are measured from its middle.
+Supplement H 4.1 and 4.2 — cards 2
 and 5 — put it at the West Pier hut, on "a transit formed by bringing in
 line the two triangles above the West Pier Hut", crossed between the hut and
 whichever limit mark is signalled: a fixed line, though the club publishes
-no coordinate for it, so it too is carried as the SI's words. Each card
+no coordinate for it, so it too is carried as the SI's words. It has no
+`ends`: H 4.2 does not say which side of a starting boat the hut is on, the
+limit mark is one of four signalled on the day, and a transit is not a line
+between two objects in any case. Each card
 carries its own as a `startLine` and every course begins there, which is why
 the start line belongs to the card and not to the marks file the five share.
 `extract_start_line.py` refuses any text that is not in the SI verbatim.

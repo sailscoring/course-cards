@@ -83,7 +83,11 @@ instructions print Outer as `0` (E2) and twice as `OUT` (A2), where every
 other course and the legend have `O`; the manifest maps both to O and says
 so. Course B2 prints no sides, so its entries carry none. The start line is
 7.1 and 7.2, the committee-boat line; 8.1 says the finish "will be the same
-line as the start line", so every course ends at `SL` too. 8.1, 12.2
+line as the start line", so every course ends at `SL` too. The line has
+`ends`: 7.1 lays the pin "on port-side of the committee boat", so the
+mainmast is the starboard end and the pin the port, and legs to and from
+`SL` are measured from the middle of the line between them. The inner-limit
+mark of 7.2 "does not form part of the start-line". 8.1, 12.2
 ("START-FINISH LINE & 1st LEG") and 12.3 are the card's notes — 12.2 by
 its opening words, because the instructions number two clauses 12.2.
 

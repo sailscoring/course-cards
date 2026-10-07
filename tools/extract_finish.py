@@ -17,8 +17,9 @@ words the way tools/extract_start_line.py reads the start line.
 `--meta` supplies the id, name and citation the format's `finish` carries
 alongside the placement this reads, and a `position` where the line has one —
 the offshore line's shore end is a transit on the East Pier, not a buoy laid
-on the day. `--via` is the JSON list of course-mark entries the run in passes
-on the way to the line ({"mark": "Q", "side": "starboard", "passing": true}),
+on the day — and its `ends`, as tools/extract_start_line.py takes them.
+`--via` is the JSON list of course-mark entries the run in passes on the way
+to the line ({"mark": "Q", "side": "starboard", "passing": true}),
 which the sailing instruction names but the card does not print.
 """
 
@@ -28,7 +29,7 @@ import re
 import sys
 
 sys.path.insert(0, __file__.rsplit('/', 1)[0])
-from extract_start_line import after, clause, verbatim  # noqa: E402
+from extract_start_line import after, clause, line_ends, verbatim  # noqa: E402
 from pdf_markdown import parts  # noqa: E402
 
 # The order the format sets a mark's fields in, so a finish reads like one.
@@ -68,6 +69,9 @@ def main():
         if not isinstance(via, list) or not all(isinstance(v, dict) and v.get('mark') for v in via):
             sys.exit('--via must be a list of course marks, each with a "mark"')
         finish['via'] = via
+    ends = line_ends(args.pdf, args.columns, meta)
+    if ends:
+        finish['ends'] = ends
     print(json.dumps(finish, indent=2, ensure_ascii=False))
 
 

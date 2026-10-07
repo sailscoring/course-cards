@@ -8,7 +8,21 @@
     "id": "SL",
     "name": "Start line",
     "placement": "The race start line will be approximately North of Dun Laoghaire Harbour.",
-    "source": "Dun Laoghaire Combined Clubs regattas 2026 sailing instructions, Addendum A 3.1"
+    "source": "Dun Laoghaire Combined Clubs regattas 2026 sailing instructions, Addendum A 3.1",
+    "ends": [
+      {
+        "end": "starboard",
+        "name": "Main mast or a staff displaying an orange flag on the race committee vessel",
+        "placement": "Laid on the day",
+        "source": "Dun Laoghaire Combined Clubs regattas 2026 sailing instructions 10.3"
+      },
+      {
+        "end": "port",
+        "name": "Course side of the port-end starting mark",
+        "placement": "Laid on the day",
+        "source": "Dun Laoghaire Combined Clubs regattas 2026 sailing instructions 10.3"
+      }
+    ]
   },
   "notes": [
     {

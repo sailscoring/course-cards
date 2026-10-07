@@ -8,7 +8,19 @@
     "id": "SL",
     "name": "Start line",
     "placement": "The start Line: shall be between the mainmast of the committee boat and an Outer Pin-end mark, laid on port-side of the committee boat. Restrictions: An inner-limit mark will be laid close to the committee boat; no boat shall pass between the inner limit buoy and the committee boat. Any boat passing between will be (DSQ) disqualified from the Championship. This inner-limit mark may be in front or behind the start line, OR leeward of the committee boat and does not form part of the start-line.",
-    "source": "East Coast Bilge Keel Championship 2026 sailing instructions 7.1 and 7.2"
+    "source": "East Coast Bilge Keel Championship 2026 sailing instructions 7.1 and 7.2",
+    "ends": [
+      {
+        "end": "starboard",
+        "name": "Mainmast of the committee boat",
+        "placement": "Laid on the day"
+      },
+      {
+        "end": "port",
+        "name": "Outer Pin-end mark",
+        "placement": "Laid on port-side of the committee boat"
+      }
+    ]
   },
   "notes": [
     {

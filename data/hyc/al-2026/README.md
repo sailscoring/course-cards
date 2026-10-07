@@ -69,6 +69,9 @@ roundings to starboard and 13 of 469 inshore.
 starting lines, and 6.1 A and 6.2 A the areas they are laid in; both are
 quoted verbatim into each card's `startLine` by `extract_start_line.py`, so
 every course begins at `SL` and the first leg is the beat from the line to Z.
+Each buoy is "to be passed to port", so it is the line's port end and the
+committee vessel's pole the starboard: both lines carry those `ends`, and
+the beat to Z is measured from the middle of the line.
 SI 6.1 C and 6.2 C say as much: Z is "laid approximately to windward of the
 starting line" and "is the first mark on all fixed mark courses" — which the
 cards bear out, every one of the 144 beginning at Z.
@@ -79,7 +82,10 @@ instead: SI 6.1 D offshore, and 6.2 D inshore as amendment 01 replaces it.
 Each card carries it as its `finish` — the line as a mark, the instruction
 quoted verbatim into its `placement` by `extract_finish.py`, and the marks
 the run in passes in `via` — and every course ends with those marks and then
-the line. See "The run home" below.
+the line. See "The run home" below. Neither finish has `ends`: 6.1 D and
+amendment 01's 6.2 D say what the two ends are — the Finisher's Hut and a
+black cherry buoy, Mark F and the finishing vessel — but not which is the
+starboard end and which the port.
 
 **Marks.** SI 6.1 C and 6.2 C name a Technical Sheet, but the club has not
 published a 2026 one, so the marks are the 2025 sheet's, read from it in

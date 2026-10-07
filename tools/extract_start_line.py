@@ -21,7 +21,9 @@ the document into headings and clauses; this selects from them), so the
 Line", whose paragraphs are taken together); `--after` scopes the search to
 what follows a heading, for an SI that defines more than one start line.
 `--meta` supplies the id, name and citation the format's `startLine` carries
-alongside the placement this reads.
+alongside the placement this reads, and the line's `ends` where the
+instruction says which is the starboard end and which the port: each end's
+`name` is the club's words for it, and must be in the document.
 """
 
 import argparse
@@ -42,6 +44,37 @@ def verbatim(pdf, columns, text):
     flat = re.sub(r'\s+', ' ', ' '.join(line for page in pages(pdf, columns) for line in page))
     if re.sub(r'\s+', ' ', text) not in flat:
         sys.exit(f'the text read is not in {pdf} verbatim:\n{text}')
+
+
+def comparable(text):
+    """Text with what a PDF's text layer varies in levelled — whitespace,
+    curly quotes, case — for finding a phrase the meta quotes."""
+    for curly, plain in (('‘', "'"), ('’', "'"), ('“', '"'), ('”', '"')):
+        text = text.replace(curly, plain)
+    return re.sub(r'\s+', ' ', text).lower()
+
+
+def line_ends(pdf, columns, meta):
+    """The line's two ends as the meta gives them, checked: one starboard and
+    one port, as the instructions name them, each called what the document
+    calls it. Which end is which is the instruction's, never inferred from
+    where a committee boat usually lies, so a line whose instruction does not
+    say has no ends in its meta."""
+    ends = meta.get('ends')
+    if ends is None:
+        return None
+    if not isinstance(ends, list) or sorted(e.get('end') for e in ends) != ['port', 'starboard']:
+        sys.exit('--meta ends must be one starboard end and one port end')
+    if pdf.endswith('.md'):
+        flat = comparable(open(pdf).read())
+    else:
+        flat = comparable(' '.join(line for page in pages(pdf, columns) for line in page))
+    for end in ends:
+        if end.get('name') and comparable(end['name']) not in flat:
+            sys.exit(f'the {end["end"]} end\'s name is not in {pdf}: {end["name"]}')
+        if end.get('mark') and end.get('position'):
+            sys.exit(f'the {end["end"]} end is placed by a mark or a position, not both')
+    return ends
 
 
 def after(items, heading):
@@ -114,6 +147,9 @@ def main():
     start['placement'] = placement
     if meta.get('source'):
         start['source'] = meta['source']
+    ends = line_ends(args.pdf, args.columns, meta)
+    if ends:
+        start['ends'] = ends
     print(json.dumps(start, indent=2, ensure_ascii=False))
 
 

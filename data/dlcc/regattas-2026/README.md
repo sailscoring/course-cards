@@ -78,7 +78,11 @@ approximate start line positions are in the addendums and nowhere else. It
 is carried as the card's `startLine`, with no position, and every course
 begins there. `extract_start_line.py` refuses any text that is not in the SI
 verbatim. The same words are also in the card's A3 note, since the note
-carries the addendum section whole.
+carries the addendum section whole. What forms the line is the general
+instructions' 10.3, the same for every course area — the committee vessel's
+main mast or staff "at the starboard end and the course side of the
+port-end starting mark" — so the line's `ends` cite it, and legs to and from
+`SL` are measured from the middle of the line.
 
 The sides come from Addendum A 1.6, "All marks shall be rounded to port in
 the order listed", which the tool requires to be in the SI's text; there

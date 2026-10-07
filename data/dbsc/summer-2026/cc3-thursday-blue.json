@@ -8,7 +8,19 @@
     "id": "SL",
     "name": "Start line",
     "placement": "The starting line will be between a red and white staff on the committee vessel (or the main mast if a yacht is being used) at the starboard end, and a starting mark or a staff on a RIB displaying an orange flag at the port end. An orange flag may be displayed on the red and white staff on the committee vessel. Whether the flag is displayed or not, the red and white staff is the starboard end of the starting line.",
-    "source": "DBSC 2026 sailing instructions supplement B – Fixed-Mark Courses, Committee Vessel, 4.2"
+    "source": "DBSC 2026 sailing instructions supplement B – Fixed-Mark Courses, Committee Vessel, 4.2",
+    "ends": [
+      {
+        "end": "starboard",
+        "name": "Red and white staff on the committee vessel (or the main mast if a yacht is being used)",
+        "placement": "Laid on the day"
+      },
+      {
+        "end": "port",
+        "name": "Starting mark or a staff on a RIB displaying an orange flag",
+        "placement": "Laid on the day"
+      }
+    ]
   },
   "notes": [
     {

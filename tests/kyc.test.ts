@@ -172,7 +172,7 @@ describe('the RTC/Coastal courses', () => {
     const legs = courseLegs(rtc, marks, 'N2', { marks: { SL: { lat: 51.63, lng: -8.49 } } });
     expect(legs).toHaveLength(8);
     expect(legs.map((l) => l.to.mark)).toEqual(['B', 'J', 'K', 'C', 'B', 'M', 'A', 'CF']);
-    expect(() => courseLegs(rtc, marks, 'N1', {})).toThrow(/no position for mark "SL"/);
+    expect(() => courseLegs(rtc, marks, 'N1', {})).toThrow(/no position for the starboard end of "SL"/);
   });
 
   it('carries FB 3, FB 4, FB 6, FC 3 and FC 6 as notes', () => {

@@ -63,7 +63,9 @@ flag and "either a cylindrical orange buoy or an orange buoy with a flag on
 top" — and SI 8.1 puts the race area north-west of Ireland's Eye. Both are
 quoted as the card's `startLine`, with no position, and every course begins
 there. `extract_start_line.py` refuses any text that is not in the SI
-verbatim; 8.1's sentence is also the card's "8. Race Area" note.
+verbatim; 8.1's sentence is also the card's "8. Race Area" note. The line
+has no `ends`: 12.1 names the pole and the buoy but not which end is
+starboard and which port.
 
 **Notes.** The card's WIND column — the wind direction each course is set
 for — is carried as the card's first note, "Wind" (`1 N, 2 N, 3 N/E, …`),

@@ -53,7 +53,11 @@ A and B do the same for the inshore fleet, north-west of Ireland's Eye. Each
 card carries its own as a `startLine` with those clauses quoted, and every
 course begins there — the two cards share one marks file but not one start
 line, which is why the start line lives on the card. `extract_start_line.py`
-refuses any text that is not in the SI verbatim.
+refuses any text that is not in the SI verbatim. Both lines have `ends`:
+each instruction's buoy is "to be passed to port", so it is the port end and
+the committee vessel's pole the starboard, and legs to and from `SL` are
+measured from the middle of the line. The finish, F, is a mark of the marks
+file the cards print, not a line of the card's, and has no ends.
 
 **Notes.** The sheet's two passages of explanatory text — "Navigation Marks
 and Obstructions" and "Course Selection" — are read from the page regions

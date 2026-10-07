@@ -73,8 +73,21 @@
         "meta": {
           "id": "SL",
           "name": "Start line",
-          "source": "HYC Autumn League 2026 sailing instructions 6.1 A and B"
-        }
+          "source": "HYC Autumn League 2026 sailing instructions 6.1 A and B",
+          "ends": [
+            {
+              "end": "starboard",
+              "name": "Red/white pole (or mainmast) on the Committee Starting Vessel",
+              "placement": "Laid on the day"
+            },
+            {
+              "end": "port",
+              "name": "Orange outer distance mark",
+              "placement": "Laid on the day"
+            }
+          ]
+        },
+        "why": "B says the outer distance mark is \"to be passed to port\": a boat starting leaves it on her port hand, so it is the port end, and the committee vessel the starboard."
       },
       "finish": {
         "source": "source/2026_AL_Sis.pdf",
@@ -130,8 +143,21 @@
         "meta": {
           "id": "SL",
           "name": "Start line",
-          "source": "HYC Autumn League 2026 sailing instructions 6.2 A and B"
-        }
+          "source": "HYC Autumn League 2026 sailing instructions 6.2 A and B",
+          "ends": [
+            {
+              "end": "starboard",
+              "name": "Red/white pole or the main mast of the Committee Starting Vessel",
+              "placement": "Laid on the day"
+            },
+            {
+              "end": "port",
+              "name": "Orange buoy with an orange flag",
+              "placement": "Laid on the day"
+            }
+          ]
+        },
+        "why": "B says the orange buoy is \"to be passed to port\": a boat starting leaves it on her port hand, so it is the port end, and the committee vessel the starboard."
       },
       "finish": {
         "source": "source/Autumn_League_SI_Amendment_01.pdf",

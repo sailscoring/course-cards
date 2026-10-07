@@ -8,7 +8,19 @@
     "id": "SL",
     "name": "Start line",
     "placement": "The starting line will be between a Red & White Pole on the Committee Vessel and a Mark (or a vessel displaying an orange flag) at the port end. An IDM may be laid off the Committee Vessel and boats shall not pass between the CV and the IDM when starting. The location of the start will be advised over Ch72 at 10.00 hrs and at suitable intervals prior to the Warning Signal on each day of racing.",
-    "source": "Sovereign's Cup 2025 sailing instructions FB 2.1 and 2.2"
+    "source": "Sovereign's Cup 2025 sailing instructions FB 2.1 and 2.2",
+    "ends": [
+      {
+        "end": "starboard",
+        "name": "Red & White Pole on the Committee Vessel",
+        "placement": "Laid on the day"
+      },
+      {
+        "end": "port",
+        "name": "Mark (or a vessel displaying an orange flag)",
+        "placement": "Laid on the day"
+      }
+    ]
   },
   "notes": [
     {

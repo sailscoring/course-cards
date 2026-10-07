@@ -85,7 +85,7 @@ describe('calledCourseLegs', () => {
   });
 
   it('asks for the start line the way a numbered course does', () => {
-    expect(() => calledCourseLegs(dbscCard, dbscMarks, [{ mark: 'E', side: 'port' }], {})).toThrow(/called course: no position for mark "SL" \(/);
+    expect(() => calledCourseLegs(dbscCard, dbscMarks, [{ mark: 'E', side: 'port' }], {})).toThrow(/called course: no position for the starboard end of "SL" \(Laid on the day\)/);
   });
 
   it('gives a Kinsale race officer’s round-the-cans call its legs', () => {
